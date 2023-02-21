@@ -30,28 +30,28 @@ public class HeroScript : MonoBehaviour
     {
         Vector2 moveDirection = Vector2.zero;
 
-        if(Input.GetKey(KeyCode.RightArrow))
+        if(Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
         {
             moveDirection += Vector2.right;
             transform.localScale = new Vector2(1, 1);
             animator.SetBool("right", true);
             animator.SetBool("left", false);
         }
-        if(Input.GetKey(KeyCode.LeftArrow))
+        if(Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
         {
             moveDirection += Vector2.left;
             transform.localScale = new Vector2(-1, 1);
             animator.SetBool("right", false);
             animator.SetBool("left", true);
         }
-        if(Input.GetKey(KeyCode.UpArrow))
+        if(Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
         {
             moveDirection += Vector2.up;
             animator.SetBool("up", true);
             animator.SetBool("down", false);
             
         }
-        if(Input.GetKey(KeyCode.DownArrow))
+        if(Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
         {
             moveDirection += Vector2.down;
             animator.SetBool("up", false);
