@@ -17,7 +17,7 @@ public class HeroScript : MonoBehaviour
     
     void Start()
     {
-        moveSpeed = 300;
+        moveSpeed = 60;
         maxHP = 100;
         nowHP = 100;
         atkDmg = 10;
