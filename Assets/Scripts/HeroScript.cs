@@ -34,7 +34,14 @@ public class HeroScript : MonoBehaviour
         if(Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
         {
             moveDirection += Vector2.right;
-            transform.localScale = new Vector2(1, 1);
+            if(transform.localScale.x < 0)
+            {
+                transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+            }
+            else
+            {
+                transform.localScale = new Vector2(transform.localScale.x, transform.localScale.y);
+            }
             animator.SetBool("right", true);
         }
         else
@@ -44,7 +51,14 @@ public class HeroScript : MonoBehaviour
         if(Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
         {
             moveDirection += Vector2.left;
-            transform.localScale = new Vector2(-1, 1);
+            if(transform.localScale.x > 0)
+            {
+                transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+            }
+            else
+            {
+                transform.localScale = new Vector2(transform.localScale.x, transform.localScale.y);
+            }
             animator.SetBool("left", true);
         }
         else
