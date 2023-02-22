@@ -6,6 +6,7 @@ public class HeroScript : MonoBehaviour
 {
     public GameObject Hero;
     Animator animator;
+    public GameObject Map;
 
     public int moveSpeed;
     public int maxHP;
@@ -17,7 +18,7 @@ public class HeroScript : MonoBehaviour
     
     void Start()
     {
-        moveSpeed = 60;
+        moveSpeed = 8;
         maxHP = 100;
         nowHP = 100;
         atkDmg = 10;
@@ -35,14 +36,20 @@ public class HeroScript : MonoBehaviour
             moveDirection += Vector2.right;
             transform.localScale = new Vector2(1, 1);
             animator.SetBool("right", true);
-            animator.SetBool("left", false);
+        }
+        else
+        {
+            animator.SetBool("right", false);
         }
         if(Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
         {
             moveDirection += Vector2.left;
             transform.localScale = new Vector2(-1, 1);
-            animator.SetBool("right", false);
             animator.SetBool("left", true);
+        }
+        else
+        {
+            animator.SetBool("left", false);
         }
         if(Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
         {
@@ -60,7 +67,16 @@ public class HeroScript : MonoBehaviour
         }
         moveDirection.Normalize();
 
-        transform.Translate(moveDirection * Time.deltaTime * moveSpeed);
+        if(
+            transform.position.x + moveDirection.x * Time.deltaTime * moveSpeed + transform.localScale.x * 0.5 > Map.transform.localScale.x * -0.5f
+            && transform.position.x + moveDirection.x * Time.deltaTime * moveSpeed + transform.localScale.x * 0.5 < Map.transform.localScale.x * 0.5f
+            && transform.position.y + moveDirection.y * Time.deltaTime * moveSpeed + transform.localScale.y * -0.5f > Map.transform.localScale.y * -0.5f
+            && transform.position.y + moveDirection.y * Time.deltaTime * moveSpeed + transform.localScale.y * 0.5 < Map.transform.localScale.y * 0.5f
+        )
+        {
+            transform.Translate(moveDirection * Time.deltaTime * moveSpeed);
+
+        }
 
         animator.SetBool("isMoving", moveDirection.magnitude > 0);
         
