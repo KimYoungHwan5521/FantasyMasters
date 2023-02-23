@@ -1,0 +1,2 @@
+HeroID	HeroNameKR	HeroAttributes	HeroHP	HeroAtkDmg	HeroAtkSpeed	HeroArmor	HeroMoveSpeed	HeroAbilityKR
+0000	스컬윙	암흑	80	10	10	0	6	20초마다 스켈톤 하수인 1마리 소환
