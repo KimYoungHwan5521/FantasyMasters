@@ -6,7 +6,7 @@ using UnityEngine;
 public class Hero
 {
     public Hero(string _ID, string _NameKR, string _Attributes, string _HP, string _HPRegeneration, string _AtkDmg, string _AtkSpeed, string _AtkRange,
-     string _CriticalDmg, string _CriticalChance, string _Armor, string _MoveSpeed, string _AbilityKR)
+    string _CriticalDmg, string _CriticalChance, string _Armor, string _MoveSpeed, string _AbilityKR)
     {
         heroID = _ID;
         heroNameKR = _NameKR;
@@ -40,11 +40,12 @@ public class Hero
 [System.Serializable]
 public class Enemy
 {
-    public Enemy(string _ID, string _NameKR, string _HP, string _AtkDmg, string _AtkSpeed, string _AtkRange, string _Armor, string _MoveSpeed)
+    public Enemy(string _ID, string _NameKR, string _HP, string _CollisionDmg, string _AtkDmg, string _AtkSpeed, string _AtkRange, string _Armor, string _MoveSpeed)
     {
         enemyID = _ID;
         enemyNameKR = _NameKR;
         enemyMaxHP = _HP;
+        enemyCollisionDmg = _CollisionDmg;
         enemyAtkDmg = _AtkDmg;
         enemyAtkSpeed = _AtkSpeed;
         enemyAtkRange = _AtkRange;
@@ -54,6 +55,7 @@ public class Enemy
     public string enemyID;
     public string enemyNameKR;
     public string enemyMaxHP;
+    public string enemyCollisionDmg;
     public string enemyAtkDmg;
     public string enemyAtkSpeed;
     public string enemyAtkRange;
@@ -114,11 +116,11 @@ public class DataManager : MonoBehaviour
             string[] row = line[i].Split('\t');
             if(i == 0)
             {
-                AllEnemyList.Add(new Enemy(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7]));
+                AllEnemyList.Add(new Enemy(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]));
             }
             else
             {
-                AllEnemyList.Add(new Enemy(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5], row[6], row[7]));
+                AllEnemyList.Add(new Enemy(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]));
             }
         }
         
