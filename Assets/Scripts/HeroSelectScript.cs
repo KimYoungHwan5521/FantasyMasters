@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -70,12 +71,106 @@ public class HeroSelectScript : MonoBehaviour
                 AllHeroList.Add(new Hero(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12]));
             }
         }
-        CurHeroList = AllHeroList.ToList();
+
+        for(int i=0; i < searchAttributeIsChecked.Length; i++)
+        {
+            searchAttributeIsChecked[i] = false;
+        }
     }
 
     public GameObject[] HerosSimple;
+    public Button[] SearchAttributeButton;
+    public GameObject[] SearchAttributeIsChecked;
     void Update()
     {
+        // SearchOptions Attribute Check
+        CurHeroList = new List<Hero>();
+        int cntChks = 0;
+        for(int i=0; i < searchAttributeIsChecked.Length; i++)
+        {
+            if(searchAttributeIsChecked[i])
+            {
+                SearchAttributeIsChecked[i].SetActive(true);
+                if(i != 8) cntChks++;
+            }
+            else
+            {
+                SearchAttributeIsChecked[i].SetActive(false);
+            }
+        }
+        if(searchAttributeIsChecked[8])
+        {
+            for(int i=0; i < searchAttributeIsChecked.Length; i++)
+            {
+                if(!searchAttributeIsChecked[i]) SearchAttributeButton[i].interactable = false;
+            }
+        }
+        else
+        {
+            for(int i=0; i< searchAttributeIsChecked.Length; i++)
+            {
+                SearchAttributeButton[i].interactable = true;
+            }
+        }
+        if(cntChks != 1) 
+        {
+            searchAttributeIsChecked[8] = false;
+            SearchAttributeButton[8].interactable = false;
+        }
+        else SearchAttributeButton[8].interactable = true;
+
+        // make CurHeroList as SearchOptions
+        if(cntChks != 0)
+        {
+            List<string> stringAttribute = new List<string>();
+            string[] temp = new string[] {"암흑", "불", "물", "숲", "금속", "대지", "빛", "무속성"};
+            if(!searchAttributeIsChecked[8])
+            {
+                for(int i=0; i < searchAttributeIsChecked.Length - 1; i++)
+                {   
+                    if(searchAttributeIsChecked[i]) 
+                    {
+                        stringAttribute.Add(temp[i]);
+                    }
+                }
+                for(int i=0; i < AllHeroList.Count; i++)
+                {
+                    for(int j=0; j < stringAttribute.Count; j++)
+                    {
+                        if(Array.Exists(AllHeroList[i].heroAttributes, x => x == stringAttribute[j]))
+                        {
+                            CurHeroList.Add(AllHeroList[i]);
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                for(int i=0; i < searchAttributeIsChecked.Length - 1; i++)
+                {
+                    if(searchAttributeIsChecked[i]) 
+                    {
+                        stringAttribute.Add(temp[i]);
+                        break;
+                    }
+                }
+                for(int i=0; i < AllHeroList.Count; i++)
+                {
+                    for(int j=0; j < stringAttribute.Count; j++)
+                    {
+                        if(AllHeroList[i].heroAttributes.Length == 1 && Array.Exists(AllHeroList[i].heroAttributes, x => x == stringAttribute[j])) CurHeroList.Add(AllHeroList[i]);
+                    }
+                }
+            }
+        }
+        else
+        {
+            CurHeroList = AllHeroList.ToList();
+        }
+        
+
+        // show result of CurHeroList
         for(int i=0; i < HerosSimple.Length; i++)
         {
             HerosSimple[i].SetActive(i < CurHeroList.Count);
@@ -231,6 +326,19 @@ public class HeroSelectScript : MonoBehaviour
                 HeroOutlines[i].effectColor = new Color(0, 0, 0, 1);
                 HeroOutlines[i].effectDistance = new Vector2(1, -1);
             }
+        }
+    }
+
+    bool[] searchAttributeIsChecked = new bool[9];
+    public void CheckSearchOptionAttributes(int _AttributeID)
+    {
+        if(searchAttributeIsChecked[_AttributeID])
+        {
+            searchAttributeIsChecked[_AttributeID] = false;
+        }
+        else
+        {
+            searchAttributeIsChecked[_AttributeID] = true;
         }
     }
 
