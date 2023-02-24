@@ -6,45 +6,9 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Linq;
 
-[System.Serializable]
-public class Hero
-{
-    public Hero(string _ID, string _NameKR, string _Attributes, string _HP, string _HPRegeneration, string _AtkDmg, string _AtkSpeed, string _AtkRange,
-     string _CriticalDmg, string _CriticalChance, string _Armor, string _MoveSpeed, string _AbilityKR)
-    {
-        heroID = _ID;
-        heroNameKR = _NameKR;
-        heroAttributes = _Attributes.Split(' ');
-        heroMaxHP = _HP;
-        heroHPRegeneration = _HPRegeneration;
-        heroAtkDmg = _AtkDmg;
-        heroAtkSpeed = _AtkSpeed;
-        heroAtkRange = _AtkRange;
-        heroCriticalDmg = _CriticalDmg;
-        heroCriticalChance = _CriticalChance;
-        heroArmor = _Armor;
-        heroMoveSpeed = _MoveSpeed;
-        heroAbilityKR = _AbilityKR;
-    }
-    public string heroID;
-    public string heroNameKR;
-    public string[] heroAttributes;
-    public string heroMaxHP;
-    public string heroHPRegeneration;
-    public string heroAtkDmg;
-    public string heroAtkSpeed;
-    public string heroAtkRange;
-    public string heroCriticalDmg;
-    public string heroCriticalChance;
-    public string heroArmor;
-    public string heroMoveSpeed;
-    public string heroAbilityKR;
-}
-
 public class HeroSelectScript : MonoBehaviour
 {
-    public TextAsset HeroDB;
-    public List<Hero> AllHeroList, CurHeroList;
+    public List<Hero> CurHeroList;
 
     public GameObject HeroSelect;
     public int selectedHeroID;
@@ -58,20 +22,6 @@ public class HeroSelectScript : MonoBehaviour
 
     void Start()
     {
-        string[] line = HeroDB.text.Substring(0, HeroDB.text.Length).Split('\r');
-        for(int i=1;i<line.Length;i++)
-        {
-            string[] row = line[i].Split('\t');
-            if(i == 0)
-            {
-                AllHeroList.Add(new Hero(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12]));
-            }
-            else
-            {
-                AllHeroList.Add(new Hero(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12]));
-            }
-        }
-
         for(int i=0; i < searchAttributeIsChecked.Length; i++)
         {
             searchAttributeIsChecked[i] = false;
@@ -133,13 +83,13 @@ public class HeroSelectScript : MonoBehaviour
                         stringAttribute.Add(temp[i]);
                     }
                 }
-                for(int i=0; i < AllHeroList.Count; i++)
+                for(int i=0; i < DataManager.AllHeroList.Count; i++)
                 {
                     for(int j=0; j < stringAttribute.Count; j++)
                     {
-                        if(Array.Exists(AllHeroList[i].heroAttributes, x => x == stringAttribute[j]))
+                        if(Array.Exists(DataManager.AllHeroList[i].heroAttributes, x => x == stringAttribute[j]))
                         {
-                            CurHeroList.Add(AllHeroList[i]);
+                            CurHeroList.Add(DataManager.AllHeroList[i]);
                             break;
                         }
                     }
@@ -155,18 +105,18 @@ public class HeroSelectScript : MonoBehaviour
                         break;
                     }
                 }
-                for(int i=0; i < AllHeroList.Count; i++)
+                for(int i=0; i < DataManager.AllHeroList.Count; i++)
                 {
                     for(int j=0; j < stringAttribute.Count; j++)
                     {
-                        if(AllHeroList[i].heroAttributes.Length == 1 && Array.Exists(AllHeroList[i].heroAttributes, x => x == stringAttribute[j])) CurHeroList.Add(AllHeroList[i]);
+                        if(DataManager.AllHeroList[i].heroAttributes.Length == 1 && Array.Exists(DataManager.AllHeroList[i].heroAttributes, x => x == stringAttribute[j])) CurHeroList.Add(DataManager.AllHeroList[i]);
                     }
                 }
             }
         }
         else
         {
-            CurHeroList = AllHeroList.ToList();
+            CurHeroList = DataManager.AllHeroList.ToList();
         }
         
 

@@ -13,12 +13,17 @@ public class HeroScript : MonoBehaviour
     public int nowHP;
     public int atkDmg;
     public int atkSpeed = 1;
-    public bool attacked = false;
     // public Image nowHPbar;
+
+    Rigidbody2D rigid;
+    void Awake()
+    {
+        rigid = GetComponent<Rigidbody2D>();
+    }
     
     void Start()
     {
-        moveSpeed = 8;
+        moveSpeed = 6;
         maxHP = 100;
         nowHP = 100;
         atkDmg = 10;
@@ -94,6 +99,32 @@ public class HeroScript : MonoBehaviour
 
         animator.SetBool("isMoving", moveDirection.magnitude > 0);
         
-        
     }
+    
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Enemy")
+        {
+            OnDamaged(collision.transform.position);//충돌했을때 x축,y축 넘김
+        }
+    }
+
+    void OnDamaged(Vector2 targetPos)
+    {
+        //gameObject는 자기자신을 의미
+        //충돌시 플레이어의 레이어가 PlayerDamaged 레이어로 변함 
+        gameObject.layer = 9;
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.color = new Color(1, 1, 1, 0.4f);//무적시간일 때 플레이어가 투명하게
+        Invoke("OffDamaged", 0.3f);
+    }
+
+    void OffDamaged()
+    {
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        gameObject.layer = 8;
+        spriteRenderer.color = new Color(1, 1, 1, 1);
+    }
+
+
 }
