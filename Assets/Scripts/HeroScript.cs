@@ -8,14 +8,20 @@ public class HeroScript : MonoBehaviour
     Animator animator;
     public GameObject Map;
 
-    public int moveSpeed;
-    public int maxHP;
-    public int nowHP;
-    public int atkDmg;
-    public int atkSpeed = 1;
+    public float moveSpeed;
+    public float maxHP;
+    public float nowHP;
+    public float atkDmg;
+    public float atkSpeed = 1;
     // public Image nowHPbar;
 
     Rigidbody2D rigid;
+
+    private float curTime;
+    public float coolTime = 0.5f;
+    public Transform pos;
+    public Vector2 boxSize;
+
     void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -28,12 +34,13 @@ public class HeroScript : MonoBehaviour
         nowHP = 100;
         atkDmg = 10;
         animator = GetComponent<Animator>();
-        
+        transform.position = new Vector2(0, 0);
     }
 
 
     void Update()
     {
+        // 이동
         Vector2 moveDirection = Vector2.zero;
 
         if(Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
@@ -99,6 +106,33 @@ public class HeroScript : MonoBehaviour
 
         animator.SetBool("isMoving", moveDirection.magnitude > 0);
         
+        // 공격
+        if(curTime <= 0)
+        {
+            if(Input.GetKey(KeyCode.Z))
+            {
+                Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(pos.position, boxSize, 0);
+                foreach(Collider2D collider in collider2Ds)
+                {
+                    if(collider.tag == "Enemy")
+                    {
+                        collider.GetComponent<EnemyScript>().BeAttacked(atkDmg, 1);
+                    }
+                }
+                animator.SetTrigger("isAttack");
+                curTime = coolTime;
+            }
+        }
+        else
+        {
+            curTime -= Time.deltaTime;
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(pos.position, boxSize);
     }
     
     void OnCollisionEnter2D(Collision2D collision)
@@ -111,7 +145,6 @@ public class HeroScript : MonoBehaviour
 
     void OnDamaged(Vector2 targetPos)
     {
-        //gameObject는 자기자신을 의미
         //충돌시 플레이어의 레이어가 PlayerDamaged 레이어로 변함 
         gameObject.layer = 9;
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();

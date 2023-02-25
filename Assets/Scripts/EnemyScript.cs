@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class EnemyScript : MonoBehaviour
 {
+    public DataManager DataManager;
     public int _enemyID;
-    string enemyNameKR;
+    public string enemyNameKR;
     float enemyMaxHP;
     float enemyNowHP;
     float enemyAtkDmg;
@@ -68,5 +69,11 @@ public class EnemyScript : MonoBehaviour
         }
         moveDirection.Normalize();
         transform.Translate(moveDirection * Time.deltaTime * enemyMoveSpeed);
+    }
+
+    public void BeAttacked(float dmg, float knockback)
+    {
+        enemyNowHP -= dmg;
+        print($"enemyNowHP: {enemyNowHP}");
     }
 }
