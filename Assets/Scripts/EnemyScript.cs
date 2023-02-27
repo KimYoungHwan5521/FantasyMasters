@@ -15,6 +15,8 @@ public class EnemyScript : MonoBehaviour
     float enemyArmor;
     float enemyMoveSpeed;
 
+    Animator animator;
+
     void Start()
     {
         string stringID;
@@ -52,6 +54,11 @@ public class EnemyScript : MonoBehaviour
     public GameObject Hero;
     void Update()
     {
+        if(enemyNowHP <= 0)
+        {
+            animator.SetTrigger("isDead");
+            Destroy(gameObject);
+        }
         Vector2 moveDirection = Hero.transform.position - transform.position;
         if(Hero.transform.position.x < transform.position.x)
         {
@@ -75,5 +82,17 @@ public class EnemyScript : MonoBehaviour
     {
         enemyNowHP -= dmg;
         print($"enemyNowHP: {enemyNowHP}");
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.color = new Color(1, 0, 0, 1);
+        Vector2 moveDirection = transform.position - Hero.transform.position;
+        moveDirection.Normalize();
+        transform.Translate(moveDirection * knockback);
+        Invoke("OffDamaged", 0.3f);
+    }
+    
+    void OffDamaged()
+    {
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.color = new Color(1, 1, 1, 1);
     }
 }
