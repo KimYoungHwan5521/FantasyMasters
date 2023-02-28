@@ -36,9 +36,11 @@ public class HeroScript : MonoBehaviour
         atkDmg = 10;
         animator = GetComponent<Animator>();
         transform.position = new Vector2(0, 0);
+
+        InvokeRepeating("UpdateTarget", 0, 0.25f);
     }
 
-
+    GameObject target = null;
     void Update()
     {
         // 이동
@@ -56,24 +58,6 @@ public class HeroScript : MonoBehaviour
                 transform.localScale = new Vector2(transform.localScale.x, transform.localScale.y);
             }
             animator.SetBool("right", true);
-            if(!(playerLook == 1 || playerLook == 3))
-            {
-                float tempx = boxSize.x;
-                float tempy = boxSize.y;
-                boxSize = new Vector2(tempy, tempx);
-                Vector2 tempDir = Vector2.zero;
-                if(playerLook == 0)
-                {
-                    tempDir = Vector2.up + Vector2.right;
-                }
-                else if(playerLook == 2)
-                {
-                    tempDir = Vector2.down + Vector2.right;
-                }
-                tempDir.Normalize();
-                pos.transform.Translate(tempDir * boxSize);
-                playerLook = 1;
-            }
         }
         else
         {
@@ -91,24 +75,6 @@ public class HeroScript : MonoBehaviour
                 transform.localScale = new Vector2(transform.localScale.x, transform.localScale.y);
             }
             animator.SetBool("left", true);
-            if(!(playerLook == 1 || playerLook == 3))
-            {
-                float tempx = boxSize.x;
-                float tempy = boxSize.y;
-                boxSize = new Vector2(tempy, tempx);
-                Vector2 tempDir = Vector2.zero;
-                if(playerLook == 0)
-                {
-                    tempDir = Vector2.up + Vector2.right;
-                }
-                else if(playerLook == 2)
-                {
-                    tempDir = Vector2.down + Vector2.right;
-                }
-                tempDir.Normalize();
-                pos.transform.Translate(tempDir * boxSize);
-                playerLook = 3;
-            }
         }
         else
         {
@@ -118,34 +84,6 @@ public class HeroScript : MonoBehaviour
         {
             moveDirection += Vector2.up;
             animator.SetBool("up", true);
-            if(!(playerLook == 2) && !animator.GetBool("left") && !animator.GetBool("right") && !animator.GetBool("down"))
-            {
-                Vector2 tempDir = Vector2.zero;
-                if(playerLook == 1 || playerLook == 3)
-                {
-                    tempDir = Vector2.left + Vector2.up;
-                    tempDir.Normalize();
-                    pos.transform.Translate(tempDir * boxSize);
-                    float tempx = boxSize.x;
-                    float tempy = boxSize.y;
-                    boxSize = new Vector2(tempy, tempx);
-                }
-                else if(playerLook == 0)
-                {
-                    float tempx = boxSize.x;
-                    float tempy = boxSize.y;
-                    boxSize = new Vector2(tempy, tempx);
-                    tempDir = Vector2.up + Vector2.right;
-                    tempDir.Normalize();
-                    pos.transform.Translate(tempDir * boxSize);
-                    tempDir = Vector2.up + Vector2.left;
-                    tempDir.Normalize();
-                    pos.transform.Translate(tempDir * boxSize);
-                    boxSize = new Vector2(tempx, tempy);
-                }
-                playerLook = 2;
-
-            }
             animator.SetBool("down", false);
             
         }
@@ -153,33 +91,6 @@ public class HeroScript : MonoBehaviour
         {
             moveDirection += Vector2.down;
             animator.SetBool("down", true);
-            if(!(playerLook == 0) && !animator.GetBool("left") && !animator.GetBool("right") && !animator.GetBool("up"))
-            {
-                Vector2 tempDir = Vector2.zero;
-                if(playerLook == 1 || playerLook == 3)
-                {
-                    tempDir = Vector2.left + Vector2.down;
-                    tempDir.Normalize();
-                    pos.transform.Translate(tempDir * boxSize);
-                    float tempx = boxSize.x;
-                    float tempy = boxSize.y;
-                    boxSize = new Vector2(tempy, tempx);
-                }
-                else if(playerLook == 2)
-                {
-                    float tempx = boxSize.x;
-                    float tempy = boxSize.y;
-                    boxSize = new Vector2(tempy, tempx);
-                    tempDir = Vector2.down + Vector2.left;
-                    tempDir.Normalize();
-                    pos.transform.Translate(tempDir * boxSize);
-                    tempDir = Vector2.down + Vector2.right;
-                    tempDir.Normalize();
-                    pos.transform.Translate(tempDir * boxSize);
-                    boxSize = new Vector2(tempx, tempy);
-                }
-                playerLook = 0;
-            }
             animator.SetBool("up", false);
 
         }
@@ -202,14 +113,105 @@ public class HeroScript : MonoBehaviour
         // 공격
         if(curTime <= 0)
         {
-            if(Input.GetKey(KeyCode.Z))
+            if(target != null)
             {
-                Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(pos.position, boxSize, 0);
-                foreach(Collider2D collider in collider2Ds)
+                Vector2 targetPos = target.transform.position - transform.position;
+                Vector2 tempDir;
+                if(Mathf.Abs(targetPos.x) > Mathf.Abs(targetPos.y)) 
                 {
-                    if(collider.tag == "Enemy")
+                    if(targetPos.x * transform.localScale.x < 0) transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+                    if(playerLook == 2)
                     {
-                        collider.GetComponent<EnemyScript>().BeAttacked(atkDmg, 0.3f);
+                        pos.transform.Translate(Vector2.down * boxSize);
+                    }
+                    if(playerLook == 0 || playerLook == 2)
+                    {
+                        float tempx = boxSize.x;
+                        float tempy = boxSize.y;
+                        boxSize = new Vector2(tempy, tempx);
+                        tempDir = Vector2.zero;
+                        tempDir = Vector2.up + Vector2.right;
+                        tempDir.Normalize();
+                        pos.transform.Translate(tempDir * boxSize);
+                    }
+                    if(targetPos.x >0) playerLook = 1;
+                    else playerLook = 3;
+                    
+                    Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(pos.position, boxSize, 0);
+                    foreach(Collider2D collider in collider2Ds)
+                    {
+                        if(collider.tag == "Enemy")
+                        {
+                            collider.GetComponent<EnemyScript>().BeAttacked(atkDmg, 0.3f);
+                        }
+                    }
+                    if(playerLook == 1)
+                    {
+                        animator.SetBool("left", false);
+                        animator.SetBool("right", true);
+                    }
+                    else
+                    {
+                        animator.SetBool("left", true);
+                        animator.SetBool("right", false);
+                    }
+                }
+                else
+                {
+                    if(targetPos.y > 0)
+                    {
+                        if(playerLook == 1 || playerLook == 3)
+                        {
+                            tempDir = Vector2.left + Vector2.down;
+                            tempDir.Normalize();
+                            pos.transform.Translate(tempDir * boxSize);
+                            float tempx = boxSize.x;
+                            float tempy = boxSize.y;
+                            boxSize = new Vector2(tempy, tempx);
+                            pos.transform.Translate(Vector2.up * boxSize);
+                        }
+                        else if(playerLook == 0)
+                        {
+                            pos.transform.Translate(Vector2.up * boxSize);
+                        }
+                        playerLook = 2;
+                        Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(pos.position, boxSize, 0);
+                        foreach(Collider2D collider in collider2Ds)
+                        {
+                            if(collider.tag == "Enemy")
+                            {
+                                collider.GetComponent<EnemyScript>().BeAttacked(atkDmg, 0.3f);
+                            }
+                        }
+                        animator.SetBool("up", true);
+                        animator.SetBool("down", false);
+                    }
+                    else
+                    {
+                        if(playerLook == 1 || playerLook == 3)
+                        {
+                            tempDir = Vector2.left + Vector2.down;
+                            tempDir.Normalize();
+                            pos.transform.Translate(tempDir * boxSize);
+                            float tempx = boxSize.x;
+                            float tempy = boxSize.y;
+                            boxSize = new Vector2(tempy, tempx);
+                        }
+                        else if(playerLook == 2)
+                        {
+                            pos.transform.Translate(Vector2.down * boxSize);
+                        }
+                        playerLook = 0;
+                        Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(pos.position, boxSize, 0);
+                        foreach(Collider2D collider in collider2Ds)
+                        {
+                            if(collider.tag == "Enemy")
+                            {
+                                collider.GetComponent<EnemyScript>().BeAttacked(atkDmg, 0.3f);
+                            }
+                        }
+                        animator.SetBool("up", false);
+                        animator.SetBool("down", true);
                     }
                 }
                 animator.SetTrigger("isAttack");
@@ -219,6 +221,41 @@ public class HeroScript : MonoBehaviour
         else
         {
             curTime -= Time.deltaTime;
+        }
+    }
+    
+    private void UpdateTarget()
+    {
+        Vector2 box = new Vector2(2, 2);
+        Collider2D[] tempCols = Physics2D.OverlapBoxAll(transform.position, box, 0);
+        int cnt = 0;
+        for(int i=0; i<tempCols.Length; i++)
+        {
+            if(tempCols[i].tag == "Enemy") cnt++;
+        }
+        Collider2D[] cols = new Collider2D[cnt];
+        cnt = 0;
+        for(int i=0; i<tempCols.Length; i++)
+        {
+            if(tempCols[i].tag == "Enemy") 
+            {
+                cols[cnt] = tempCols[i];
+                cnt++;
+            }
+        }
+        if(cols.Length > 0)
+        {
+            float minDistance = Vector2.Distance(transform.position, cols[0].transform.position);
+            int minDisIdx = 0;
+            for(int i=0; i < cols.Length; i++)
+            {
+                if(Vector2.Distance(transform.position, cols[i].transform.position) < minDistance)
+                {
+                    minDistance = Vector2.Distance(transform.position, cols[i].transform.position);
+                    minDisIdx = i;
+                }
+            }
+            target = cols[minDisIdx].gameObject;
         }
     }
 
