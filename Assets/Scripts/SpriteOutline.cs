@@ -4,6 +4,17 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class SpriteOutline : MonoBehaviour {
     public Color color = Color.white;
+    void Start()
+    {
+        if(gameObject.tag == "Enemy")
+        {
+            color = Color.red;
+        }
+        else if(gameObject.tag == "Minion")
+        {
+            color = Color.green;
+        }
+    }
 
     [Range(0, 16)]
     public int outlineSize = 1;

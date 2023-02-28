@@ -7,13 +7,14 @@ public class EnemyScript : MonoBehaviour
     public DataManager DataManager;
     public int _enemyID;
     public string enemyNameKR;
-    float enemyMaxHP;
-    float enemyNowHP;
-    float enemyAtkDmg;
-    float enemyAtkSpeed;
-    float enemyAtkRange;
-    float enemyArmor;
-    float enemyMoveSpeed;
+    public float enemyMaxHP;
+    public float enemyNowHP;
+    public float enemyAtkDmg;
+    public float enemyCollisionDmg;
+    public float enemyAtkSpeed;
+    public float enemyAtkRange;
+    public float enemyArmor;
+    public float enemyMoveSpeed;
 
     Animator animator;
 
@@ -44,38 +45,86 @@ public class EnemyScript : MonoBehaviour
         enemyMaxHP = float.Parse(enemyInfo.enemyMaxHP);
         enemyNowHP = enemyMaxHP;
         enemyAtkDmg = float.Parse(enemyInfo.enemyAtkDmg);
+        enemyCollisionDmg = float.Parse(enemyInfo.enemyCollisionDmg);
         enemyAtkSpeed = float.Parse(enemyInfo.enemyAtkSpeed);
         enemyAtkRange = float.Parse(enemyInfo.enemyAtkRange);
         enemyArmor = float.Parse(enemyInfo.enemyArmor);
-        // enemyMoveSpeed = float.Parse(enemyInfo.enemyMoveSpeed);
-        enemyMoveSpeed = 1;
+        enemyMoveSpeed = float.Parse(enemyInfo.enemyMoveSpeed);
+
+        animator = GetComponent<Animator>();
+
+        // 타겟 추적
+        target = Hero;
+        InvokeRepeating("UpdateTarget", 0, 0.25f);
+
     }
 
+    Vector2 moveDirection;
     public GameObject Hero;
+    GameObject target;
     void Update()
     {
         if(enemyNowHP <= 0)
         {
             animator.SetTrigger("isDead");
-            Destroy(gameObject);
-        }
-        Vector2 moveDirection = Hero.transform.position - transform.position;
-        if(Hero.transform.position.x < transform.position.x)
-        {
-            if(transform.localScale.x > 0)
-            {
-                transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
-            }
         }
         else
         {
-            if(transform.localScale.x < 0)
+            if(target != null)
             {
-                transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+                moveDirection = target.transform.position - transform.position;
+                if(target.transform.position.x < transform.position.x)
+                {
+                    if(transform.localScale.x > 0)
+                    {
+                        transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+                    }
+                }
+                else
+                {
+                    if(transform.localScale.x < 0)
+                    {
+                        transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+                    }
+                }
+                moveDirection.Normalize();
+                transform.Translate(moveDirection * Time.deltaTime * enemyMoveSpeed);
             }
         }
-        moveDirection.Normalize();
-        transform.Translate(moveDirection * Time.deltaTime * enemyMoveSpeed);
+    }
+
+    private void UpdateTarget()
+    {
+        Collider2D[] tempCols = Physics2D.OverlapBoxAll(transform.position, boxSize, 0);
+        int cnt = 0;
+        for(int i=0; i<tempCols.Length; i++)
+        {
+            if(tempCols[i].tag == "Player" || tempCols[i].tag == "Minion") cnt++;
+        }
+        Collider2D[] cols = new Collider2D[cnt];
+        cnt = 0;
+        for(int i=0; i<tempCols.Length; i++)
+        {
+            if(tempCols[i].tag == "Player" || tempCols[i].tag == "Minion") 
+            {
+                cols[cnt] = tempCols[i];
+                cnt++;
+            }
+        }
+        if(cols.Length > 0)
+        {
+            float minDistance = Vector2.Distance(transform.position, cols[0].transform.position);
+            int minDisIdx = 0;
+            for(int i=0; i < cols.Length; i++)
+            {
+                if(Vector2.Distance(transform.position, cols[i].transform.position) < minDistance)
+                {
+                    minDistance = Vector2.Distance(transform.position, cols[i].transform.position);
+                    minDisIdx = i;
+                }
+            }
+            target = cols[minDisIdx].gameObject;
+        }
     }
 
     public void BeAttacked(float dmg, float knockback)
@@ -94,5 +143,16 @@ public class EnemyScript : MonoBehaviour
     {
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.color = new Color(1, 1, 1, 1);
+    }
+
+
+
+    Vector2 center;
+    public Vector2 boxSize;
+    private void OnDrawGizmos()
+    {
+        center = transform.position;
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(center, boxSize);
     }
 }

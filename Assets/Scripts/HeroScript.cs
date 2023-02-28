@@ -183,9 +183,7 @@ public class HeroScript : MonoBehaviour
             animator.SetBool("up", false);
 
         }
-        print($"Before: {moveDirection}");
         moveDirection.Normalize();
-        print($"After: {moveDirection}");
 
 
         if(
@@ -234,14 +232,17 @@ public class HeroScript : MonoBehaviour
     {
         if (collision.gameObject.tag == "Enemy")
         {
-            OnDamaged(collision.transform.position);//충돌했을때 x축,y축 넘김
+            EnemyScript colES = collision.gameObject.GetComponent<EnemyScript>();
+            nowHP -= colES.enemyCollisionDmg;
+            print($"PlayerHP: {nowHP}");
+            OnDamaged(collision.transform.position);
         }
     }
 
     void OnDamaged(Vector2 targetPos)
     {
-        //충돌시 플레이어의 레이어가 PlayerDamaged 레이어로 변함 
-        gameObject.layer = 9;
+        //충돌시 플레이어의 레이어가 PlayerInv 레이어로 변함 
+        gameObject.layer = 12;
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.color = new Color(1, 1, 1, 0.4f);//무적시간일 때 플레이어가 투명하게
         Invoke("OffDamaged", 0.3f);
@@ -250,7 +251,7 @@ public class HeroScript : MonoBehaviour
     void OffDamaged()
     {
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-        gameObject.layer = 8;
+        gameObject.layer = 11;
         spriteRenderer.color = new Color(1, 1, 1, 1);
     }
 

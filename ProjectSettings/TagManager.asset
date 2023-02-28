@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
+  - Minion
   layers:
   - Default
   - TransparentFX
@@ -14,11 +15,11 @@ TagManager:
   - UI
   - Platform
   - Enemy
+  - EnemyInv
+  - Minion
+  - MinionInv
   - Player
-  - PlayerDamaged
-  - 
-  - 
-  - 
+  - PlayerInv
   - 
   - 
   - 
