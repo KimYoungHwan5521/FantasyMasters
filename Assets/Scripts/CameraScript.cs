@@ -16,7 +16,6 @@ public class CameraScript : MonoBehaviour
 
     void Start()
     {
-        Hero = GameObject.FindWithTag("Player");
         // _Camera = GameObject.Find("MainCamera").GetComponent<Camera>();
         z = transform.position.z;
         height = Camera.main.orthographicSize;
@@ -28,6 +27,7 @@ public class CameraScript : MonoBehaviour
         // float scrollWheel = Input.GetAxis("Mouse ScrollWheel");
         // _Camera.orthographicSize += scrollWheel * Time.deltaTime * scrollSpeed;
 
+        Hero = GameObject.FindWithTag("Player");
         transform.position = Vector3.Lerp(Hero.transform.position, Hero.transform.position, Time.deltaTime * speed);
 
         // Mathf.Clamp() : 유니티에선 변수가 일정한 값을 벗어나지 못하도록 범위를 제한하는 함수

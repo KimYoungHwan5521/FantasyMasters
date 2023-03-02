@@ -1,2 +1,2 @@
 EnemyID	EnemyNameKR	EnemyHP	EnemyCollisionDmg	EnemyAtkDmg	EnemyAtkSpeed	EnemyAtkRange	EnemyArmor	EnemyMoveSpeed
-0000	슬라임	50	10	0	0	0	0	1
+0000	슬라임	50	5	0	0	0	0	1

@@ -63,6 +63,41 @@ public class Enemy
     public string enemyMoveSpeed;
 }
 
+[System.Serializable]
+public class Minion
+{
+    public Minion(string _ID, string _NameKR, string _Attributes, string _HP, string _Existencetime, string _AtkDmg, string _AtkSpeed, string _AtkRange,
+    string _CriticalDmg, string _CriticalChance, string _Armor, string _MoveSpeed, string _AbilityKR)
+    {
+        minionID = _ID;
+        minionNameKR = _NameKR;
+        minionAttributes = _Attributes.Split(' ');
+        minionMaxHP = _HP;
+        minionExistencetime = _Existencetime;
+        minionAtkDmg = _AtkDmg;
+        minionAtkSpeed = _AtkSpeed;
+        minionAtkRange = _AtkRange;
+        minionCriticalDmg = _CriticalDmg;
+        minionCriticalChance = _CriticalChance;
+        minionArmor = _Armor;
+        minionMoveSpeed = _MoveSpeed;
+        minionAbilityKR = _AbilityKR;
+    }
+    public string minionID;
+    public string minionNameKR;
+    public string[] minionAttributes;
+    public string minionMaxHP;
+    public string minionExistencetime;
+    public string minionAtkDmg;
+    public string minionAtkSpeed;
+    public string minionAtkRange;
+    public string minionCriticalDmg;
+    public string minionCriticalChance;
+    public string minionArmor;
+    public string minionMoveSpeed;
+    public string minionAbilityKR;
+}
+
 public class DataManager : MonoBehaviour
 {
     public static DataManager instance;
@@ -89,8 +124,10 @@ public class DataManager : MonoBehaviour
 
     public TextAsset HeroDB;
     public TextAsset EnemyDB;
+    public TextAsset MinionDB;
     public static List<Hero> AllHeroList;
     public static List<Enemy> AllEnemyList;
+    public static List<Minion> AllMinionList;
 
     void Start()
     {
@@ -121,6 +158,21 @@ public class DataManager : MonoBehaviour
             else
             {
                 AllEnemyList.Add(new Enemy(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]));
+            }
+        }
+
+        AllMinionList = new List<Minion>();
+        line = MinionDB.text.Substring(0, MinionDB.text.Length).Split('\r');
+        for(int i=1;i<line.Length;i++)
+        {
+            string[] row = line[i].Split('\t');
+            if(i == 0)
+            {
+                AllMinionList.Add(new Minion(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12]));
+            }
+            else
+            {
+                AllMinionList.Add(new Minion(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12]));
             }
         }
         

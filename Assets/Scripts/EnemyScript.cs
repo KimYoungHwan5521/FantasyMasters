@@ -68,7 +68,7 @@ public class EnemyScript : MonoBehaviour
     {
         if(enemyNowHP <= 0)
         {
-            animator.SetTrigger("isDead");
+            animator.SetTrigger("Dead");
         }
         else
         {
@@ -127,6 +127,7 @@ public class EnemyScript : MonoBehaviour
             }
             target = cols[minDisIdx].gameObject;
         }
+        if(target == null) target = Hero;
     }
 
     public void BeAttacked(float dmg, float knockback)

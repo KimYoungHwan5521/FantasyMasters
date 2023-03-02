@@ -19,8 +19,7 @@ public class HeroScript : MonoBehaviour
     Rigidbody2D rigid;
 
     private float curTime;
-    public float coolTime = 0.5f;
-    public Transform pos;
+    public float atkCoolTime = 0.3f;
     public Vector2 boxSize;
 
     void Awake()
@@ -39,6 +38,7 @@ public class HeroScript : MonoBehaviour
 
         Map = GameObject.Find("Map");
         InvokeRepeating("UpdateTarget", 0, 0.25f);
+        boxSize = new Vector2(2, 2);
     }
 
     GameObject target = null;
@@ -117,35 +117,12 @@ public class HeroScript : MonoBehaviour
             if(target != null)
             {
                 Vector2 targetPos = target.transform.position - transform.position;
-                Vector2 tempDir;
                 if(Mathf.Abs(targetPos.x) > Mathf.Abs(targetPos.y)) 
                 {
                     if(targetPos.x * transform.localScale.x < 0) transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
-                    if(playerLook == 2)
-                    {
-                        pos.transform.Translate(Vector2.down * boxSize);
-                    }
-                    if(playerLook == 0 || playerLook == 2)
-                    {
-                        float tempx = boxSize.x;
-                        float tempy = boxSize.y;
-                        boxSize = new Vector2(tempy, tempx);
-                        tempDir = Vector2.zero;
-                        tempDir = Vector2.up + Vector2.right;
-                        tempDir.Normalize();
-                        pos.transform.Translate(tempDir * boxSize);
-                    }
                     if(targetPos.x >0) playerLook = 1;
                     else playerLook = 3;
                     
-                    Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(pos.position, boxSize, 0);
-                    foreach(Collider2D collider in collider2Ds)
-                    {
-                        if(collider.tag == "Enemy")
-                        {
-                            collider.GetComponent<EnemyScript>().BeAttacked(atkDmg, 0.3f);
-                        }
-                    }
                     if(playerLook == 1)
                     {
                         animator.SetBool("left", false);
@@ -161,62 +138,27 @@ public class HeroScript : MonoBehaviour
                 {
                     if(targetPos.y > 0)
                     {
-                        if(playerLook == 1 || playerLook == 3)
-                        {
-                            tempDir = Vector2.left + Vector2.down;
-                            tempDir.Normalize();
-                            pos.transform.Translate(tempDir * boxSize);
-                            float tempx = boxSize.x;
-                            float tempy = boxSize.y;
-                            boxSize = new Vector2(tempy, tempx);
-                            pos.transform.Translate(Vector2.up * boxSize);
-                        }
-                        else if(playerLook == 0)
-                        {
-                            pos.transform.Translate(Vector2.up * boxSize);
-                        }
                         playerLook = 2;
-                        Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(pos.position, boxSize, 0);
-                        foreach(Collider2D collider in collider2Ds)
-                        {
-                            if(collider.tag == "Enemy")
-                            {
-                                collider.GetComponent<EnemyScript>().BeAttacked(atkDmg, 0.3f);
-                            }
-                        }
                         animator.SetBool("up", true);
                         animator.SetBool("down", false);
                     }
                     else
                     {
-                        if(playerLook == 1 || playerLook == 3)
-                        {
-                            tempDir = Vector2.left + Vector2.down;
-                            tempDir.Normalize();
-                            pos.transform.Translate(tempDir * boxSize);
-                            float tempx = boxSize.x;
-                            float tempy = boxSize.y;
-                            boxSize = new Vector2(tempy, tempx);
-                        }
-                        else if(playerLook == 2)
-                        {
-                            pos.transform.Translate(Vector2.down * boxSize);
-                        }
                         playerLook = 0;
-                        Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(pos.position, boxSize, 0);
-                        foreach(Collider2D collider in collider2Ds)
-                        {
-                            if(collider.tag == "Enemy")
-                            {
-                                collider.GetComponent<EnemyScript>().BeAttacked(atkDmg, 0.3f);
-                            }
-                        }
                         animator.SetBool("up", false);
                         animator.SetBool("down", true);
                     }
                 }
-                animator.SetTrigger("isAttack");
-                curTime = coolTime;
+                Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(transform.position, boxSize, 0);
+                foreach(Collider2D collider in collider2Ds)
+                {
+                    if(collider.tag == "Enemy")
+                    {
+                        collider.GetComponent<EnemyScript>().BeAttacked(atkDmg, 0.3f);
+                    }
+                }
+                animator.SetTrigger("Attack");
+                curTime = atkCoolTime;
             }
         }
         else
@@ -263,7 +205,7 @@ public class HeroScript : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(pos.position, boxSize);
+        Gizmos.DrawWireCube(transform.position, boxSize);
     }
     
     void OnCollisionEnter2D(Collision2D collision)
