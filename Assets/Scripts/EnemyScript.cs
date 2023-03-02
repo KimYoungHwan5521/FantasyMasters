@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyScript : MonoBehaviour
 {
-    public DataManager DataManager;
+    DataManager DataManager;
     public int _enemyID;
     public string enemyNameKR;
     public float enemyMaxHP;
@@ -39,6 +39,8 @@ public class EnemyScript : MonoBehaviour
         }
         stringID += _enemyID.ToString();
 
+        DataManager = GameObject.Find("DataManager").GetComponent<DataManager>();
+        Hero = GameObject.FindWithTag("Player");
         int idx = DataManager.AllEnemyList.FindIndex(x => x.enemyID == stringID);
         Enemy enemyInfo = DataManager.AllEnemyList[idx];
         enemyNameKR = enemyInfo.enemyNameKR;
@@ -60,7 +62,7 @@ public class EnemyScript : MonoBehaviour
     }
 
     Vector2 moveDirection;
-    public GameObject Hero;
+    GameObject Hero;
     GameObject target;
     void Update()
     {

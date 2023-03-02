@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraScript : MonoBehaviour
 {
-    public GameObject Hero;
+    GameObject Hero;
     // Camera _Camera;
     public GameObject Map;
     public float scrollSpeed = 2000.0f;
@@ -16,6 +16,7 @@ public class CameraScript : MonoBehaviour
 
     void Start()
     {
+        Hero = GameObject.FindWithTag("Player");
         // _Camera = GameObject.Find("MainCamera").GetComponent<Camera>();
         z = transform.position.z;
         height = Camera.main.orthographicSize;

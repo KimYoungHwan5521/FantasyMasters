@@ -6,7 +6,7 @@ public class HeroScript : MonoBehaviour
 {
     public GameObject Hero;
     Animator animator;
-    public GameObject Map;
+    GameObject Map;
 
     public float moveSpeed;
     public float maxHP;
@@ -37,6 +37,7 @@ public class HeroScript : MonoBehaviour
         animator = GetComponent<Animator>();
         transform.position = new Vector2(0, 0);
 
+        Map = GameObject.Find("Map");
         InvokeRepeating("UpdateTarget", 0, 0.25f);
     }
 
