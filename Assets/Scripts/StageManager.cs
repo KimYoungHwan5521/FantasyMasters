@@ -9,7 +9,7 @@ public class StageManager : MonoBehaviour
     public float spawnCool;
     void Start()
     {
-        var Hero = Resources.Load<GameObject>("Heros/Hero");
+        var Hero = Resources.Load<GameObject>("Heros/Hero0000");
         Instantiate(Hero);
 
         if(spawnCool > 0)

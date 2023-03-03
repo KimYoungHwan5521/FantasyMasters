@@ -133,7 +133,7 @@ public class EnemyScript : MonoBehaviour
     public void BeAttacked(float dmg, float knockback)
     {
         enemyNowHP -= dmg;
-        print($"enemyNowHP: {enemyNowHP}");
+        // print($"enemyNowHP: {enemyNowHP}");
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.color = new Color(1, 0, 0, 1);
         Vector2 moveDirection = transform.position - Hero.transform.position;

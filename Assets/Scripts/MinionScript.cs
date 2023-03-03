@@ -73,6 +73,7 @@ public class MinionScript : MonoBehaviour
 
     Vector2 moveDirection;
     GameObject target;
+    bool isCritical = false;
     void Update()
     {
         if(minionNowHP <= 0)
@@ -94,10 +95,21 @@ public class MinionScript : MonoBehaviour
                         {
                             if(collider.tag == "Enemy")
                             {
-                                collider.GetComponent<EnemyScript>().BeAttacked(minionAtkDmg, 0.3f);
+                                if(Random.Range(0, 100) < minionCriticalChance) isCritical = true;
+                                else isCritical = false;
+                                if(isCritical)
+                                {
+                                    collider.GetComponent<EnemyScript>().BeAttacked(minionAtkDmg * minionCriticalDmg, 0.6f);
+                                }
+                                else
+                                {
+                                    collider.GetComponent<EnemyScript>().BeAttacked(minionAtkDmg, 0.3f);
+                                }
                             }
                         }
                         animator.SetTrigger("Attack");
+                        if(isCritical) animator.SetBool("isCritical", true);
+                        else animator.SetBool("isCritical", false);
                         curTime = atkCoolTime;
                     }
                     else
@@ -185,7 +197,7 @@ public class MinionScript : MonoBehaviour
         {
             EnemyScript colES = collision.gameObject.GetComponent<EnemyScript>();
             minionNowHP -= colES.enemyCollisionDmg;
-            print($"minionNowHP: {minionNowHP}");
+            // print($"minionNowHP: {minionNowHP}");
             OnDamaged(collision.transform.position);
         }
     }

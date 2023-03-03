@@ -4,44 +4,85 @@ using UnityEngine;
 
 public class HeroScript : MonoBehaviour
 {
-    public GameObject Hero;
     Animator animator;
     GameObject Map;
+    DataManager DataManager;
 
-    public float moveSpeed;
+    public int _heroID;
+    public string heroNameKR;
+    public string[] attributes;
     public float maxHP;
     public float nowHP;
+    public float HPRegeneration;
     public float atkDmg;
-    public float atkSpeed = 1;
+    public float atkSpeed;
+    public float atkRange;
+    public float criticalDmg;
+    public float criticalChance;
+    public float armor;
+    public float moveSpeed;
+    public string abilityKR;
     // public Image nowHPbar;
-    public int playerLook = 0;
-
-    Rigidbody2D rigid;
 
     private float curTime;
-    public float atkCoolTime = 0.3f;
+    public float atkCoolTime;
     public Vector2 boxSize;
 
-    void Awake()
-    {
-        rigid = GetComponent<Rigidbody2D>();
-    }
     
     void Start()
     {
-        moveSpeed = 6;
-        maxHP = 100;
-        nowHP = 100;
-        atkDmg = 10;
+        DataManager = GameObject.Find("DataManager").GetComponent<DataManager>();
+        _heroID = DataManager.selectedHeroID;
+        string stringID;
+        int cntDgit = 0;
+        int copy_heroID = _heroID;
+        for(int i=0; i<4; i++)
+        {
+            if(copy_heroID / 10 > 0)
+            {
+                cntDgit++;
+                copy_heroID /= 10;
+            }
+            else break;
+        }
+        stringID = "";
+        for(int i=0;i<3 - cntDgit / 10; i++)
+        {
+            stringID += "0";
+        }
+        stringID += _heroID.ToString();
+        int idx = DataManager.AllHeroList.FindIndex(x => x.heroID == stringID);
+        Hero heroInfo = DataManager.AllHeroList[idx];
+        heroNameKR = heroInfo.heroNameKR;
+        attributes = heroInfo.heroAttributes;
+        maxHP = float.Parse(heroInfo.heroMaxHP);
+        nowHP = maxHP;
+        HPRegeneration = float.Parse(heroInfo.heroHPRegeneration);
+        atkDmg = float.Parse(heroInfo.heroAtkDmg);
+        atkSpeed = float.Parse(heroInfo.heroAtkSpeed);
+        atkCoolTime = 10 / atkSpeed;
+        atkRange = float.Parse(heroInfo.heroAtkRange);
+        boxSize = new Vector2(atkRange, atkRange);
+        criticalDmg = float.Parse(heroInfo.heroCriticalDmg);
+        criticalChance = float.Parse(heroInfo.heroCriticalChance);
+        armor = float.Parse(heroInfo.heroArmor);
+        moveSpeed = float.Parse(heroInfo.heroMoveSpeed);
+        abilityKR = heroInfo.heroAbilityKR;
+
+        if(_heroID == 0)
+        {
+            StartCoroutine(SummonMinion("0000", 20.0f));
+        }
+
         animator = GetComponent<Animator>();
         transform.position = new Vector2(0, 0);
 
         Map = GameObject.Find("Map");
         InvokeRepeating("UpdateTarget", 0, 0.25f);
-        boxSize = new Vector2(2, 2);
     }
 
     GameObject target = null;
+    bool isCritical = false;
     void Update()
     {
         // 이동
@@ -58,11 +99,6 @@ public class HeroScript : MonoBehaviour
             {
                 transform.localScale = new Vector2(transform.localScale.x, transform.localScale.y);
             }
-            animator.SetBool("right", true);
-        }
-        else
-        {
-            animator.SetBool("right", false);
         }
         if(Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
         {
@@ -75,24 +111,15 @@ public class HeroScript : MonoBehaviour
             {
                 transform.localScale = new Vector2(transform.localScale.x, transform.localScale.y);
             }
-            animator.SetBool("left", true);
-        }
-        else
-        {
-            animator.SetBool("left", false);
         }
         if(Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
         {
             moveDirection += Vector2.up;
-            animator.SetBool("up", true);
-            animator.SetBool("down", false);
             
         }
         if(Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
         {
             moveDirection += Vector2.down;
-            animator.SetBool("down", true);
-            animator.SetBool("up", false);
 
         }
         moveDirection.Normalize();
@@ -106,7 +133,6 @@ public class HeroScript : MonoBehaviour
         )
         {
             transform.Translate(moveDirection * Time.deltaTime * moveSpeed);
-
         }
 
         animator.SetBool("isMoving", moveDirection.magnitude > 0);
@@ -117,44 +143,23 @@ public class HeroScript : MonoBehaviour
             if(target != null)
             {
                 Vector2 targetPos = target.transform.position - transform.position;
-                if(Mathf.Abs(targetPos.x) > Mathf.Abs(targetPos.y)) 
-                {
-                    if(targetPos.x * transform.localScale.x < 0) transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
-                    if(targetPos.x >0) playerLook = 1;
-                    else playerLook = 3;
-                    
-                    if(playerLook == 1)
-                    {
-                        animator.SetBool("left", false);
-                        animator.SetBool("right", true);
-                    }
-                    else
-                    {
-                        animator.SetBool("left", true);
-                        animator.SetBool("right", false);
-                    }
-                }
-                else
-                {
-                    if(targetPos.y > 0)
-                    {
-                        playerLook = 2;
-                        animator.SetBool("up", true);
-                        animator.SetBool("down", false);
-                    }
-                    else
-                    {
-                        playerLook = 0;
-                        animator.SetBool("up", false);
-                        animator.SetBool("down", true);
-                    }
-                }
+
+                if(targetPos.x * transform.localScale.x < 0) transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
                 Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(transform.position, boxSize, 0);
                 foreach(Collider2D collider in collider2Ds)
                 {
                     if(collider.tag == "Enemy")
                     {
-                        collider.GetComponent<EnemyScript>().BeAttacked(atkDmg, 0.3f);
+                        if(Random.Range(0, 100) < criticalChance) isCritical = true;
+                        else isCritical = false;
+                        if(isCritical)
+                        {
+                            collider.GetComponent<EnemyScript>().BeAttacked(atkDmg * criticalDmg, 0.6f);
+                        }
+                        else
+                        {
+                            collider.GetComponent<EnemyScript>().BeAttacked(atkDmg, 0.3f);
+                        }
                     }
                 }
                 animator.SetTrigger("Attack");
@@ -235,5 +240,15 @@ public class HeroScript : MonoBehaviour
         spriteRenderer.color = new Color(1, 1, 1, 1);
     }
 
+    IEnumerator SummonMinion(string _minionID, float summonCoolTime)
+    {
+        var minionToSummon = Resources.Load<GameObject>($"Minions/Minion{_minionID}");
+        while(true)
+        {
+            Vector3 summonPositon = transform.position + Vector3.right;
+            Instantiate(minionToSummon, summonPositon, Quaternion.identity);
+            yield return new WaitForSeconds(summonCoolTime);
+        }
+    }
 
 }

@@ -129,6 +129,8 @@ public class DataManager : MonoBehaviour
     public static List<Enemy> AllEnemyList;
     public static List<Minion> AllMinionList;
 
+    public static int selectedHeroID = 0;
+
     void Start()
     {
         AllHeroList = new List<Hero>();
