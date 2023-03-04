@@ -300,6 +300,7 @@ public class HeroSelectScript : MonoBehaviour
         }
         else
         {
+            DataManager.selectedHeroID = selectedHeroID;
             SceneManager.LoadScene("MainGameScene");
         }
     }

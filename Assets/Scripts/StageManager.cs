@@ -7,9 +7,29 @@ public class StageManager : MonoBehaviour
     public GameObject SpawnPoint;
     public GameObject EnemyToSpawn;
     public float spawnCool;
+    public int _heroID;
     void Start()
     {
-        var Hero = Resources.Load<GameObject>("Heros/Hero0000");
+        _heroID = DataManager.selectedHeroID;
+        string stringID;
+        int cntDgit = 0;
+        int copy_heroID = _heroID;
+        for(int i=0; i<4; i++)
+        {
+            if(copy_heroID / 10 > 0)
+            {
+                cntDgit++;
+                copy_heroID /= 10;
+            }
+            else break;
+        }
+        stringID = "";
+        for(int i=0;i<3 - cntDgit / 10; i++)
+        {
+            stringID += "0";
+        }
+        stringID += _heroID.ToString();
+        var Hero = Resources.Load<GameObject>($"Heros/Hero{stringID}");
         Instantiate(Hero);
 
         if(spawnCool > 0)

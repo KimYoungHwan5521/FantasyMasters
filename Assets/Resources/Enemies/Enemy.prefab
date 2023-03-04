@@ -165,7 +165,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09944a88e711a424a86463db3f0ed36a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DataManager: {fileID: 0}
   _enemyID: 0
   enemyNameKR: 
   enemyMaxHP: 0
@@ -176,7 +175,6 @@ MonoBehaviour:
   enemyAtkRange: 0
   enemyArmor: 0
   enemyMoveSpeed: 0
-  Hero: {fileID: 8334188260346054206, guid: 6718f6cc40cfcbc4ab4820a2484abe7a, type: 3}
   boxSize: {x: 2, y: 2}
 --- !u!114 &1411985955392162275
 MonoBehaviour:

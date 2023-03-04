@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MinionScript : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class MinionScript : MonoBehaviour
     public string minionAbilityKR;
 
     Animator animator;
+    public RectTransform HPBar;
 
     private float curTime;
     public float atkCoolTime;
@@ -65,6 +67,7 @@ public class MinionScript : MonoBehaviour
         minionAbilityKR = minionInfo.minionAbilityKR;
 
         animator = GetComponent<Animator>();
+        HPBar = Instantiate(Resources.Load<RectTransform>("UIs/HPBar"), new Vector3(0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
 
         target = null;
         InvokeRepeating("UpdateTarget", 0, 0.25f);
@@ -78,11 +81,14 @@ public class MinionScript : MonoBehaviour
     {
         if(minionNowHP <= 0)
         {
+            HPBar.GetComponent<Image>().fillAmount = 0;
             animator.SetTrigger("Dead");
             animator.SetBool("isMoving", false);
         }
         else
         {
+            HPBar.position = Camera.main.WorldToScreenPoint(new Vector3(transform.position.x, transform.position.y - transform.localScale.y * 0.2f, 0));
+            HPBar.GetComponent<Image>().fillAmount = minionNowHP / minionMaxHP;
             if(target != null)
             {
                 if(Vector2.Distance(transform.position, target.transform.position) < minionAtkRange)

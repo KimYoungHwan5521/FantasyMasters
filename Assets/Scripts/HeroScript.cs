@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HeroScript : MonoBehaviour
 {
@@ -22,12 +23,14 @@ public class HeroScript : MonoBehaviour
     public float armor;
     public float moveSpeed;
     public string abilityKR;
-    // public Image nowHPbar;
 
     private float curTime;
     public float atkCoolTime;
     public Vector2 boxSize;
 
+    public Image HPbar;
+    public Text TextMaxHP;
+    public Text TextNowHP;
     
     void Start()
     {
@@ -78,13 +81,23 @@ public class HeroScript : MonoBehaviour
         transform.position = new Vector2(0, 0);
 
         Map = GameObject.Find("Map");
+        HPbar = GameObject.Find("HeroHPBar").GetComponent<Image>();
+        TextMaxHP = GameObject.Find("HeroMaxHPText").GetComponent<Text>();
+        TextNowHP = GameObject.Find("HeroNowHPText").GetComponent<Text>();
         InvokeRepeating("UpdateTarget", 0, 0.25f);
+        InvokeRepeating("HPRegenerationMethod", 0, 1);
     }
 
     GameObject target = null;
     bool isCritical = false;
     void Update()
     {
+        TextMaxHP.text = Mathf.Ceil(maxHP).ToString();
+        TextNowHP.text = Mathf.Ceil(nowHP).ToString();
+        HPbar.fillAmount = nowHP / maxHP;
+        if(nowHP / maxHP < 0.3f) HPbar.color = Color.red;
+        else HPbar.color = Color.green;
+
         // 이동
         Vector2 moveDirection = Vector2.zero;
 
@@ -205,6 +218,12 @@ public class HeroScript : MonoBehaviour
             }
             target = cols[minDisIdx].gameObject;
         }
+    }
+
+    private void HPRegenerationMethod()
+    {
+        nowHP += 1;
+        if(nowHP > maxHP) nowHP = maxHP;
     }
 
     private void OnDrawGizmos()

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyScript : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class EnemyScript : MonoBehaviour
     public float enemyMoveSpeed;
 
     Animator animator;
+    public RectTransform HPBar;
 
     void Start()
     {
@@ -54,6 +56,7 @@ public class EnemyScript : MonoBehaviour
         enemyMoveSpeed = float.Parse(enemyInfo.enemyMoveSpeed);
 
         animator = GetComponent<Animator>();
+        HPBar = Instantiate(Resources.Load<RectTransform>("UIs/HPBar"), new Vector3(0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
 
         // 타겟 추적
         target = Hero;
@@ -68,10 +71,13 @@ public class EnemyScript : MonoBehaviour
     {
         if(enemyNowHP <= 0)
         {
+            HPBar.GetComponent<Image>().fillAmount = 0;
             animator.SetTrigger("Dead");
         }
         else
         {
+            HPBar.position = Camera.main.WorldToScreenPoint(new Vector3(transform.position.x, transform.position.y - transform.localScale.y * 0.2f, 0));
+            HPBar.GetComponent<Image>().fillAmount = enemyNowHP / enemyMaxHP;
             if(target != null)
             {
                 moveDirection = target.transform.position - transform.position;
