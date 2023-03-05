@@ -223,7 +223,8 @@ public class HeroScript : MonoBehaviour
 
     private void RangedAttack()
     {
-        // Instantiate(Resources.Load<GameObject>($"Projectiles/ProjectileHero{stringID}"), transform.position, Quaternion.identity);
+        GameObject chk = GameObject.Find($"ProjectileHero{stringID}(Clone)");
+        if(!chk) Instantiate(Resources.Load<GameObject>($"Projectiles/ProjectileHero{stringID}"), GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
     }
 
     private void OnDrawGizmos()

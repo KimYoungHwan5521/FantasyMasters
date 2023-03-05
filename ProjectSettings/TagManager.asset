@@ -21,8 +21,8 @@ TagManager:
   - MinionInv
   - Player
   - PlayerInv
-  - Projectile
-  - 
+  - Projectile(alli)
+  - Projectile(enemy)
   - 
   - 
   - 

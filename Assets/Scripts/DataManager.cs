@@ -135,7 +135,7 @@ public class DataManager : MonoBehaviour
     public static List<Enemy> AllEnemyList;
     public static List<Minion> AllMinionList;
 
-    public static int selectedHeroID = 0;
+    public static int selectedHeroID = 3;
 
     void Start()
     {

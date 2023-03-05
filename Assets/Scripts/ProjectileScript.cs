@@ -7,7 +7,7 @@ public class ProjectileScript : MonoBehaviour
     GameObject Player;
     Vector2 spawnPoint;
     GameObject target;
-    public float projectileSpeed = 1;
+    public float projectileSpeed = 10;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,24 +20,24 @@ public class ProjectileScript : MonoBehaviour
     {
         if(Vector2.Distance(transform.position, spawnPoint) > Player.GetComponent<HeroScript>().atkRange)
         {
-            Destroy(gameObject);
+            Destroy(transform.parent.gameObject);
         }
         target = Player.GetComponent<HeroScript>().target;
         if(target)
         {
-            // float AngleRad = Mathf.Atan2(target.GetComponent<Transform>().position.y - transform.position.y, target.GetComponent<Transform>().position.x - transform.position.x);
-            // float AngleDeg = (180 / Mathf.PI) * AngleRad;
-            // transform.rotation = Quaternion.Euler(0, 0, AngleDeg);
-            // transform.LookAt(target.transform.position);
+            float AngleRad = Mathf.Atan2(target.GetComponent<Transform>().position.y - transform.position.y, target.GetComponent<Transform>().position.x - transform.position.x);
+            float AngleDeg = (180 / Mathf.PI) * AngleRad;
+            transform.rotation = Quaternion.Euler(0, 0, AngleDeg);
 
-            // Vector2 moveDirection = Vector2.zero;
-            // moveDirection = target.transform.position - transform.position;
-            // moveDirection.Normalize();
-            // transform.Translate(moveDirection * Time.deltaTime * projectileSpeed);
+            Vector2 moveDirection = Vector2.zero;
+            moveDirection = target.transform.position - transform.position;
+            moveDirection.Normalize();
+            transform.parent.transform.Translate(moveDirection * Time.deltaTime * projectileSpeed);
+            transform.position = transform.parent.transform.position;
         }
         else
         {
-            Destroy(gameObject);
+            Destroy(transform.parent.gameObject);
         }
 
     }
@@ -57,7 +57,7 @@ public class ProjectileScript : MonoBehaviour
             {
                 collision.gameObject.GetComponent<EnemyScript>().BeAttacked(Player.GetComponent<HeroScript>().atkDmg, 0.1f);
             }
-            Destroy(gameObject);
+            Destroy(transform.parent.gameObject);
         }
     } 
 }
