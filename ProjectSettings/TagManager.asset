@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Enemy
   - Minion
+  - Projectile
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - MinionInv
   - Player
   - PlayerInv
-  - 
+  - Projectile
   - 
   - 
   - 

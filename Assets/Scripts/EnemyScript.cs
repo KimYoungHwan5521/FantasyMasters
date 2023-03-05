@@ -10,6 +10,7 @@ public class EnemyScript : MonoBehaviour
     public string enemyNameKR;
     public float enemyMaxHP;
     public float enemyNowHP;
+    public int enemyAtkType;
     public float enemyAtkDmg;
     public float enemyCollisionDmg;
     public float enemyAtkSpeed;
@@ -48,6 +49,7 @@ public class EnemyScript : MonoBehaviour
         enemyNameKR = enemyInfo.enemyNameKR;
         enemyMaxHP = float.Parse(enemyInfo.enemyMaxHP);
         enemyNowHP = enemyMaxHP;
+        enemyAtkType = int.Parse(enemyInfo.enemyAtkType);
         enemyAtkDmg = float.Parse(enemyInfo.enemyAtkDmg);
         enemyCollisionDmg = float.Parse(enemyInfo.enemyCollisionDmg);
         enemyAtkSpeed = float.Parse(enemyInfo.enemyAtkSpeed);
@@ -76,12 +78,12 @@ public class EnemyScript : MonoBehaviour
         }
         else
         {
-            HPBar.position = Camera.main.WorldToScreenPoint(new Vector3(transform.position.x, transform.position.y - transform.localScale.y * 0.2f, 0));
+            HPBar.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y - GetComponent<BoxCollider2D>().size.y * 2, 0));
             HPBar.GetComponent<Image>().fillAmount = enemyNowHP / enemyMaxHP;
             if(target != null)
             {
-                moveDirection = target.transform.position - transform.position;
-                if(target.transform.position.x < transform.position.x)
+                moveDirection = target.GetComponent<Collider2D>().bounds.center - GetComponent<Collider2D>().bounds.center;
+                if(target.GetComponent<Collider2D>().bounds.center.x < GetComponent<Collider2D>().bounds.center.x)
                 {
                     if(transform.localScale.x > 0)
                     {
@@ -103,7 +105,7 @@ public class EnemyScript : MonoBehaviour
 
     private void UpdateTarget()
     {
-        Collider2D[] tempCols = Physics2D.OverlapBoxAll(transform.position, boxSize, 0);
+        Collider2D[] tempCols = Physics2D.OverlapBoxAll(GetComponent<Collider2D>().bounds.center, boxSize, 0);
         int cnt = 0;
         for(int i=0; i<tempCols.Length; i++)
         {
@@ -121,13 +123,13 @@ public class EnemyScript : MonoBehaviour
         }
         if(cols.Length > 0)
         {
-            float minDistance = Vector2.Distance(transform.position, cols[0].transform.position);
+            float minDistance = Vector2.Distance(GetComponent<Collider2D>().bounds.center, cols[0].GetComponent<Collider2D>().bounds.center);
             int minDisIdx = 0;
             for(int i=0; i < cols.Length; i++)
             {
-                if(Vector2.Distance(transform.position, cols[i].transform.position) < minDistance)
+                if(Vector2.Distance(GetComponent<Collider2D>().bounds.center, cols[i].GetComponent<Collider2D>().bounds.center) < minDistance)
                 {
-                    minDistance = Vector2.Distance(transform.position, cols[i].transform.position);
+                    minDistance = Vector2.Distance(GetComponent<Collider2D>().bounds.center, cols[i].GetComponent<Collider2D>().bounds.center);
                     minDisIdx = i;
                 }
             }
@@ -139,10 +141,10 @@ public class EnemyScript : MonoBehaviour
     public void BeAttacked(float dmg, float knockback)
     {
         enemyNowHP -= dmg;
-        // print($"enemyNowHP: {enemyNowHP}");
+        print($"enemyNowHP: {enemyNowHP}");
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.color = new Color(1, 0, 0, 1);
-        Vector2 moveDirection = transform.position - Hero.transform.position;
+        Vector2 moveDirection = GetComponent<Collider2D>().bounds.center - Hero.GetComponent<Collider2D>().bounds.center;
         moveDirection.Normalize();
         transform.Translate(moveDirection * knockback);
         Invoke("OffDamaged", 0.3f);
@@ -160,7 +162,7 @@ public class EnemyScript : MonoBehaviour
     public Vector2 boxSize;
     private void OnDrawGizmos()
     {
-        center = transform.position;
+        center = GetComponent<Collider2D>().bounds.center;
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(center, boxSize);
     }

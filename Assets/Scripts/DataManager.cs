@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class Hero
 {
-    public Hero(string _ID, string _NameKR, string _Attributes, string _HP, string _HPRegeneration, string _AtkDmg, string _AtkSpeed, string _AtkRange,
+    public Hero(string _ID, string _NameKR, string _Attributes, string _HP, string _HPRegeneration, string _AtkType, string _AtkDmg, string _AtkSpeed, string _AtkRange,
     string _CriticalDmg, string _CriticalChance, string _Armor, string _MoveSpeed, string _AbilityKR)
     {
         heroID = _ID;
@@ -13,6 +13,7 @@ public class Hero
         heroAttributes = _Attributes.Split(' ');
         heroMaxHP = _HP;
         heroHPRegeneration = _HPRegeneration;
+        heroAtkType = _AtkType;
         heroAtkDmg = _AtkDmg;
         heroAtkSpeed = _AtkSpeed;
         heroAtkRange = _AtkRange;
@@ -27,6 +28,7 @@ public class Hero
     public string[] heroAttributes;
     public string heroMaxHP;
     public string heroHPRegeneration;
+    public string heroAtkType;
     public string heroAtkDmg;
     public string heroAtkSpeed;
     public string heroAtkRange;
@@ -40,11 +42,12 @@ public class Hero
 [System.Serializable]
 public class Enemy
 {
-    public Enemy(string _ID, string _NameKR, string _HP, string _CollisionDmg, string _AtkDmg, string _AtkSpeed, string _AtkRange, string _Armor, string _MoveSpeed)
+    public Enemy(string _ID, string _NameKR, string _HP, string _AtkType, string _CollisionDmg, string _AtkDmg, string _AtkSpeed, string _AtkRange, string _Armor, string _MoveSpeed)
     {
         enemyID = _ID;
         enemyNameKR = _NameKR;
         enemyMaxHP = _HP;
+        enemyAtkType = _AtkType;
         enemyCollisionDmg = _CollisionDmg;
         enemyAtkDmg = _AtkDmg;
         enemyAtkSpeed = _AtkSpeed;
@@ -55,6 +58,7 @@ public class Enemy
     public string enemyID;
     public string enemyNameKR;
     public string enemyMaxHP;
+    public string enemyAtkType;
     public string enemyCollisionDmg;
     public string enemyAtkDmg;
     public string enemyAtkSpeed;
@@ -66,7 +70,7 @@ public class Enemy
 [System.Serializable]
 public class Minion
 {
-    public Minion(string _ID, string _NameKR, string _Attributes, string _HP, string _Existencetime, string _AtkDmg, string _AtkSpeed, string _AtkRange,
+    public Minion(string _ID, string _NameKR, string _Attributes, string _HP, string _Existencetime, string _AtkType, string _AtkDmg, string _AtkSpeed, string _AtkRange,
     string _CriticalDmg, string _CriticalChance, string _Armor, string _MoveSpeed, string _AbilityKR)
     {
         minionID = _ID;
@@ -74,6 +78,7 @@ public class Minion
         minionAttributes = _Attributes.Split(' ');
         minionMaxHP = _HP;
         minionExistencetime = _Existencetime;
+        minionAtkType = _AtkType;
         minionAtkDmg = _AtkDmg;
         minionAtkSpeed = _AtkSpeed;
         minionAtkRange = _AtkRange;
@@ -88,6 +93,7 @@ public class Minion
     public string[] minionAttributes;
     public string minionMaxHP;
     public string minionExistencetime;
+    public string minionAtkType;
     public string minionAtkDmg;
     public string minionAtkSpeed;
     public string minionAtkRange;
@@ -140,11 +146,11 @@ public class DataManager : MonoBehaviour
             string[] row = line[i].Split('\t');
             if(i == 0)
             {
-                AllHeroList.Add(new Hero(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12]));
+                AllHeroList.Add(new Hero(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13]));
             }
             else
             {
-                AllHeroList.Add(new Hero(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12]));
+                AllHeroList.Add(new Hero(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13]));
             }
         }
 
@@ -155,11 +161,11 @@ public class DataManager : MonoBehaviour
             string[] row = line[i].Split('\t');
             if(i == 0)
             {
-                AllEnemyList.Add(new Enemy(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]));
+                AllEnemyList.Add(new Enemy(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9]));
             }
             else
             {
-                AllEnemyList.Add(new Enemy(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]));
+                AllEnemyList.Add(new Enemy(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9]));
             }
         }
 
@@ -170,11 +176,11 @@ public class DataManager : MonoBehaviour
             string[] row = line[i].Split('\t');
             if(i == 0)
             {
-                AllMinionList.Add(new Minion(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12]));
+                AllMinionList.Add(new Minion(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13]));
             }
             else
             {
-                AllMinionList.Add(new Minion(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12]));
+                AllMinionList.Add(new Minion(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13]));
             }
         }
         

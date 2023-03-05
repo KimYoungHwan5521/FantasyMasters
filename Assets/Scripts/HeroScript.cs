@@ -10,11 +10,13 @@ public class HeroScript : MonoBehaviour
     DataManager DataManager;
 
     public int _heroID;
+    public string stringID;
     public string heroNameKR;
     public string[] attributes;
     public float maxHP;
     public float nowHP;
     public float HPRegeneration;
+    public int atkType;
     public float atkDmg;
     public float atkSpeed;
     public float atkRange;
@@ -36,7 +38,6 @@ public class HeroScript : MonoBehaviour
     {
         DataManager = GameObject.Find("DataManager").GetComponent<DataManager>();
         _heroID = DataManager.selectedHeroID;
-        string stringID;
         int cntDgit = 0;
         int copy_heroID = _heroID;
         for(int i=0; i<4; i++)
@@ -61,6 +62,7 @@ public class HeroScript : MonoBehaviour
         maxHP = float.Parse(heroInfo.heroMaxHP);
         nowHP = maxHP;
         HPRegeneration = float.Parse(heroInfo.heroHPRegeneration);
+        atkType = int.Parse(heroInfo.heroAtkType);
         atkDmg = float.Parse(heroInfo.heroAtkDmg);
         atkSpeed = float.Parse(heroInfo.heroAtkSpeed);
         atkCoolTime = 10 / atkSpeed;
@@ -77,7 +79,7 @@ public class HeroScript : MonoBehaviour
             StartCoroutine(SummonMinion("0000", 20.0f));
         }
 
-        animator = GetComponent<Animator>();
+        animator = GetComponentInChildren<Animator>();
         transform.position = new Vector2(0, 0);
 
         Map = GameObject.Find("Map");
@@ -88,7 +90,7 @@ public class HeroScript : MonoBehaviour
         InvokeRepeating("HPRegenerationMethod", 0, 1);
     }
 
-    GameObject target = null;
+    public GameObject target = null;
     bool isCritical = false;
     void Update()
     {
@@ -136,17 +138,7 @@ public class HeroScript : MonoBehaviour
 
         }
         moveDirection.Normalize();
-
-
-        if(
-            transform.position.x + moveDirection.x * Time.deltaTime * moveSpeed + transform.localScale.x * 0.5 > Map.transform.localScale.x * -0.5f
-            && transform.position.x + moveDirection.x * Time.deltaTime * moveSpeed + transform.localScale.x * 0.5 < Map.transform.localScale.x * 0.5f
-            && transform.position.y + moveDirection.y * Time.deltaTime * moveSpeed + transform.localScale.y * -0.5f > Map.transform.localScale.y * -0.5f
-            && transform.position.y + moveDirection.y * Time.deltaTime * moveSpeed + transform.localScale.y * 0.5 < Map.transform.localScale.y * 0.5f
-        )
-        {
-            transform.Translate(moveDirection * Time.deltaTime * moveSpeed);
-        }
+        transform.Translate(moveDirection * Time.deltaTime * moveSpeed);
 
         animator.SetBool("isMoving", moveDirection.magnitude > 0);
         
@@ -155,23 +147,26 @@ public class HeroScript : MonoBehaviour
         {
             if(target != null)
             {
-                Vector2 targetPos = target.transform.position - transform.position;
+                Vector2 targetPos = target.GetComponent<Collider2D>().bounds.center - GetComponent<Collider2D>().bounds.center;
 
                 if(targetPos.x * transform.localScale.x < 0) transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
-                Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(transform.position, boxSize, 0);
-                foreach(Collider2D collider in collider2Ds)
+                if(atkType == 1)
                 {
-                    if(collider.tag == "Enemy")
+                    Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(GetComponent<Collider2D>().bounds.center, boxSize, 0);
+                    foreach(Collider2D collider in collider2Ds)
                     {
-                        if(Random.Range(0, 100) < criticalChance) isCritical = true;
-                        else isCritical = false;
-                        if(isCritical)
+                        if(collider.tag == "Enemy")
                         {
-                            collider.GetComponent<EnemyScript>().BeAttacked(atkDmg * criticalDmg, 0.6f);
-                        }
-                        else
-                        {
-                            collider.GetComponent<EnemyScript>().BeAttacked(atkDmg, 0.3f);
+                            if(Random.Range(0, 100) < criticalChance) isCritical = true;
+                            else isCritical = false;
+                            if(isCritical)
+                            {
+                                collider.GetComponent<EnemyScript>().BeAttacked(atkDmg * criticalDmg, 0.6f);
+                            }
+                            else
+                            {
+                                collider.GetComponent<EnemyScript>().BeAttacked(atkDmg, 0.3f);
+                            }
                         }
                     }
                 }
@@ -187,8 +182,8 @@ public class HeroScript : MonoBehaviour
     
     private void UpdateTarget()
     {
-        Vector2 box = new Vector2(2, 2);
-        Collider2D[] tempCols = Physics2D.OverlapBoxAll(transform.position, box, 0);
+        Vector2 box = new Vector2(atkRange, atkRange);
+        Collider2D[] tempCols = Physics2D.OverlapBoxAll(GetComponent<Collider2D>().bounds.center, box, 0);
         int cnt = 0;
         for(int i=0; i<tempCols.Length; i++)
         {
@@ -206,13 +201,13 @@ public class HeroScript : MonoBehaviour
         }
         if(cols.Length > 0)
         {
-            float minDistance = Vector2.Distance(transform.position, cols[0].transform.position);
+            float minDistance = Vector2.Distance(GetComponent<Collider2D>().bounds.center, cols[0].GetComponent<Collider2D>().bounds.center);
             int minDisIdx = 0;
             for(int i=0; i < cols.Length; i++)
             {
-                if(Vector2.Distance(transform.position, cols[i].transform.position) < minDistance)
+                if(Vector2.Distance(GetComponent<Collider2D>().bounds.center, cols[i].GetComponent<Collider2D>().bounds.center) < minDistance)
                 {
-                    minDistance = Vector2.Distance(transform.position, cols[i].transform.position);
+                    minDistance = Vector2.Distance(GetComponent<Collider2D>().bounds.center, cols[i].GetComponent<Collider2D>().bounds.center);
                     minDisIdx = i;
                 }
             }
@@ -226,10 +221,15 @@ public class HeroScript : MonoBehaviour
         if(nowHP > maxHP) nowHP = maxHP;
     }
 
+    private void RangedAttack()
+    {
+        // Instantiate(Resources.Load<GameObject>($"Projectiles/ProjectileHero{stringID}"), transform.position, Quaternion.identity);
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(transform.position, boxSize);
+        Gizmos.DrawWireCube(GetComponent<Collider2D>().bounds.center, boxSize);
     }
     
     void OnCollisionEnter2D(Collision2D collision)
@@ -264,7 +264,7 @@ public class HeroScript : MonoBehaviour
         var minionToSummon = Resources.Load<GameObject>($"Minions/Minion{_minionID}");
         while(true)
         {
-            Vector3 summonPositon = transform.position + Vector3.right;
+            Vector3 summonPositon = GetComponent<Collider2D>().bounds.center;
             Instantiate(minionToSummon, summonPositon, Quaternion.identity);
             yield return new WaitForSeconds(summonCoolTime);
         }

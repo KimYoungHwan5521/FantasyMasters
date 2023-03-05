@@ -12,6 +12,7 @@ public class MinionScript : MonoBehaviour
     public float minionMaxHP;
     public float minionNowHP;
     public float minionExistencetime;
+    public int minionAtkType;
     public float minionAtkDmg;
     public float minionAtkSpeed;
     public float minionAtkRange;
@@ -55,6 +56,7 @@ public class MinionScript : MonoBehaviour
         minionMaxHP = float.Parse(minionInfo.minionMaxHP);
         minionNowHP = minionMaxHP;
         minionExistencetime = float.Parse(minionInfo.minionExistencetime);
+        minionAtkType = int.Parse(minionInfo.minionAtkType);
         minionAtkDmg = float.Parse(minionInfo.minionAtkDmg);
         minionAtkSpeed = float.Parse(minionInfo.minionAtkSpeed);
         atkCoolTime = 10 / minionAtkSpeed;
@@ -87,16 +89,16 @@ public class MinionScript : MonoBehaviour
         }
         else
         {
-            HPBar.position = Camera.main.WorldToScreenPoint(new Vector3(transform.position.x, transform.position.y - transform.localScale.y * 0.2f, 0));
+            HPBar.position = Camera.main.WorldToScreenPoint(new Vector3(transform.GetComponent<Collider2D>().bounds.center.x, transform.GetComponent<Collider2D>().bounds.center.y - GetComponent<BoxCollider2D>().size.y * 2, 0));
             HPBar.GetComponent<Image>().fillAmount = minionNowHP / minionMaxHP;
             if(target != null)
             {
-                if(Vector2.Distance(transform.position, target.transform.position) < minionAtkRange)
+                if(Vector2.Distance(transform.GetComponent<Collider2D>().bounds.center, target.GetComponent<Collider2D>().bounds.center) < minionAtkRange)
                 {
                     // animator.SetBool("isMoving", false);
                     if(curTime <= 0)
                     {
-                        Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(transform.position, boxSize, 0);
+                        Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(transform.GetComponent<Collider2D>().bounds.center, boxSize, 0);
                         foreach(Collider2D collider in collider2Ds)
                         {
                             if(collider.tag == "Enemy")
@@ -127,8 +129,8 @@ public class MinionScript : MonoBehaviour
                 else
                 {
                     animator.SetBool("isMoving", true);
-                    moveDirection = target.transform.position - transform.position;
-                    if(target.transform.position.x < transform.position.x)
+                    moveDirection = target.GetComponent<Collider2D>().bounds.center - GetComponent<Collider2D>().bounds.center;
+                    if(target.GetComponent<Collider2D>().bounds.center.x < GetComponent<Collider2D>().bounds.center.x)
                     {
                         if(transform.localScale.x > 0)
                         {
@@ -156,7 +158,7 @@ public class MinionScript : MonoBehaviour
     public Vector2 TrackingBox;
     private void UpdateTarget()
     {
-        Collider2D[] tempCols = Physics2D.OverlapBoxAll(transform.position, TrackingBox, 0);
+        Collider2D[] tempCols = Physics2D.OverlapBoxAll(GetComponent<Collider2D>().bounds.center, TrackingBox, 0);
         int cnt = 0;
         for(int i=0; i<tempCols.Length; i++)
         {
@@ -174,13 +176,13 @@ public class MinionScript : MonoBehaviour
         }
         if(cols.Length > 0)
         {
-            float minDistance = Vector2.Distance(transform.position, cols[0].transform.position);
+            float minDistance = Vector2.Distance(GetComponent<Collider2D>().bounds.center, cols[0].GetComponent<Collider2D>().bounds.center);
             int minDisIdx = 0;
             for(int i=0; i < cols.Length; i++)
             {
-                if(Vector2.Distance(transform.position, cols[i].transform.position) < minDistance)
+                if(Vector2.Distance(GetComponent<Collider2D>().bounds.center, cols[i].GetComponent<Collider2D>().bounds.center) < minDistance)
                 {
-                    minDistance = Vector2.Distance(transform.position, cols[i].transform.position);
+                    minDistance = Vector2.Distance(GetComponent<Collider2D>().bounds.center, cols[i].GetComponent<Collider2D>().bounds.center);
                     minDisIdx = i;
                 }
             }
@@ -192,9 +194,9 @@ public class MinionScript : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(transform.position, boxSize);
+        Gizmos.DrawWireCube(GetComponent<Collider2D>().bounds.center, boxSize);
         Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(transform.position, TrackingBox);
+        Gizmos.DrawWireCube(GetComponent<Collider2D>().bounds.center, TrackingBox);
     }
     
     void OnCollisionEnter2D(Collision2D collision)

@@ -1,2 +1,2 @@
-MinionID	MinionNameKR	MinionAttributes	MinionHP	MinionExsitencetime	MinionAtkDmg	MinionAtkSpeed	MinionAtkRange	MinionCriticalDmg	MinionCriticalChance	MinionArmor	MinionMoveSpeed	MinionAbilityKR
-0000	스켈톤 검사	암흑	100	20	10	20	1	2	10	0	1	없음
+MinionID	MinionNameKR	MinionAttributes	MinionHP	MinionExsitencetime	MinionAtkType	MinionAtkDmg	MinionAtkSpeed	MinionAtkRange	MinionCriticalDmg	MinionCriticalChance	MinionArmor	MinionMoveSpeed	MinionAbilityKR
+0000	스켈톤 검사	암흑	100	20	1	10	20	1	2	10	0	1	없음
