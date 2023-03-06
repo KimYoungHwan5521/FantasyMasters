@@ -24,7 +24,7 @@ public class HeroScript : MonoBehaviour
     public float criticalChance;
     public float armor;
     public float moveSpeed;
-    public string abilityKR;
+    public List<string> abilities;
 
     private float curTime;
     public float atkCoolTime;
@@ -72,7 +72,7 @@ public class HeroScript : MonoBehaviour
         criticalChance = float.Parse(heroInfo.heroCriticalChance);
         armor = float.Parse(heroInfo.heroArmor);
         moveSpeed = float.Parse(heroInfo.heroMoveSpeed);
-        abilityKR = heroInfo.heroAbilityKR;
+        abilities = heroInfo.heroAbilities;
 
         if(_heroID == 0)
         {

@@ -1,5 +1,5 @@
-HeroID	HeroNameKR	HeroAttributes	HeroHP	HeroHPRegeneration	HeroAtkType	HeroAtkDmg	HeroAtkSpeed	HeroAtkRange	HeroCriticalDmg	HeroCriticalChance	HeroArmor	HeroMoveSpeed	HeroAbilityKR
-0000	스컬윙	암흑	80	1	1	20	10	2	2	10	0	3	20초마다 스켈톤 하수인 1마리 소환
-0001	아크데몬	불	100	1	1	40	10	2	2	20	-2	4	기본공격으로 적 처치시 남은 데미지로 가까운적에게 피해
-0002	노스페라투	암흑 불	50	10	2	16	10	8	1.5	30	-1	3	기본공격으로 입힌 피해의 30%만큼 체력 회복
-0003	포레스트 레인져	숲	50	1	2	30	10	10	3	10	0	2	치명타 발동시 5초동안 공격속도 20% 증가
+HeroID	HeroNameKR	HeroAttributes	HeroHP	HeroHPRegeneration	HeroAtkType	HeroAtkDmg	HeroAtkSpeed	HeroAtkRange	HeroCriticalDmg	HeroCriticalChance	HeroArmor	HeroMoveSpeed	HeroAbilityID
+0000	스컬윙	암흑	80	1	1	20	10	2	2	10	0	3	0000
+0001	아크데몬	불	100	1	1	40	10	2	2	20	-2	4	0001
+0002	노스페라투	암흑 불	50	10	2	16	10	8	1.5	30	-1	3	0002
+0003	포레스트 레인져	숲	50	1	2	30	10	10	3	10	0	2	0003

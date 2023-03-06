@@ -237,7 +237,18 @@ public class HeroSelectScript : MonoBehaviour
         HeroDetailValues[8].text = CurHeroList[_heroID].heroCriticalChance + "%";
         HeroDetailValues[9].text = CurHeroList[_heroID].heroArmor;
         HeroDetailValues[10].text = CurHeroList[_heroID].heroMoveSpeed;
-        HeroDetailValues[11].text = CurHeroList[_heroID].heroAbilityKR;
+        HeroDetailValues[11].text = "";
+        HeroDetailValues[12].text = "";
+        for(int i=0; i<CurHeroList[_heroID].heroAbilities.Count; i++)
+        {
+            if(i>0) HeroDetailValues[11].text += "/";
+            HeroDetailValues[11].text += DataManager.AllAbilityList.Find(x => x.abilityID == CurHeroList[_heroID].heroAbilities[i]).abilityNameKR;
+        }
+        for(int i=0; i<CurHeroList[_heroID].heroAbilities.Count; i++)
+        {
+            if(i>0) HeroDetailValues[12].text += "/\n";
+            HeroDetailValues[12].text += DataManager.AllAbilityList.Find(x => x.abilityID == CurHeroList[_heroID].heroAbilities[i]).abilityExplainKR;
+        }
 
         RectTransform Parent;
         Parent = HerosSimple[_heroID].transform.parent.GetComponent<RectTransform>();

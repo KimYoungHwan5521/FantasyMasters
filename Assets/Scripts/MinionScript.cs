@@ -20,7 +20,7 @@ public class MinionScript : MonoBehaviour
     public float minionCriticalChance;
     public float minionArmor;
     public float minionMoveSpeed;
-    public string minionAbilityKR;
+    public List<string> minionAbilities;
 
     Animator animator;
     public RectTransform HPBar;
@@ -66,7 +66,7 @@ public class MinionScript : MonoBehaviour
         minionCriticalChance = float.Parse(minionInfo.minionCriticalChance);
         minionArmor = float.Parse(minionInfo.minionArmor);
         minionMoveSpeed = float.Parse(minionInfo.minionMoveSpeed);
-        minionAbilityKR = minionInfo.minionAbilityKR;
+        minionAbilities = minionInfo.minionAbilities;
 
         animator = GetComponent<Animator>();
         HPBar = Instantiate(Resources.Load<RectTransform>("UIs/HPBar"), new Vector3(0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);

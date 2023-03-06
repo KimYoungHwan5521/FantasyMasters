@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 [System.Serializable]
 public class Hero
 {
     public Hero(string _ID, string _NameKR, string _Attributes, string _HP, string _HPRegeneration, string _AtkType, string _AtkDmg, string _AtkSpeed, string _AtkRange,
-    string _CriticalDmg, string _CriticalChance, string _Armor, string _MoveSpeed, string _AbilityKR)
+    string _CriticalDmg, string _CriticalChance, string _Armor, string _MoveSpeed, string _AbilityID)
     {
         heroID = _ID;
         heroNameKR = _NameKR;
@@ -21,7 +22,7 @@ public class Hero
         heroCriticalChance = _CriticalChance;
         heroArmor = _Armor;
         heroMoveSpeed = _MoveSpeed;
-        heroAbilityKR = _AbilityKR;
+        heroAbilities = _AbilityID.Split(',').ToList();
     }
     public string heroID;
     public string heroNameKR;
@@ -36,7 +37,7 @@ public class Hero
     public string heroCriticalChance;
     public string heroArmor;
     public string heroMoveSpeed;
-    public string heroAbilityKR;
+    public List<string> heroAbilities;
 }
 
 [System.Serializable]
@@ -71,7 +72,7 @@ public class Enemy
 public class Minion
 {
     public Minion(string _ID, string _NameKR, string _Attributes, string _HP, string _Existencetime, string _AtkType, string _AtkDmg, string _AtkSpeed, string _AtkRange,
-    string _CriticalDmg, string _CriticalChance, string _Armor, string _MoveSpeed, string _AbilityKR)
+    string _CriticalDmg, string _CriticalChance, string _Armor, string _MoveSpeed, string _AbilityID)
     {
         minionID = _ID;
         minionNameKR = _NameKR;
@@ -86,7 +87,7 @@ public class Minion
         minionCriticalChance = _CriticalChance;
         minionArmor = _Armor;
         minionMoveSpeed = _MoveSpeed;
-        minionAbilityKR = _AbilityKR;
+        minionAbilities = _AbilityID.Split(',').ToList();
     }
     public string minionID;
     public string minionNameKR;
@@ -101,7 +102,21 @@ public class Minion
     public string minionCriticalChance;
     public string minionArmor;
     public string minionMoveSpeed;
-    public string minionAbilityKR;
+    public List<string> minionAbilities;
+}
+
+[System.Serializable]
+public class Ability
+{
+    public Ability(string _ID, string _NameKR, string _ExplainKR)
+    {
+        abilityID = _ID;
+        abilityNameKR = _NameKR;
+        abilityExplainKR = _ExplainKR;
+    }
+    public string abilityID;
+    public string abilityNameKR;
+    public string abilityExplainKR;
 }
 
 public class DataManager : MonoBehaviour
@@ -131,9 +146,11 @@ public class DataManager : MonoBehaviour
     public TextAsset HeroDB;
     public TextAsset EnemyDB;
     public TextAsset MinionDB;
+    public TextAsset AbilityDB;
     public static List<Hero> AllHeroList;
     public static List<Enemy> AllEnemyList;
     public static List<Minion> AllMinionList;
+    public static List<Ability> AllAbilityList;
 
     public static int selectedHeroID = 3;
 
@@ -181,6 +198,21 @@ public class DataManager : MonoBehaviour
             else
             {
                 AllMinionList.Add(new Minion(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13]));
+            }
+        }
+
+        AllAbilityList = new List<Ability>();
+        line = AbilityDB.text.Substring(0, AbilityDB.text.Length).Split('\r');
+        for(int i=1;i<line.Length;i++)
+        {
+            string[] row = line[i].Split('\t');
+            if(i == 0)
+            {
+                AllAbilityList.Add(new Ability(row[0], row[1], row[2]));
+            }
+            else
+            {
+                AllAbilityList.Add(new Ability(row[0].Substring(1), row[1], row[2]));
             }
         }
         
