@@ -796,6 +796,7 @@ MonoBehaviour:
   EnemyDB: {fileID: 4900000, guid: 336bb24878cabe94cbf5bce86e6d5a8e, type: 3}
   MinionDB: {fileID: 4900000, guid: 47b1cecb3726bd742bf541a487c1e73e, type: 3}
   AbilityDB: {fileID: 4900000, guid: 44145e44b1371f0458d967c1059d531f, type: 3}
+  StatusDB: {fileID: 4900000, guid: beeec90a50e54fa4fa1f2ec464ab400e, type: 3}
 --- !u!4 &1131356829
 Transform:
   m_ObjectHideFlags: 0

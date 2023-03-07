@@ -52,10 +52,10 @@ public class ProjectileScript : MonoBehaviour
             if(isCritical)
             {
                 collision.gameObject.GetComponent<EnemyScript>().BeAttacked(Player.GetComponent<HeroScript>().atkDmg * Player.GetComponent<HeroScript>().criticalDmg, 0.3f);
-                // if(Player.GetComponent<HeroScript>().abilities.Find(x => x == "0003") != null)
-                // {
-                    
-                // }
+                if(Player.GetComponent<HeroScript>().abilities.Find(x => x == "0003") != null)
+                {
+                    Player.GetComponent<HeroScript>().AddStatus("0000");
+                }
             }
             else
             {

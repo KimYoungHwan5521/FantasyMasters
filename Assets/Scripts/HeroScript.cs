@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,6 +28,7 @@ public class HeroScript : MonoBehaviour
     public float armor;
     public float moveSpeed;
     public List<string> abilities;
+    public List<StatusV> HeroStatus;
 
     private float curTime;
     public float atkCoolTime;
@@ -35,6 +37,16 @@ public class HeroScript : MonoBehaviour
     public Image HPbar;
     public Text TextMaxHP;
     public Text TextNowHP;
+
+    public class StatusV
+    {
+        public string statusID;
+        public string statusNameKR;
+        public string statusExplainKR;
+        public string[] buffStat;
+        public float[] buffValue;
+        public float buffTime;
+    }
     
     void Start()
     {
@@ -75,7 +87,7 @@ public class HeroScript : MonoBehaviour
         armor = float.Parse(heroInfo.heroArmor);
         moveSpeed = float.Parse(heroInfo.heroMoveSpeed);
         abilities = heroInfo.heroAbilities;
-
+        HeroStatus = new List<StatusV>();
         if(abilities.Find(x => x.Equals("0000")) != null)
         {
             StartCoroutine(SummonMinion("0000", 20.0f));
@@ -101,7 +113,23 @@ public class HeroScript : MonoBehaviour
         HPbar.fillAmount = nowHP / maxHP;
         if(nowHP / maxHP < 0.3f) HPbar.color = Color.red;
         else HPbar.color = Color.green;
+        atkSpeed = float.Parse(DataManager.AllHeroList[_heroID].heroAtkSpeed) * atkSpeedCVM;
         atkCoolTime = 10 / atkSpeed;
+
+        print(atkSpeed);
+        // status timer
+        if(HeroStatus.Count > 0)
+        {
+            for(int i=0; i<HeroStatus.Count; i++)
+            {
+                HeroStatus[i].buffTime -= Time.deltaTime;
+                if(HeroStatus[i].buffTime <= 0)
+                {
+                    RemoveStatus(HeroStatus[i].statusID);
+                    HeroStatus.RemoveAt(i);
+                }
+            }
+        }
 
         // 이동
         Vector2 moveDirection = Vector2.zero;
@@ -153,7 +181,7 @@ public class HeroScript : MonoBehaviour
                 Vector2 targetPos = target.GetComponent<Collider2D>().bounds.center - GetComponent<Collider2D>().bounds.center;
 
                 if(targetPos.x * transform.localScale.x < 0) transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
-                if(Random.Range(0, 100) < criticalChance) isCritical = true;
+                if(UnityEngine.Random.Range(0, 100) < criticalChance) isCritical = true;
                 else isCritical = false;
                 if(isCritical) animator.SetBool("isCritical", true);
                 else animator.SetBool("isCritical", false);
@@ -277,21 +305,49 @@ public class HeroScript : MonoBehaviour
         }
     }
 
-    // public void BuffController(string buffTarget, float buffValue, float buffTime)
-    // {
-    //     if(buffTarget == "atkSpeedCVM")
-    //     {
-    //         StartCoroutine(OnBuffCoroutine(buffTarget, buffValue, buffTime));
-    //         atkSpeed = float.Parse(heroInfo.heroAtkSpeed) * atkSpeedCVM;
-    //     }
-    // }
+    public void AddStatus(string _statusID)
+    {
+        int isAlreadyGotIt = HeroStatus.FindIndex(x => x.statusID == _statusID);
+        if(isAlreadyGotIt != -1)
+        {
+            HeroStatus[isAlreadyGotIt].buffTime = float.Parse(DataManager.AllStatusList.Find(x => x.statusID == _statusID).buffTime);
+        }
+        else
+        {
+            Status _status = DataManager.AllStatusList.Find(x => x.statusID == _statusID);
+            StatusV tempStatus = new StatusV(); 
+            tempStatus.statusID = _status.statusID;
+            tempStatus.statusNameKR = _status.statusNameKR;
+            tempStatus.statusExplainKR = _status.statusExplainKR;
+            tempStatus.buffStat = new string[_status.buffStat.Length];
+            Array.Copy(_status.buffStat, tempStatus.buffStat, _status.buffStat.Length);
+            tempStatus.buffValue = Array.ConvertAll(_status.buffValue, x => float.Parse(x));
+            for(int i=0; i<_status.buffStat.Length; i++)
+            {
+                if(_status.buffStat[i] == "atkSpeedCVM")
+                {
+                    atkSpeedCVM *= float.Parse(_status.buffValue[i]);
+                }
+                else
+                {
+                    print($"wrong buffStat name : '{_status.buffStat[i]}'");
+                }
+            }
+            tempStatus.buffTime = float.Parse(_status.buffTime);
+            HeroStatus.Add(tempStatus);
+        }
+    }
 
-    // IEnumerator OnBuffCoroutine(string buffTarget, float buffValue, float buffTime)
-    // {
-    //     while(buffTime > 0)
-    //     {
-
-    //     }
-    // }
+    public void RemoveStatus(string _statusID)
+    {
+        int idx = HeroStatus.FindIndex(x => x.statusID == _statusID);
+        for(int i=0; i<HeroStatus[idx].buffStat.Length; i++)
+        {
+            if(HeroStatus[idx].buffStat[i] == "atkSpeedCVM")
+            {
+                atkSpeedCVM /= HeroStatus[idx].buffValue[i];
+            }
+        }
+    }
 
 }

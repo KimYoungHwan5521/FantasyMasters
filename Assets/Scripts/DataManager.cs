@@ -119,6 +119,26 @@ public class Ability
     public string abilityExplainKR;
 }
 
+[System.Serializable]
+public class Status
+{
+    public Status(string _ID, string _NameKR, string _ExplainKR, string _buffStat, string _buffValue, string _buffTime)
+    {
+        statusID = _ID;
+        statusNameKR = _NameKR;
+        statusExplainKR = _ExplainKR;
+        buffStat = _buffStat.Split('|');
+        buffValue = _buffValue.Split('|');
+        buffTime = _buffTime;
+    }
+    public string statusID;
+    public string statusNameKR;
+    public string statusExplainKR;
+    public string[] buffStat;
+    public string[] buffValue;
+    public string buffTime;
+}
+
 public class DataManager : MonoBehaviour
 {
     public static DataManager instance;
@@ -147,12 +167,14 @@ public class DataManager : MonoBehaviour
     public TextAsset EnemyDB;
     public TextAsset MinionDB;
     public TextAsset AbilityDB;
+    public TextAsset StatusDB;
     public static List<Hero> AllHeroList;
     public static List<Enemy> AllEnemyList;
     public static List<Minion> AllMinionList;
     public static List<Ability> AllAbilityList;
+    public static List<Status> AllStatusList;
 
-    public static int selectedHeroID = 0;
+    public static int selectedHeroID = 3;
 
     void Start()
     {
@@ -216,6 +238,20 @@ public class DataManager : MonoBehaviour
             }
         }
         
+        AllStatusList = new List<Status>();
+        line = StatusDB.text.Substring(0, StatusDB.text.Length).Split('\r');
+        for(int i=1; i<line.Length; i++)
+        {
+            string[] row = line[i].Split('\t');
+            if(i == 0)
+            {
+                AllStatusList.Add(new Status(row[0], row[1], row[2], row[3], row[4], row[5]));
+            }
+            else
+            {
+                AllStatusList.Add(new Status(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5]));
+            }
+        }
     }
 
     // Update is called once per frame
