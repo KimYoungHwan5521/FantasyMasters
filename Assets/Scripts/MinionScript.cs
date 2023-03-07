@@ -98,23 +98,8 @@ public class MinionScript : MonoBehaviour
                     // animator.SetBool("isMoving", false);
                     if(curTime <= 0)
                     {
-                        Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(transform.GetComponent<Collider2D>().bounds.center, boxSize, 0);
-                        foreach(Collider2D collider in collider2Ds)
-                        {
-                            if(collider.tag == "Enemy")
-                            {
-                                if(Random.Range(0, 100) < minionCriticalChance) isCritical = true;
-                                else isCritical = false;
-                                if(isCritical)
-                                {
-                                    collider.GetComponent<EnemyScript>().BeAttacked(minionAtkDmg * minionCriticalDmg, 0.6f);
-                                }
-                                else
-                                {
-                                    collider.GetComponent<EnemyScript>().BeAttacked(minionAtkDmg, 0.3f);
-                                }
-                            }
-                        }
+                        if(Random.Range(0, 100) < minionCriticalChance) isCritical = true;
+                        else isCritical = false;
                         animator.SetTrigger("Attack");
                         if(isCritical) animator.SetBool("isCritical", true);
                         else animator.SetBool("isCritical", false);
@@ -187,6 +172,25 @@ public class MinionScript : MonoBehaviour
                 }
             }
             target = cols[minDisIdx].gameObject;
+        }
+    }
+
+    private void MeleeAttack()
+    {
+        Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(transform.GetComponent<Collider2D>().bounds.center, boxSize, 0);
+        foreach(Collider2D collider in collider2Ds)
+        {
+            if(collider.tag == "Enemy")
+            {
+                if(isCritical)
+                {
+                    collider.GetComponent<EnemyScript>().BeAttacked(minionAtkDmg * minionCriticalDmg, 0.6f);
+                }
+                else
+                {
+                    collider.GetComponent<EnemyScript>().BeAttacked(minionAtkDmg, 0.3f);
+                }
+            }
         }
     }
 

@@ -9,6 +9,7 @@ public class HeroScript : MonoBehaviour
     GameObject Map;
     DataManager DataManager;
 
+    Hero heroInfo;
     public int _heroID;
     public string stringID;
     public string heroNameKR;
@@ -19,6 +20,7 @@ public class HeroScript : MonoBehaviour
     public int atkType;
     public float atkDmg;
     public float atkSpeed;
+    public float atkSpeedCVM = 1;
     public float atkRange;
     public float criticalDmg;
     public float criticalChance;
@@ -56,7 +58,7 @@ public class HeroScript : MonoBehaviour
         }
         stringID += _heroID.ToString();
         int idx = DataManager.AllHeroList.FindIndex(x => x.heroID == stringID);
-        Hero heroInfo = DataManager.AllHeroList[idx];
+        heroInfo = DataManager.AllHeroList[idx];
         heroNameKR = heroInfo.heroNameKR;
         attributes = heroInfo.heroAttributes;
         maxHP = float.Parse(heroInfo.heroMaxHP);
@@ -74,7 +76,7 @@ public class HeroScript : MonoBehaviour
         moveSpeed = float.Parse(heroInfo.heroMoveSpeed);
         abilities = heroInfo.heroAbilities;
 
-        if(_heroID == 0)
+        if(abilities.Find(x => x.Equals("0000")) != null)
         {
             StartCoroutine(SummonMinion("0000", 20.0f));
         }
@@ -99,6 +101,7 @@ public class HeroScript : MonoBehaviour
         HPbar.fillAmount = nowHP / maxHP;
         if(nowHP / maxHP < 0.3f) HPbar.color = Color.red;
         else HPbar.color = Color.green;
+        atkCoolTime = 10 / atkSpeed;
 
         // 이동
         Vector2 moveDirection = Vector2.zero;
@@ -150,26 +153,10 @@ public class HeroScript : MonoBehaviour
                 Vector2 targetPos = target.GetComponent<Collider2D>().bounds.center - GetComponent<Collider2D>().bounds.center;
 
                 if(targetPos.x * transform.localScale.x < 0) transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
-                if(atkType == 1)
-                {
-                    Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(GetComponent<Collider2D>().bounds.center, boxSize, 0);
-                    foreach(Collider2D collider in collider2Ds)
-                    {
-                        if(collider.tag == "Enemy")
-                        {
-                            if(Random.Range(0, 100) < criticalChance) isCritical = true;
-                            else isCritical = false;
-                            if(isCritical)
-                            {
-                                collider.GetComponent<EnemyScript>().BeAttacked(atkDmg * criticalDmg, 0.6f);
-                            }
-                            else
-                            {
-                                collider.GetComponent<EnemyScript>().BeAttacked(atkDmg, 0.3f);
-                            }
-                        }
-                    }
-                }
+                if(Random.Range(0, 100) < criticalChance) isCritical = true;
+                else isCritical = false;
+                if(isCritical) animator.SetBool("isCritical", true);
+                else animator.SetBool("isCritical", false);
                 animator.SetTrigger("Attack");
                 curTime = atkCoolTime;
             }
@@ -221,6 +208,25 @@ public class HeroScript : MonoBehaviour
         if(nowHP > maxHP) nowHP = maxHP;
     }
 
+    private void MeleeAttack()
+    {
+        Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(GetComponent<Collider2D>().bounds.center, boxSize, 0);
+        foreach(Collider2D collider in collider2Ds)
+        {
+            if(collider.tag == "Enemy")
+            {
+                if(isCritical)
+                {
+                    collider.GetComponent<EnemyScript>().BeAttacked(atkDmg * criticalDmg, 0.6f);
+                }
+                else
+                {
+                    collider.GetComponent<EnemyScript>().BeAttacked(atkDmg, 0.3f);
+                }
+            }
+        }
+    }
+
     private void RangedAttack()
     {
         GameObject chk = GameObject.Find($"ProjectileHero{stringID}(Clone)");
@@ -270,5 +276,22 @@ public class HeroScript : MonoBehaviour
             yield return new WaitForSeconds(summonCoolTime);
         }
     }
+
+    // public void BuffController(string buffTarget, float buffValue, float buffTime)
+    // {
+    //     if(buffTarget == "atkSpeedCVM")
+    //     {
+    //         StartCoroutine(OnBuffCoroutine(buffTarget, buffValue, buffTime));
+    //         atkSpeed = float.Parse(heroInfo.heroAtkSpeed) * atkSpeedCVM;
+    //     }
+    // }
+
+    // IEnumerator OnBuffCoroutine(string buffTarget, float buffValue, float buffTime)
+    // {
+    //     while(buffTime > 0)
+    //     {
+
+    //     }
+    // }
 
 }

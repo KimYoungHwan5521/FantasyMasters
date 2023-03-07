@@ -152,7 +152,7 @@ public class DataManager : MonoBehaviour
     public static List<Minion> AllMinionList;
     public static List<Ability> AllAbilityList;
 
-    public static int selectedHeroID = 3;
+    public static int selectedHeroID = 0;
 
     void Start()
     {
