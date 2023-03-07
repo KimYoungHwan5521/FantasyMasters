@@ -42,13 +42,11 @@ public class ProjectileScript : MonoBehaviour
 
     }
 
-    bool isCritical = false;
+    public bool isCritical = false;
     void OnCollisionEnter2D(Collision2D collision)
     {
         if(collision.gameObject.tag == "Enemy")
         {
-            if(Random.Range(0, 100) < Player.GetComponent<HeroScript>().criticalChance) isCritical = true;
-            else isCritical = false;
             if(isCritical)
             {
                 collision.gameObject.GetComponent<EnemyScript>().BeAttacked(Player.GetComponent<HeroScript>().atkDmg * Player.GetComponent<HeroScript>().criticalDmg, 0.3f);

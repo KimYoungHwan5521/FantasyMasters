@@ -105,7 +105,7 @@ public class HeroScript : MonoBehaviour
     }
 
     public GameObject target = null;
-    bool isCritical = false;
+    public bool isCritical = false;
     void Update()
     {
         TextMaxHP.text = Mathf.Ceil(maxHP).ToString();
@@ -114,9 +114,10 @@ public class HeroScript : MonoBehaviour
         if(nowHP / maxHP < 0.3f) HPbar.color = Color.red;
         else HPbar.color = Color.green;
         atkSpeed = float.Parse(DataManager.AllHeroList[_heroID].heroAtkSpeed) * atkSpeedCVM;
+        animator.SetFloat("AttackSpeed", atkSpeedCVM);
         atkCoolTime = 10 / atkSpeed;
 
-        print(atkSpeed);
+        print($"atkSpeed: {atkSpeed}, atkSpeedCVM: {atkSpeedCVM}");
         // status timer
         if(HeroStatus.Count > 0)
         {
@@ -258,7 +259,15 @@ public class HeroScript : MonoBehaviour
     private void RangedAttack()
     {
         GameObject chk = GameObject.Find($"ProjectileHero{stringID}(Clone)");
-        if(!chk) Instantiate(Resources.Load<GameObject>($"Projectiles/ProjectileHero{stringID}"), GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
+        if(!chk)
+        {
+            Instantiate(Resources.Load<GameObject>($"Projectiles/ProjectileHero{stringID}"), GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
+        } 
+        else
+        {
+            if(isCritical) chk.GetComponentInChildren<ProjectileScript>().isCritical = true;
+            else chk.GetComponent<ProjectileScript>().isCritical = false;
+        }
     }
 
     private void OnDrawGizmos()

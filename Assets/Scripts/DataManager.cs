@@ -139,6 +139,20 @@ public class Status
     public string buffTime;
 }
 
+[System.Serializable]
+public class Stage
+{
+    public Stage(string _ID, string _stageNumber, string _stageInfo)
+    {
+        mapID = _ID;
+        stageNumber = _stageNumber;
+        stageInfo = _stageInfo;
+    }
+    public string mapID;
+    public string stageNumber;
+    public string stageInfo;
+}
+
 public class DataManager : MonoBehaviour
 {
     public static DataManager instance;
@@ -168,11 +182,13 @@ public class DataManager : MonoBehaviour
     public TextAsset MinionDB;
     public TextAsset AbilityDB;
     public TextAsset StatusDB;
+    public TextAsset StageDB;
     public static List<Hero> AllHeroList;
     public static List<Enemy> AllEnemyList;
     public static List<Minion> AllMinionList;
     public static List<Ability> AllAbilityList;
     public static List<Status> AllStatusList;
+    public static List<Stage> AllStageList;
 
     public static int selectedHeroID = 3;
 
@@ -250,6 +266,21 @@ public class DataManager : MonoBehaviour
             else
             {
                 AllStatusList.Add(new Status(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5]));
+            }
+        }
+
+        AllStageList = new List<Stage>();
+        line = StageDB.text.Substring(0, StageDB.text.Length).Split('\r');
+        for(int i=1; i<line.Length; i++)
+        {
+            string[] row = line[i].Split('\t');
+            if(i == 0)
+            {
+                AllStageList.Add(new Stage(row[0], row[1], row[2]));
+            }
+            else
+            {
+                AllStageList.Add(new Stage(row[0].Substring(1), row[1], row[2]));
             }
         }
     }
