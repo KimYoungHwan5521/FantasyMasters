@@ -197,6 +197,7 @@ MonoBehaviour:
   minionMaxHP: 0
   minionNowHP: 0
   minionExistencetime: 0
+  minionAtkType: 0
   minionAtkDmg: 0
   minionAtkSpeed: 0
   minionAtkRange: 0
@@ -204,7 +205,8 @@ MonoBehaviour:
   minionCriticalChance: 0
   minionArmor: 0
   minionMoveSpeed: 0
-  minionAbilityKR: 
+  minionAbilities: []
+  HPBar: {fileID: 0}
   atkCoolTime: 0
   TrackingBox: {x: 10, y: 10}
   boxSize: {x: 1, y: 1}
@@ -218,7 +220,7 @@ Animator:
   m_GameObject: {fileID: 6229738066027970466}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c9e0e2d7b4eb5034a8d6c887e3e812a4, type: 2}
+  m_Controller: {fileID: 22100000, guid: 6cb13ad2448f33044b318034410dbb52, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

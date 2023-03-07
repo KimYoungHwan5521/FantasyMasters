@@ -96,7 +96,7 @@ Animator:
   m_GameObject: {fileID: 8139610042829298298}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 2737234d91067494089a690300bc4662, type: 2}
+  m_Controller: {fileID: 22100000, guid: 6436c75e2a6d2bc4ca8f9ddca6bb1a2b, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -164,12 +164,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32d482ac42824b143942874005161a34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 0
+  _heroID: 0
+  stringID: 
+  heroNameKR: 
+  attributes: []
   maxHP: 0
   nowHP: 0
+  HPRegeneration: 0
+  atkType: 0
   atkDmg: 0
+  atkSpeed: 1
+  atkSpeedCVM: 1
+  atkRange: 0
   criticalDmg: 0
   criticalChance: 0
-  atkSpeed: 1
+  armor: 0
+  moveSpeed: 0
+  abilities: []
   atkCoolTime: 0.3
   boxSize: {x: 0, y: 0}
+  HPbar: {fileID: 0}
+  TextMaxHP: {fileID: 0}
+  TextNowHP: {fileID: 0}
+  target: {fileID: 0}

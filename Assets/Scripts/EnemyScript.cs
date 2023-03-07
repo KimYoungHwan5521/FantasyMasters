@@ -54,6 +54,8 @@ public class EnemyScript : MonoBehaviour
         enemyCollisionDmg = float.Parse(enemyInfo.enemyCollisionDmg);
         enemyAtkSpeed = float.Parse(enemyInfo.enemyAtkSpeed);
         enemyAtkRange = float.Parse(enemyInfo.enemyAtkRange);
+        if(enemyAtkRange < 2) boxSize = new Vector2(2, 2);
+        else boxSize = new Vector2(enemyAtkRange, enemyAtkRange);
         enemyArmor = float.Parse(enemyInfo.enemyArmor);
         enemyMoveSpeed = float.Parse(enemyInfo.enemyMoveSpeed);
 
@@ -74,6 +76,7 @@ public class EnemyScript : MonoBehaviour
         if(enemyNowHP <= 0)
         {
             HPBar.GetComponent<Image>().fillAmount = 0;
+            animator.SetBool("isMoving", false);
             animator.SetTrigger("Dead");
         }
         else
@@ -99,6 +102,7 @@ public class EnemyScript : MonoBehaviour
                 }
                 moveDirection.Normalize();
                 transform.Translate(moveDirection * Time.deltaTime * enemyMoveSpeed);
+                animator.SetBool("isMoving", true);
             }
         }
     }
