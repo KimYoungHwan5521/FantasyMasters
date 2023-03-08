@@ -12,6 +12,10 @@ public class StageManager : MonoBehaviour
     public string mapID = "0000";
     public int stageNumber = 1;
     public string stageInfo;
+    public Text StageTime;
+    public int stageTime = 60;
+    
+    GameObject Hero;
     void Start()
     {
         _heroID = DataManager.selectedHeroID;
@@ -33,8 +37,7 @@ public class StageManager : MonoBehaviour
             stringID += "0";
         }
         stringID += _heroID.ToString();
-        var Hero = Resources.Load<GameObject>($"Heros/Hero{stringID}");
-        Instantiate(Hero);
+        Hero = Instantiate(Resources.Load<GameObject>($"Heros/Hero{stringID}"));
 
         CurStageList = DataManager.AllStageList.FindAll(x => x.mapID == "0000");
 
@@ -43,6 +46,7 @@ public class StageManager : MonoBehaviour
 
     IEnumerator StageStart()
     {
+        stageInfo = CurStageList.Find(x => x.stageNumber == stageNumber.ToString()).stageInfo;
         for(int i=3; i>-1; i--)
         {
             FloatingText CountText = Instantiate(Resources.Load<FloatingText>("Effects/FloatingText"), new Vector2(0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
@@ -51,10 +55,24 @@ public class StageManager : MonoBehaviour
             else CountText.SetText($"<size=100>{i.ToString()}</size>", "#FF0000");
             yield return new WaitForSeconds(1);
         }
-        stageInfo = CurStageList.Find(x => x.stageNumber == stageNumber.ToString()).stageInfo;
-
+        if(Hero.GetComponent<HeroScript>().abilities.Find(x => x.Equals("0000")) != null)
+        {
+            StartCoroutine(SummonMinion("0000", 20.0f));
+        }
+        StartCoroutine(StageTimer());
         StartCoroutine(SpawnEnemy(stageInfo));
-
+    }
+    
+    IEnumerator StageTimer()
+    {
+        StageTime.gameObject.SetActive(true);
+        for(int i=1; i < stageTime + 1; i++)
+        {
+            StageTime.text = (stageTime - i).ToString();
+            yield return new WaitForSeconds(1);
+        }
+        StageTime.gameObject.SetActive(false);
+        StartCoroutine(StageEnd());
     }
     
     IEnumerator SpawnEnemy(string _stageInfo)
@@ -82,6 +100,45 @@ public class StageManager : MonoBehaviour
             }
             for(int x=0;x<8;x++) spawnPointID.Add(x);
             yield return new WaitForSeconds(5);
+        }
+    }
+
+    IEnumerator StageEnd()
+    {
+        GameObject[] E = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach(GameObject e in E)
+        {
+            e.GetComponent<EnemyScript>().enemyNowHP = 0;
+        }
+        GameObject[] M = GameObject.FindGameObjectsWithTag("Minion");
+        foreach(GameObject m in M)
+        {
+            m.GetComponent<MinionScript>().minionNowHP = 0;
+        }
+        stageNumber++;
+        yield return StartCoroutine(ReadyToNextStage());
+    }
+
+    public GameObject Shop;
+    IEnumerator ReadyToNextStage()
+    {
+        Shop.SetActive(true);
+        yield return null;
+    }
+
+    public void OnClickStartNextStage()
+    {
+        StartCoroutine(StageStart());
+    }
+    
+    IEnumerator SummonMinion(string _minionID, float summonCoolTime)
+    {
+        var minionToSummon = Resources.Load<GameObject>($"Minions/Minion{_minionID}");
+        while(true)
+        {
+            Vector3 summonPositon = Hero.GetComponent<Collider2D>().bounds.center;
+            Instantiate(minionToSummon, summonPositon, Quaternion.identity);
+            yield return new WaitForSeconds(summonCoolTime);
         }
     }
 }

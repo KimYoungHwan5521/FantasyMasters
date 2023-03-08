@@ -88,10 +88,6 @@ public class HeroScript : MonoBehaviour
         moveSpeed = float.Parse(heroInfo.heroMoveSpeed);
         abilities = heroInfo.heroAbilities;
         HeroStatus = new List<StatusV>();
-        if(abilities.Find(x => x.Equals("0000")) != null)
-        {
-            StartCoroutine(SummonMinion("0000", 20.0f));
-        }
 
         animator = GetComponentInChildren<Animator>();
         transform.position = new Vector2(0, 0);
@@ -309,17 +305,6 @@ public class HeroScript : MonoBehaviour
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         gameObject.layer = 11;
         spriteRenderer.color = new Color(1, 1, 1, 1);
-    }
-
-    IEnumerator SummonMinion(string _minionID, float summonCoolTime)
-    {
-        var minionToSummon = Resources.Load<GameObject>($"Minions/Minion{_minionID}");
-        while(true)
-        {
-            Vector3 summonPositon = GetComponent<Collider2D>().bounds.center;
-            Instantiate(minionToSummon, summonPositon, Quaternion.identity);
-            yield return new WaitForSeconds(summonCoolTime);
-        }
     }
 
     public void AddStatus(string _statusID)
