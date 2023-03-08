@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class StageManager : MonoBehaviour
 {
@@ -36,6 +37,20 @@ public class StageManager : MonoBehaviour
         Instantiate(Hero);
 
         CurStageList = DataManager.AllStageList.FindAll(x => x.mapID == "0000");
+
+        StartCoroutine(StageStart());
+    }
+
+    IEnumerator StageStart()
+    {
+        for(int i=3; i>-1; i--)
+        {
+            FloatingText CountText = Instantiate(Resources.Load<FloatingText>("Effects/FloatingText"), new Vector2(0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
+            CountText.gameObject.GetComponent<RectTransform>().position = Camera.main.WorldToScreenPoint(new Vector3(0, 0, 0));
+            if(i == 0) CountText.SetText("<size=100>Start!</size>", "#FF0000");
+            else CountText.SetText($"<size=100>{i.ToString()}</size>", "#FF0000");
+            yield return new WaitForSeconds(1);
+        }
         stageInfo = CurStageList.Find(x => x.stageNumber == stageNumber.ToString()).stageInfo;
 
         StartCoroutine(SpawnEnemy(stageInfo));

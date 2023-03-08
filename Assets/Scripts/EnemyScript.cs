@@ -150,9 +150,8 @@ public class EnemyScript : MonoBehaviour
         enemyNowHP -= dmg;
         RectTransform DmgText = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);
         DmgText.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y, 0));
-        DmgText.gameObject.GetComponent<FloatingText>().damage = dmg;
-        if(getCritical) DmgText.GetComponent<FloatingText>().isCritical = true;
-        else DmgText.GetComponent<FloatingText>().isCritical = false;
+        if(getCritical) DmgText.gameObject.GetComponent<FloatingText>().SetText($"<size=50>{Mathf.Round(dmg).ToString()}</size>", "#FF0000");
+        else DmgText.gameObject.GetComponent<FloatingText>().SetText(Mathf.Round(dmg).ToString(), "#FFAAAA");
         // print($"enemyNowHP: {enemyNowHP}");
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.color = new Color(1, 0, 0, 1);

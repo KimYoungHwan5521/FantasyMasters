@@ -281,16 +281,17 @@ public class HeroScript : MonoBehaviour
         {
             EnemyScript colES = collision.gameObject.GetComponent<EnemyScript>();
             float dmg = 0;
+            RectTransform DmgText = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);
+            DmgText.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y, 0));
             if(colES.enemyCollisionDmg - armor > 0) 
             {
                 dmg = colES.enemyCollisionDmg - armor;
                 nowHP -= dmg;
                 // print($"PlayerHP: {nowHP}");
+                DmgText.gameObject.GetComponent<FloatingText>().SetText(Mathf.Round(dmg).ToString(), "#FFAAAA");
                 OnDamaged(collision.transform.position);
             }
-            RectTransform DmgText = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);
-            DmgText.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y, 0));
-            DmgText.gameObject.GetComponent<FloatingText>().damage = dmg;
+            else DmgText.gameObject.GetComponent<FloatingText>().SetText(Mathf.Round(dmg).ToString());
         }
     }
 

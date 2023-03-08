@@ -10,8 +10,6 @@ public class FloatingText : MonoBehaviour
     private float destroyTime;
     Text text;
     Color alpha;
-    public float damage;
-    public bool isCritical = false;
 
     // Start is called before the first frame update
     void Start()
@@ -20,19 +18,15 @@ public class FloatingText : MonoBehaviour
         alphaSpeed = 2.0f;
         destroyTime = 2.0f;
 
-        text = GetComponent<Text>();
-        text.text = Mathf.Round(damage).ToString();
-        if(damage == 0)
-        {
-            alpha = Color.white;
-        }
-        else
-        {
-            if(isCritical) ColorUtility.TryParseHtmlString("#FF0000", out alpha);
-            else ColorUtility.TryParseHtmlString("#FF9999", out alpha);
-        }
-        text.color = alpha;
         Invoke("DestroyObject", destroyTime);
+    }
+
+    public void SetText(string textToFloat, string textColorHexCode = "#FFFFFF")
+    {
+        text = GetComponent<Text>();
+        text.text = textToFloat;
+        ColorUtility.TryParseHtmlString(textColorHexCode, out alpha);
+        text.color = alpha;
     }
 
     // Update is called once per frame
