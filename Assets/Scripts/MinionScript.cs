@@ -89,7 +89,7 @@ public class MinionScript : MonoBehaviour
         }
         else
         {
-            HPBar.position = Camera.main.WorldToScreenPoint(new Vector3(transform.GetComponent<Collider2D>().bounds.center.x, transform.GetComponent<Collider2D>().bounds.center.y - GetComponent<BoxCollider2D>().size.y * 2, 0));
+            HPBar.position = Camera.main.WorldToScreenPoint(new Vector3(transform.GetComponent<Collider2D>().bounds.center.x, transform.GetComponent<Collider2D>().bounds.center.y - GetComponent<BoxCollider2D>().size.y * transform.localScale.y, 0));
             HPBar.GetComponent<Image>().fillAmount = minionNowHP / minionMaxHP;
             if(target != null)
             {
@@ -184,11 +184,11 @@ public class MinionScript : MonoBehaviour
             {
                 if(isCritical)
                 {
-                    collider.GetComponent<EnemyScript>().BeAttacked(minionAtkDmg * minionCriticalDmg, 0.6f);
+                    collider.GetComponent<EnemyScript>().BeAttacked(minionAtkDmg * minionCriticalDmg, 0.6f, isCritical);
                 }
                 else
                 {
-                    collider.GetComponent<EnemyScript>().BeAttacked(minionAtkDmg, 0.3f);
+                    collider.GetComponent<EnemyScript>().BeAttacked(minionAtkDmg, 0.3f, isCritical);
                 }
             }
         }
@@ -207,10 +207,18 @@ public class MinionScript : MonoBehaviour
     {
         if (collision.gameObject.tag == "Enemy")
         {
+            float dmg = 0;
             EnemyScript colES = collision.gameObject.GetComponent<EnemyScript>();
-            minionNowHP -= colES.enemyCollisionDmg;
-            // print($"minionNowHP: {minionNowHP}");
-            OnDamaged(collision.transform.position);
+            if(colES.enemyCollisionDmg - minionArmor > 0)
+            {
+                dmg = colES.enemyCollisionDmg - minionArmor;
+                minionNowHP -= dmg;
+                // print($"minionNowHP: {minionNowHP}");
+                OnDamaged(collision.transform.position);
+            }
+            RectTransform DmgText = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);
+            DmgText.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y, 0));
+            DmgText.gameObject.GetComponent<FloatingText>().damage = dmg;
         }
     }
 

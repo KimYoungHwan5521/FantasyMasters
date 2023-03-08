@@ -81,7 +81,7 @@ public class EnemyScript : MonoBehaviour
         }
         else
         {
-            HPBar.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y - GetComponent<BoxCollider2D>().size.y * 2, 0));
+            HPBar.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y - GetComponent<BoxCollider2D>().size.y * transform.localScale.y, 0));
             HPBar.GetComponent<Image>().fillAmount = enemyNowHP / enemyMaxHP;
             if(target != null)
             {
@@ -142,9 +142,17 @@ public class EnemyScript : MonoBehaviour
         if(target == null) target = Hero;
     }
 
-    public void BeAttacked(float dmg, float knockback)
+    
+    public void BeAttacked(float dmg, float knockback, bool getCritical = false)
     {
+        if(dmg - enemyArmor < 1) dmg = 1;
+        else dmg = dmg - enemyArmor;
         enemyNowHP -= dmg;
+        RectTransform DmgText = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);
+        DmgText.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y, 0));
+        DmgText.gameObject.GetComponent<FloatingText>().damage = dmg;
+        if(getCritical) DmgText.GetComponent<FloatingText>().isCritical = true;
+        else DmgText.GetComponent<FloatingText>().isCritical = false;
         // print($"enemyNowHP: {enemyNowHP}");
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.color = new Color(1, 0, 0, 1);

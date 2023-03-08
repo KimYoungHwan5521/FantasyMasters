@@ -77,7 +77,7 @@ public class HeroScript : MonoBehaviour
         nowHP = maxHP;
         HPRegeneration = float.Parse(heroInfo.heroHPRegeneration);
         atkType = int.Parse(heroInfo.heroAtkType);
-        atkDmg = float.Parse(heroInfo.heroAtkDmg);
+        atkDmg = float.Parse(heroInfo.heroAtkDmg.Split('x')[0]);
         atkSpeed = float.Parse(heroInfo.heroAtkSpeed);
         atkCoolTime = 10 / atkSpeed;
         atkRange = float.Parse(heroInfo.heroAtkRange);
@@ -117,7 +117,6 @@ public class HeroScript : MonoBehaviour
         animator.SetFloat("AttackSpeed", atkSpeedCVM);
         atkCoolTime = 10 / atkSpeed;
 
-        print($"atkSpeed: {atkSpeed}, atkSpeedCVM: {atkSpeedCVM}");
         // status timer
         if(HeroStatus.Count > 0)
         {
@@ -246,11 +245,11 @@ public class HeroScript : MonoBehaviour
             {
                 if(isCritical)
                 {
-                    collider.GetComponent<EnemyScript>().BeAttacked(atkDmg * criticalDmg, 0.6f);
+                    collider.GetComponent<EnemyScript>().BeAttacked(atkDmg * criticalDmg, 0.6f, isCritical);
                 }
                 else
                 {
-                    collider.GetComponent<EnemyScript>().BeAttacked(atkDmg, 0.3f);
+                    collider.GetComponent<EnemyScript>().BeAttacked(atkDmg, 0.3f, isCritical);
                 }
             }
         }
@@ -281,9 +280,17 @@ public class HeroScript : MonoBehaviour
         if (collision.gameObject.tag == "Enemy")
         {
             EnemyScript colES = collision.gameObject.GetComponent<EnemyScript>();
-            nowHP -= colES.enemyCollisionDmg;
-            print($"PlayerHP: {nowHP}");
-            OnDamaged(collision.transform.position);
+            float dmg = 0;
+            if(colES.enemyCollisionDmg - armor > 0) 
+            {
+                dmg = colES.enemyCollisionDmg - armor;
+                nowHP -= dmg;
+                // print($"PlayerHP: {nowHP}");
+                OnDamaged(collision.transform.position);
+            }
+            RectTransform DmgText = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);
+            DmgText.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y, 0));
+            DmgText.gameObject.GetComponent<FloatingText>().damage = dmg;
         }
     }
 
