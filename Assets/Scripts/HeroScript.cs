@@ -102,6 +102,7 @@ public class HeroScript : MonoBehaviour
 
     public GameObject target = null;
     public bool isCritical = false;
+    private int projectileCount = 0;
     void Update()
     {
         TextMaxHP.text = Mathf.Ceil(maxHP).ToString();
@@ -181,6 +182,7 @@ public class HeroScript : MonoBehaviour
                 else isCritical = false;
                 if(isCritical) animator.SetBool("isCritical", true);
                 else animator.SetBool("isCritical", false);
+                projectileCount++;
                 animator.SetTrigger("Attack");
                 curTime = atkCoolTime;
             }
@@ -253,15 +255,11 @@ public class HeroScript : MonoBehaviour
 
     private void RangedAttack()
     {
-        GameObject chk = GameObject.Find($"ProjectileHero{stringID}(Clone)");
-        if(!chk)
+        if(projectileCount > 0)
         {
-            Instantiate(Resources.Load<GameObject>($"Projectiles/ProjectileHero{stringID}"), GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
-        } 
-        else
-        {
-            if(isCritical) chk.GetComponentInChildren<ProjectileScript>().isCritical = true;
-            else chk.GetComponent<ProjectileScript>().isCritical = false;
+            GameObject p = Instantiate(Resources.Load<GameObject>($"Projectiles/ProjectileHero{stringID}"), GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
+            p.GetComponentInChildren<ProjectileScript>().SetProjectile(gameObject, target, isCritical);
+            projectileCount--;
         }
     }
 
@@ -283,15 +281,28 @@ public class HeroScript : MonoBehaviour
             {
                 dmg = colES.enemyCollisionDmg - armor;
                 nowHP -= dmg;
-                // print($"PlayerHP: {nowHP}");
                 DmgText.gameObject.GetComponent<FloatingText>().SetText(Mathf.Round(dmg).ToString(), "#FFAAAA");
-                OnDamaged(collision.transform.position);
+                OnDamaged();
             }
             else DmgText.gameObject.GetComponent<FloatingText>().SetText(Mathf.Round(dmg).ToString());
         }
     }
 
-    void OnDamaged(Vector2 targetPos)
+    public void BeAttacked(float dmg)
+    {
+        dmg -= armor;
+        RectTransform DmgText = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);
+        DmgText.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y, 0));
+        if(dmg > 0)
+        {
+            nowHP -= dmg;
+            DmgText.gameObject.GetComponent<FloatingText>().SetText(Mathf.Round(dmg).ToString(), "#FFAAAA");
+            OnDamaged();
+        }
+        else DmgText.gameObject.GetComponent<FloatingText>().SetText("0", "#FFAAAA");
+    }
+
+    void OnDamaged()
     {
         //충돌시 플레이어의 레이어가 PlayerInv 레이어로 변함 
         gameObject.layer = 12;

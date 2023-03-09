@@ -55,11 +55,12 @@ public class StageManager : MonoBehaviour
             else CountText.SetText($"<size=100>{i.ToString()}</size>", "#FF0000");
             yield return new WaitForSeconds(1);
         }
+        stageTime = 60;
+        StartCoroutine(StageTimer());
         if(Hero.GetComponent<HeroScript>().abilities.Find(x => x.Equals("0000")) != null)
         {
             StartCoroutine(SummonMinion("0000", 20.0f));
         }
-        StartCoroutine(StageTimer());
         StartCoroutine(SpawnEnemy(stageInfo));
     }
     

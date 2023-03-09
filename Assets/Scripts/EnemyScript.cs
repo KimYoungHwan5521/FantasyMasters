@@ -7,6 +7,7 @@ public class EnemyScript : MonoBehaviour
 {
     DataManager DataManager;
     public int _enemyID;
+    public string stringID;
     public string enemyNameKR;
     public float enemyMaxHP;
     public float enemyNowHP;
@@ -21,9 +22,12 @@ public class EnemyScript : MonoBehaviour
     Animator animator;
     public RectTransform HPBar;
 
+    private float curTime;
+    public float atkCoolTime;
+    private int projectileCount;
+
     void Start()
     {
-        string stringID;
         int cntDigit = 0;
         int copy_enemyID = _enemyID;
         for(int i=0; i < 4; i++)
@@ -53,6 +57,7 @@ public class EnemyScript : MonoBehaviour
         enemyAtkDmg = float.Parse(enemyInfo.enemyAtkDmg);
         enemyCollisionDmg = float.Parse(enemyInfo.enemyCollisionDmg);
         enemyAtkSpeed = float.Parse(enemyInfo.enemyAtkSpeed);
+        atkCoolTime = 10 / enemyAtkSpeed;
         enemyAtkRange = float.Parse(enemyInfo.enemyAtkRange);
         if(enemyAtkRange < 2) boxSize = new Vector2(2, 2);
         else boxSize = new Vector2(enemyAtkRange, enemyAtkRange);
@@ -71,6 +76,7 @@ public class EnemyScript : MonoBehaviour
     Vector2 moveDirection;
     GameObject Hero;
     GameObject target;
+
     void Update()
     {
         if(enemyNowHP <= 0)
@@ -85,24 +91,43 @@ public class EnemyScript : MonoBehaviour
             HPBar.GetComponent<Image>().fillAmount = enemyNowHP / enemyMaxHP;
             if(target != null)
             {
-                moveDirection = target.GetComponent<Collider2D>().bounds.center - GetComponent<Collider2D>().bounds.center;
-                if(target.GetComponent<Collider2D>().bounds.center.x < GetComponent<Collider2D>().bounds.center.x)
+                if(Vector2.Distance(transform.GetComponent<Collider2D>().bounds.center, target.GetComponent<Collider2D>().bounds.center) < enemyAtkRange)
                 {
-                    if(transform.localScale.x > 0)
+                    if(curTime <= 0)
                     {
-                        transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+                        animator.SetTrigger("Attack");
+                        curTime = atkCoolTime;
+                    }
+                    else
+                    {
+                        curTime -= Time.deltaTime;
                     }
                 }
                 else
                 {
-                    if(transform.localScale.x < 0)
+                    animator.SetBool("isMoving", true);
+                    moveDirection = target.GetComponent<Collider2D>().bounds.center - GetComponent<Collider2D>().bounds.center;
+                    if(target.GetComponent<Collider2D>().bounds.center.x < GetComponent<Collider2D>().bounds.center.x)
                     {
-                        transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+                        if(transform.localScale.x > 0)
+                        {
+                            transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+                        }
                     }
+                    else
+                    {
+                        if(transform.localScale.x < 0)
+                        {
+                            transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+                        }
+                    }
+                    moveDirection.Normalize();
+                    transform.Translate(moveDirection * Time.deltaTime * enemyMoveSpeed);
                 }
-                moveDirection.Normalize();
-                transform.Translate(moveDirection * Time.deltaTime * enemyMoveSpeed);
-                animator.SetBool("isMoving", true);
+            }
+            else
+            {
+                animator.SetBool("isMoving", false);
             }
         }
     }
@@ -142,7 +167,32 @@ public class EnemyScript : MonoBehaviour
         if(target == null) target = Hero;
     }
 
+    private void MeleeAttack()
+    {
+        Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(transform.GetComponent<Collider2D>().bounds.center, boxSize, 0);
+        foreach(Collider2D collider in collider2Ds)
+        {
+            if(collider.tag == "Player")
+            {
+                collider.GetComponent<HeroScript>().BeAttacked(enemyAtkDmg);
+            }
+            else if(collider.tag == "Minion")
+            {
+                collider.GetComponent<MinionScript>().BeAttacked(enemyAtkDmg);
+            }
+        }
+    }
     
+    private void RangedAttack()
+    {
+        if(projectileCount > 0)
+        {
+            GameObject p = Instantiate(Resources.Load<GameObject>($"Projectiles/ProjectileEnemy{stringID}"), GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
+            p.GetComponent<ProjectileScript>().SetProjectile(gameObject, target);
+            projectileCount--;
+        }
+    }
+
     public void BeAttacked(float dmg, float knockback, bool getCritical = false)
     {
         if(dmg - enemyArmor < 1) dmg = 1;

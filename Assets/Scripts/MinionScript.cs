@@ -7,6 +7,7 @@ public class MinionScript : MonoBehaviour
 {
     DataManager DataManager;
     public int _minionID;
+    public string stringID;
     public string minionNameKR;
     public string[] minionAttributes;
     public float minionMaxHP;
@@ -27,10 +28,10 @@ public class MinionScript : MonoBehaviour
 
     private float curTime;
     public float atkCoolTime;
+    private int projectileCount;
     
     void Start()
     {
-        string stringID;
         int cntDgit = 0;
         int copy_minionID = _minionID;
         for(int i=0; i<4; i++)
@@ -194,6 +195,33 @@ public class MinionScript : MonoBehaviour
         }
     }
 
+    private void RangedAttack()
+    {
+        if(projectileCount > 0)
+        {
+            GameObject p = Instantiate(Resources.Load<GameObject>($"Projectiles/ProjectileMinion{stringID}"), GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
+            p.GetComponent<ProjectileScript>().SetProjectile(gameObject, target, isCritical);
+            projectileCount--;
+        }
+    }
+
+    public void BeAttacked(float dmg)
+    {
+        RectTransform DmgText = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);
+        DmgText.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y, 0));
+        if(dmg - minionArmor <= 0)
+        {
+            DmgText.gameObject.GetComponent<FloatingText>().SetText("0", "#FFFFFF");
+        }
+        else
+        {
+            minionNowHP -= dmg - minionArmor;
+            DmgText.gameObject.GetComponent<FloatingText>().SetText(Mathf.Round(dmg).ToString(), "#FFAAAA");
+            OnDamaged();
+        }
+
+    }
+
     public Vector2 boxSize;
     private void OnDrawGizmos()
     {
@@ -214,7 +242,7 @@ public class MinionScript : MonoBehaviour
                 dmg = colES.enemyCollisionDmg - minionArmor;
                 minionNowHP -= dmg;
                 // print($"minionNowHP: {minionNowHP}");
-                OnDamaged(collision.transform.position);
+                OnDamaged();
             }
             RectTransform DmgText = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);
             DmgText.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y, 0));
@@ -222,7 +250,7 @@ public class MinionScript : MonoBehaviour
         }
     }
 
-    void OnDamaged(Vector2 targetPos)
+    void OnDamaged()
     {
         gameObject.layer = 10;
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
