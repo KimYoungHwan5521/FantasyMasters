@@ -18,8 +18,6 @@ public class CameraScript : MonoBehaviour
     {
         // _Camera = GameObject.Find("MainCamera").GetComponent<Camera>();
         z = transform.position.z;
-        height = Camera.main.orthographicSize;
-        width = height * Screen.width / Screen.height;
     }
 
     private float temp_value;
@@ -51,6 +49,8 @@ public class CameraScript : MonoBehaviour
         Hero = GameObject.FindWithTag("Player");
         transform.position = Vector3.Lerp(Hero.transform.position, Hero.transform.position, Time.deltaTime * speed);
 
+        height = Camera.main.orthographicSize;
+        width = height * Screen.width / Screen.height;
         // Mathf.Clamp() : 유니티에선 변수가 일정한 값을 벗어나지 못하도록 범위를 제한하는 함수
         float lx = Map.transform.localScale.x * 0.5f - width;
         float clampX = Mathf.Clamp(transform.position.x, -lx + center.x, lx + center.x);
