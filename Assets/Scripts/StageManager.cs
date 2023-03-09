@@ -116,7 +116,8 @@ public class StageManager : MonoBehaviour
             m.GetComponent<MinionScript>().minionNowHP = 0;
         }
         stageNumber++;
-        yield return StartCoroutine(ReadyToNextStage());
+        if(CurStageList.Find(x => x.stageNumber == stageNumber.ToString()) != null) yield return StartCoroutine(ReadyToNextStage());
+        else yield return StartCoroutine(ClearMap());
     }
 
     public GameObject Shop;
@@ -129,6 +130,11 @@ public class StageManager : MonoBehaviour
     public void OnClickStartNextStage()
     {
         StartCoroutine(StageStart());
+    }
+
+    IEnumerator ClearMap()
+    {
+        yield return null;
     }
     
     IEnumerator SummonMinion(string _minionID, float summonCoolTime)

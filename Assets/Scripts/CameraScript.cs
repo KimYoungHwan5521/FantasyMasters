@@ -22,11 +22,32 @@ public class CameraScript : MonoBehaviour
         width = height * Screen.width / Screen.height;
     }
 
+    private float temp_value;
+    void Update()
+    {
+        float scroll = Input.GetAxis("Mouse ScrollWheel") * speed;
+
+        // scroll < 0 : scroll down하면 줌인
+        if (gameObject.GetComponent<Camera>().orthographicSize - scroll * 0.01f < 2f && scroll > 0)
+        {
+            temp_value = gameObject.GetComponent<Camera>().orthographicSize;
+            gameObject.GetComponent<Camera>().orthographicSize = temp_value; // maximize zoom in
+
+           // 최대로 Zoom in 했을 때, 특정 값을 지정했을 때 최대 줌 인 범위를 벗어날 때 값에 맞추려고 한번 줌 아웃 되는 현상을 방지
+        }
+
+        // scroll > 0 : scroll up하면 줌아웃
+        else if (gameObject.GetComponent<Camera>().orthographicSize - scroll * 0.01f > 5f && scroll < 0)
+        {
+            temp_value = gameObject.GetComponent<Camera>().orthographicSize;
+            gameObject.GetComponent<Camera>().orthographicSize = temp_value; // maximize zoom out
+        }
+        else
+            gameObject.GetComponent<Camera>().orthographicSize -= scroll * 0.01f;
+    }
+
     void LateUpdate()
     {
-        // float scrollWheel = Input.GetAxis("Mouse ScrollWheel");
-        // _Camera.orthographicSize += scrollWheel * Time.deltaTime * scrollSpeed;
-
         Hero = GameObject.FindWithTag("Player");
         transform.position = Vector3.Lerp(Hero.transform.position, Hero.transform.position, Time.deltaTime * speed);
 

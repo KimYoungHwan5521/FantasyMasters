@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 6229738066027970465}
   - component: {fileID: 6229738066027970493}
   - component: {fileID: 6229738066027970492}
+  - component: {fileID: -1331547741101159289}
   m_Layer: 9
   m_Name: Minion0000
   m_TagString: Minion
@@ -229,3 +230,17 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &-1331547741101159289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6229738066027970466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a3d658df8c4ac54da684473deee6ca8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {r: 1, g: 1, b: 1, a: 1}
+  outlineSize: 1
