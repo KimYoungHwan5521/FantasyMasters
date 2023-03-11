@@ -43,7 +43,7 @@ public class Hero
 [System.Serializable]
 public class Enemy
 {
-    public Enemy(string _ID, string _NameKR, string _HP, string _AtkType, string _CollisionDmg, string _AtkDmg, string _AtkSpeed, string _AtkRange, string _Armor, string _MoveSpeed)
+    public Enemy(string _ID, string _NameKR, string _HP, string _AtkType, string _CollisionDmg, string _AtkDmg, string _AtkSpeed, string _AtkRange, string _Armor, string _MoveSpeed, string _AbilityID)
     {
         enemyID = _ID;
         enemyNameKR = _NameKR;
@@ -55,6 +55,7 @@ public class Enemy
         enemyAtkRange = _AtkRange;
         enemyArmor = _Armor;
         enemyMoveSpeed = _MoveSpeed;
+        enemyAbilities = _AbilityID.Split(',').ToList();
     }
     public string enemyID;
     public string enemyNameKR;
@@ -66,6 +67,7 @@ public class Enemy
     public string enemyAtkRange;
     public string enemyArmor;
     public string enemyMoveSpeed;
+    public List<string> enemyAbilities;
 }
 
 [System.Serializable]
@@ -216,11 +218,11 @@ public class DataManager : MonoBehaviour
             string[] row = line[i].Split('\t');
             if(i == 0)
             {
-                AllEnemyList.Add(new Enemy(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9]));
+                AllEnemyList.Add(new Enemy(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10]));
             }
             else
             {
-                AllEnemyList.Add(new Enemy(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9]));
+                AllEnemyList.Add(new Enemy(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10]));
             }
         }
 

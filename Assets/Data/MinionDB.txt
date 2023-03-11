@@ -1,2 +1,3 @@
-MinionID	MinionNameKR	MinionAttributes	MinionHP	MinionExsitencetime	MinionAtkType	MinionAtkDmg	MinionAtkSpeed	MinionAtkRange	MinionCriticalDmg	MinionCriticalChance	MinionArmor	MinionMoveSpeed	MinionAbilityKR
-0000	스켈톤 검사	암흑	100	20	1	10	20	1	2	10	0	1	없음
+MinionID	MinionNameKR	MinionAttributes	MinionHP	MinionExsitencetime	MinionAtkType	MinionAtkDmg	MinionAtkSpeed	MinionAtkRange	MinionCriticalDmg	MinionCriticalChance	MinionArmor	MinionMoveSpeed	MinionAbilityID
+0000	스켈레톤 소드맨	암흑	100	20	1	10	20	1	2	10	0	1	
+0001	스켈레톤 액스맨	암흑	150	20	1	20	10	1	3	10	3	0.8	
