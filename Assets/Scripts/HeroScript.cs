@@ -29,6 +29,7 @@ public class HeroScript : MonoBehaviour
     public float moveSpeed;
     public List<string> abilities;
     public List<StatusV> HeroStatus;
+    public GameObject StatusSprites;
 
     private float curTime;
     public float atkCoolTime;
@@ -88,6 +89,7 @@ public class HeroScript : MonoBehaviour
         moveSpeed = float.Parse(heroInfo.heroMoveSpeed);
         abilities = heroInfo.heroAbilities;
         HeroStatus = new List<StatusV>();
+        StatusSprites = GameObject.Find("HeroStatus");
 
         animator = GetComponentInChildren<Animator>();
         transform.position = new Vector2(0, 0);
@@ -124,6 +126,7 @@ public class HeroScript : MonoBehaviour
                 {
                     RemoveStatus(HeroStatus[i].statusID);
                     HeroStatus.RemoveAt(i);
+                    Destroy(StatusSprites.transform.GetChild(i).gameObject);
                 }
             }
         }
@@ -336,11 +339,13 @@ public class HeroScript : MonoBehaviour
             tempStatus.buffStat = new string[_status.buffStat.Length];
             Array.Copy(_status.buffStat, tempStatus.buffStat, _status.buffStat.Length);
             tempStatus.buffValue = Array.ConvertAll(_status.buffValue, x => float.Parse(x));
+
             for(int i=0; i<_status.buffStat.Length; i++)
             {
                 if(_status.buffStat[i] == "atkSpeedCVM")
                 {
                     atkSpeedCVM *= float.Parse(_status.buffValue[i]);
+                    Instantiate(Resources.Load("UIs/Icons/AttackSpeedBuff"), new Vector2(0, 0), Quaternion.identity, GameObject.Find("HeroStatus").transform);
                 }
                 else
                 {
