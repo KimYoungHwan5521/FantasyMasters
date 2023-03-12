@@ -8,15 +8,11 @@ public class ProjectileScript : MonoBehaviour
     GameObject target;
     Vector2 spawnPoint;
     public float projectileSpeed = 10;
-    // Start is called before the first frame update
-    void Start()
-    {
-        spawnPoint = transform.position;
-    }
 
     public void SetProjectile(GameObject _summoner, GameObject _target, bool _isCritical = false)
     {
         summoner = _summoner;
+        spawnPoint = summoner.transform.position;
         target = _target;
         isCritical = _isCritical;
         StartCoroutine(Launch());

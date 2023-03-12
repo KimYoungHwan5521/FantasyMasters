@@ -259,6 +259,7 @@ public class HeroScript : MonoBehaviour
         {
             GameObject p = Instantiate(Resources.Load<GameObject>($"Projectiles/ProjectileHero{stringID}"), GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
             p.GetComponentInChildren<ProjectileScript>().SetProjectile(gameObject, target, isCritical);
+            // print($"spp, target: {gameObject}, {target}");
             projectileCount--;
         }
     }
