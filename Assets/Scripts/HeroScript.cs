@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class HeroScript : MonoBehaviour
 {
@@ -27,6 +28,7 @@ public class HeroScript : MonoBehaviour
     public float criticalChance;
     public float armor;
     public float moveSpeed;
+    public float moveSpeedCVM = 1;
     public List<string> abilities;
     public List<StatusV> HeroStatus;
     public GameObject StatusSprites;
@@ -87,7 +89,7 @@ public class HeroScript : MonoBehaviour
         criticalChance = float.Parse(heroInfo.heroCriticalChance);
         armor = float.Parse(heroInfo.heroArmor);
         moveSpeed = float.Parse(heroInfo.heroMoveSpeed);
-        abilities = heroInfo.heroAbilities;
+        abilities = heroInfo.heroAbilities.ToList();
         HeroStatus = new List<StatusV>();
         StatusSprites = GameObject.Find("HeroStatus");
 
@@ -114,6 +116,8 @@ public class HeroScript : MonoBehaviour
         else HPbar.color = Color.green;
         atkSpeed = float.Parse(DataManager.AllHeroList[_heroID].heroAtkSpeed) * atkSpeedCVM;
         animator.SetFloat("AttackSpeed", atkSpeedCVM);
+        moveSpeed = float.Parse(DataManager.AllHeroList[_heroID].heroMoveSpeed) * moveSpeedCVM;
+        animator.SetFloat("MoveSpeed", moveSpeedCVM);
         atkCoolTime = 10 / atkSpeed;
 
         // status timer
@@ -185,9 +189,13 @@ public class HeroScript : MonoBehaviour
                 else isCritical = false;
                 if(isCritical) animator.SetBool("isCritical", true);
                 else animator.SetBool("isCritical", false);
-                projectileCount++;
+                if(atkType == 2) projectileCount++;
                 animator.SetTrigger("Attack");
                 curTime = atkCoolTime;
+            }
+            else
+            {
+                animator.ResetTrigger("Attack");
             }
         }
         else
@@ -344,14 +352,18 @@ public class HeroScript : MonoBehaviour
             {
                 if(_status.buffStat[i] == "atkSpeedCVM")
                 {
-                    atkSpeedCVM *= float.Parse(_status.buffValue[i]);
-                    Instantiate(Resources.Load("UIs/Icons/AttackSpeedBuff"), new Vector2(0, 0), Quaternion.identity, GameObject.Find("HeroStatus").transform);
+                    atkSpeedCVM += float.Parse(_status.buffValue[i]);
+                }
+                else if(_status.buffStat[i] == "moveSpeedCVM")
+                {
+                    moveSpeedCVM += float.Parse(_status.buffValue[i]);
                 }
                 else
                 {
                     print($"wrong buffStat name : '{_status.buffStat[i]}'");
                 }
             }
+            Instantiate(Resources.Load($"UIs/Icons/Status{_statusID}"), new Vector2(0, 0), Quaternion.identity, GameObject.Find("HeroStatus").transform);
             tempStatus.buffTime = float.Parse(_status.buffTime);
             HeroStatus.Add(tempStatus);
         }
@@ -364,7 +376,11 @@ public class HeroScript : MonoBehaviour
         {
             if(HeroStatus[idx].buffStat[i] == "atkSpeedCVM")
             {
-                atkSpeedCVM /= HeroStatus[idx].buffValue[i];
+                atkSpeedCVM -= HeroStatus[idx].buffValue[i];
+            }
+            else if(HeroStatus[idx].buffStat[i] == "moveSpeedCVM")
+            {
+                moveSpeedCVM -= HeroStatus[idx].buffValue[i];
             }
         }
     }

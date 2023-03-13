@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class EnemyScript : MonoBehaviour
 {
@@ -18,13 +19,14 @@ public class EnemyScript : MonoBehaviour
     public float enemyAtkRange;
     public float enemyArmor;
     public float enemyMoveSpeed;
+    public List<string> enemyAbilities;
 
     Animator animator;
     public RectTransform HPBar;
 
     private float curTime;
     public float atkCoolTime;
-    private int projectileCount;
+    private int projectileCount = 0;
 
     void Start()
     {
@@ -63,6 +65,7 @@ public class EnemyScript : MonoBehaviour
         else boxSize = new Vector2(enemyAtkRange, enemyAtkRange);
         enemyArmor = float.Parse(enemyInfo.enemyArmor);
         enemyMoveSpeed = float.Parse(enemyInfo.enemyMoveSpeed);
+        enemyAbilities = enemyInfo.enemyAbilities.ToList();
 
         animator = GetComponent<Animator>();
         HPBar = Instantiate(Resources.Load<RectTransform>("UIs/HPBar"), new Vector3(0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
@@ -91,10 +94,12 @@ public class EnemyScript : MonoBehaviour
             HPBar.GetComponent<Image>().fillAmount = enemyNowHP / enemyMaxHP;
             if(target != null)
             {
-                if(Vector2.Distance(transform.GetComponent<Collider2D>().bounds.center, target.GetComponent<Collider2D>().bounds.center) < enemyAtkRange)
+                if(Vector2.Distance(transform.GetComponent<Collider2D>().bounds.center, target.GetComponent<Collider2D>().bounds.center) * Mathf.Abs(transform.localScale.x) < enemyAtkRange)
                 {
+                    print($"distance, atkrange: {Vector2.Distance(transform.GetComponent<Collider2D>().bounds.center, target.GetComponent<Collider2D>().bounds.center) * Mathf.Abs(transform.localScale.x)}, {enemyAtkRange}");
                     if(curTime <= 0)
                     {
+                        if(enemyAtkType == 2) projectileCount++;
                         animator.SetTrigger("Attack");
                         curTime = atkCoolTime;
                     }
@@ -188,7 +193,7 @@ public class EnemyScript : MonoBehaviour
         if(projectileCount > 0)
         {
             GameObject p = Instantiate(Resources.Load<GameObject>($"Projectiles/ProjectileEnemy{stringID}"), GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
-            p.GetComponent<ProjectileScript>().SetProjectile(gameObject, target);
+            p.GetComponentInChildren<ProjectileScript>().SetProjectile(gameObject, target);
             projectileCount--;
         }
     }
@@ -226,5 +231,7 @@ public class EnemyScript : MonoBehaviour
         center = GetComponent<Collider2D>().bounds.center;
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(center, boxSize);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireCube(GetComponent<Collider2D>().bounds.center, new Vector2(enemyAtkRange, enemyAtkRange));
     }
 }

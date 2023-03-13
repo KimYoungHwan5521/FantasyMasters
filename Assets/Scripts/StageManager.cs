@@ -131,6 +131,7 @@ public class StageManager : MonoBehaviour
 
     public void OnClickStartNextStage()
     {
+        Shop.SetActive(false);
         StartCoroutine(StageStart());
     }
 
@@ -144,6 +145,7 @@ public class StageManager : MonoBehaviour
         var minionToSummon = Resources.Load<GameObject>($"Minions/Minion{_minionID}");
         while(true)
         {
+            if(StageTime.text == "0") break;
             Vector3 summonPositon = Hero.GetComponent<Collider2D>().bounds.center;
             Instantiate(minionToSummon, summonPositon, Quaternion.identity);
             yield return new WaitForSeconds(summonCoolTime);

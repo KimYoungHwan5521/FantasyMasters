@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5707914551934466521}
   - component: {fileID: 3274059641347523175}
   m_Layer: 5
-  m_Name: AttackSpeedBuff
+  m_Name: Status0000
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -15,6 +15,7 @@ public class ProjectileScript : MonoBehaviour
         spawnPoint = summoner.transform.position;
         target = _target;
         isCritical = _isCritical;
+        print($"sum, tar: {summoner.tag}, {target.tag}");
         StartCoroutine(Launch());
     }
 
@@ -51,6 +52,7 @@ public class ProjectileScript : MonoBehaviour
             limit -= Time.deltaTime;
             yield return null;
         }
+        Destroy(transform.parent.gameObject);
     }
 
     public bool isCritical = false;
@@ -68,7 +70,7 @@ public class ProjectileScript : MonoBehaviour
                 if(isCritical) 
                 {
                     dmg *= summoner.GetComponent<HeroScript>().criticalDmg;
-                    if(summoner.GetComponent<HeroScript>().abilities.Find(x => x == "0003") != null)
+                    if(summoner.GetComponent<HeroScript>().abilities.Contains("0003"))
                     {
                         summoner.GetComponent<HeroScript>().AddStatus("0000");
                     }
@@ -98,6 +100,10 @@ public class ProjectileScript : MonoBehaviour
             if(collision.gameObject.tag == "Player")
             {
                 collision.gameObject.GetComponent<HeroScript>().BeAttacked(dmg);
+                if(summoner.GetComponent<EnemyScript>().enemyAbilities.Contains("0001"))
+                {
+                    collision.gameObject.GetComponent<HeroScript>().AddStatus("0001");
+                }
             }
             else if(collision.gameObject.tag == "Minion")
             {

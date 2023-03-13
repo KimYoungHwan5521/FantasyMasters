@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class MinionScript : MonoBehaviour
 {
@@ -16,20 +18,33 @@ public class MinionScript : MonoBehaviour
     public int minionAtkType;
     public float minionAtkDmg;
     public float minionAtkSpeed;
+    public float atkSpeedCVM = 1;
     public float minionAtkRange;
     public float minionCriticalDmg;
     public float minionCriticalChance;
     public float minionArmor;
     public float minionMoveSpeed;
+    public float moveSpeedCVM = 1;
     public List<string> minionAbilities;
+    public List<StatusV> MinionStatus;
 
     Animator animator;
     public RectTransform HPBar;
 
     private float curTime;
     public float atkCoolTime;
-    private int projectileCount;
+    private int projectileCount = 0;
     
+    public class StatusV
+    {
+        public string statusID;
+        public string statusNameKR;
+        public string statusExplainKR;
+        public string[] buffStat;
+        public float[] buffValue;
+        public float buffTime;
+    }
+
     void Start()
     {
         int cntDgit = 0;
@@ -67,7 +82,9 @@ public class MinionScript : MonoBehaviour
         minionCriticalChance = float.Parse(minionInfo.minionCriticalChance);
         minionArmor = float.Parse(minionInfo.minionArmor);
         minionMoveSpeed = float.Parse(minionInfo.minionMoveSpeed);
-        minionAbilities = minionInfo.minionAbilities;
+        minionAbilities = minionInfo.minionAbilities.ToList();
+        MinionStatus = new List<StatusV>();
+        TrackingBox = new Vector2(10, 10);
 
         animator = GetComponent<Animator>();
         HPBar = Instantiate(Resources.Load<RectTransform>("UIs/HPBar"), new Vector3(0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
@@ -82,6 +99,20 @@ public class MinionScript : MonoBehaviour
     bool isCritical = false;
     void Update()
     {
+        // status timer
+        if(MinionStatus.Count > 0)
+        {
+            for(int i=0; i<MinionStatus.Count; i++)
+            {
+                MinionStatus[i].buffTime -= Time.deltaTime;
+                if(MinionStatus[i].buffTime <= 0)
+                {
+                    RemoveStatus(MinionStatus[i].statusID);
+                    MinionStatus.RemoveAt(i);
+                }
+            }
+        }
+
         if(minionNowHP <= 0)
         {
             HPBar.GetComponent<Image>().fillAmount = 0;
@@ -94,13 +125,13 @@ public class MinionScript : MonoBehaviour
             HPBar.GetComponent<Image>().fillAmount = minionNowHP / minionMaxHP;
             if(target != null)
             {
-                if(Vector2.Distance(transform.GetComponent<Collider2D>().bounds.center, target.GetComponent<Collider2D>().bounds.center) < minionAtkRange)
+                if(Vector2.Distance(transform.GetComponent<Collider2D>().bounds.center, target.GetComponent<Collider2D>().bounds.center) * Mathf.Abs(transform.localScale.x) < minionAtkRange)
                 {
-                    // animator.SetBool("isMoving", false);
                     if(curTime <= 0)
                     {
-                        if(Random.Range(0, 100) < minionCriticalChance) isCritical = true;
+                        if(UnityEngine.Random.Range(0, 100) < minionCriticalChance) isCritical = true;
                         else isCritical = false;
+                        if(minionAtkType == 2) projectileCount++;
                         animator.SetTrigger("Attack");
                         if(isCritical) animator.SetBool("isCritical", true);
                         else animator.SetBool("isCritical", false);
@@ -108,6 +139,7 @@ public class MinionScript : MonoBehaviour
                     }
                     else
                     {
+                        animator.SetBool("isMoving", false);
                         curTime -= Time.deltaTime;
                     }
                     
@@ -200,7 +232,7 @@ public class MinionScript : MonoBehaviour
         if(projectileCount > 0)
         {
             GameObject p = Instantiate(Resources.Load<GameObject>($"Projectiles/ProjectileMinion{stringID}"), GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
-            p.GetComponent<ProjectileScript>().SetProjectile(gameObject, target, isCritical);
+            p.GetComponentInChildren<ProjectileScript>().SetProjectile(gameObject, target, isCritical);
             projectileCount--;
         }
     }
@@ -263,5 +295,60 @@ public class MinionScript : MonoBehaviour
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         gameObject.layer = 9;
         spriteRenderer.color = new Color(1, 1, 1, 1);
+    }
+    
+    public void AddStatus(string _statusID)
+    {
+        int isAlreadyGotIt = MinionStatus.FindIndex(x => x.statusID == _statusID);
+        if(isAlreadyGotIt != -1)
+        {
+            MinionStatus[isAlreadyGotIt].buffTime = float.Parse(DataManager.AllStatusList.Find(x => x.statusID == _statusID).buffTime);
+        }
+        else
+        {
+            Status _status = DataManager.AllStatusList.Find(x => x.statusID == _statusID);
+            StatusV tempStatus = new StatusV(); 
+            tempStatus.statusID = _status.statusID;
+            tempStatus.statusNameKR = _status.statusNameKR;
+            tempStatus.statusExplainKR = _status.statusExplainKR;
+            tempStatus.buffStat = new string[_status.buffStat.Length];
+            Array.Copy(_status.buffStat, tempStatus.buffStat, _status.buffStat.Length);
+            tempStatus.buffValue = Array.ConvertAll(_status.buffValue, x => float.Parse(x));
+
+            for(int i=0; i<_status.buffStat.Length; i++)
+            {
+                if(_status.buffStat[i] == "atkSpeedCVM")
+                {
+                    atkSpeedCVM += float.Parse(_status.buffValue[i]);
+                }
+                else if(_status.buffStat[i] == "moveSpeedCVM")
+                {
+                    moveSpeedCVM += float.Parse(_status.buffValue[i]);
+                }
+                else
+                {
+                    print($"wrong buffStat name : '{_status.buffStat[i]}'");
+                }
+            }
+            Instantiate(Resources.Load($"UIs/Icons/Status{_statusID}"), new Vector2(0, 0), Quaternion.identity, GameObject.Find("HeroStatus").transform);
+            tempStatus.buffTime = float.Parse(_status.buffTime);
+            MinionStatus.Add(tempStatus);
+        }
+    }
+
+    public void RemoveStatus(string _statusID)
+    {
+        int idx = MinionStatus.FindIndex(x => x.statusID == _statusID);
+        for(int i=0; i<MinionStatus[idx].buffStat.Length; i++)
+        {
+            if(MinionStatus[idx].buffStat[i] == "atkSpeedCVM")
+            {
+                atkSpeedCVM -= MinionStatus[idx].buffValue[i];
+            }
+            else if(MinionStatus[idx].buffStat[i] == "moveSpeedCVM")
+            {
+                moveSpeedCVM -= MinionStatus[idx].buffValue[i];
+            }
+        }
     }
 }

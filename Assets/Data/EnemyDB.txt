@@ -1,5 +1,6 @@
 EnemyID	EnemyNameKR	EnemyHP	EnemyAtkType	EnemyCollisionDmg	EnemyAtkDmg	EnemyAtkSpeed	EnemyAtkRange	EnemyArmor	EnemyMoveSpeed	EnemyAbilityID
 0000	리틀 스켈레톤	50	0	5	0	0	0	0	2	
 0001	리틀 배트	50	0	7	0	0	0	1	5	
-0002	스켈레톤 소드맨	100	1	10	10	20	1	0	2	
-0003	스켈레톤 액스맨	150	1	10	20	10	1	3	1.5	
+0002	스켈레톤 소드맨	100	1	10	10	10	1	0	2	
+0003	스켈레톤 액스맨	150	1	10	40	5	1	3	1.5	
+0004	리틀 스파이더	50	2	10	10	10	2	0	2	0001

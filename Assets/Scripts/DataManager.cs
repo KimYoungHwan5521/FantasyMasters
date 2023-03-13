@@ -192,7 +192,7 @@ public class DataManager : MonoBehaviour
     public static List<Status> AllStatusList;
     public static List<Stage> AllStageList;
 
-    public static int selectedHeroID = 3;
+    public static int selectedHeroID = 0;
 
     void Start()
     {
