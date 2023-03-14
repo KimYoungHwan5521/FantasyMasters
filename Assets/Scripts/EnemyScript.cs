@@ -96,7 +96,6 @@ public class EnemyScript : MonoBehaviour
             {
                 if(Vector2.Distance(transform.GetComponent<Collider2D>().bounds.center, target.GetComponent<Collider2D>().bounds.center) * Mathf.Abs(transform.localScale.x) < enemyAtkRange)
                 {
-                    print($"distance, atkrange: {Vector2.Distance(transform.GetComponent<Collider2D>().bounds.center, target.GetComponent<Collider2D>().bounds.center) * Mathf.Abs(transform.localScale.x)}, {enemyAtkRange}");
                     if(curTime <= 0)
                     {
                         if(enemyAtkType == 2) projectileCount++;

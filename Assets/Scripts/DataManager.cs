@@ -110,14 +110,20 @@ public class Minion
 [System.Serializable]
 public class Ability
 {
-    public Ability(string _ID, string _NameKR, string _ExplainKR)
+    public Ability(string _ID, string _NameKR, string _Attributes, string _RareDegree, string _CoolTime, string _ExplainKR)
     {
         abilityID = _ID;
         abilityNameKR = _NameKR;
+        abilityAttributes = _Attributes.Split(' ');
+        abilityRareDegree = int.Parse(_RareDegree);
+        abilityCoolTime = _CoolTime;
         abilityExplainKR = _ExplainKR;
     }
     public string abilityID;
     public string abilityNameKR;
+    public string[] abilityAttributes;
+    public int abilityRareDegree;
+    public string abilityCoolTime;
     public string abilityExplainKR;
 }
 
@@ -155,6 +161,28 @@ public class Stage
     public string stageInfo;
 }
 
+[System.Serializable]
+public class Item
+{
+    public Item(string _ID, string _NameKR, string _Attributes, string _RareDegree, string _ExplainKR, string _buffStat, string _buffValue)
+    {
+        itemID = _ID;
+        itemNameKR = _NameKR;
+        itemAttributes = _Attributes.Split(' ');
+        itemRareDegree = int.Parse(_RareDegree);
+        itemExplainKR = _ExplainKR;
+        itemBuffStat = _buffStat.Split('|');
+        itemBuffValue = _buffValue.Split('|');
+    }
+    public string itemID;
+    public string itemNameKR;
+    public string[] itemAttributes;
+    public int itemRareDegree;
+    public string itemExplainKR;
+    public string[] itemBuffStat;
+    public string[] itemBuffValue;
+}
+
 public class DataManager : MonoBehaviour
 {
     public static DataManager instance;
@@ -185,12 +213,14 @@ public class DataManager : MonoBehaviour
     public TextAsset AbilityDB;
     public TextAsset StatusDB;
     public TextAsset StageDB;
+    public TextAsset ItemDB;
     public static List<Hero> AllHeroList;
     public static List<Enemy> AllEnemyList;
     public static List<Minion> AllMinionList;
     public static List<Ability> AllAbilityList;
     public static List<Status> AllStatusList;
     public static List<Stage> AllStageList;
+    public static List<Item> AllItemList;
 
     public static int selectedHeroID = 0;
 
@@ -248,11 +278,11 @@ public class DataManager : MonoBehaviour
             string[] row = line[i].Split('\t');
             if(i == 0)
             {
-                AllAbilityList.Add(new Ability(row[0], row[1], row[2]));
+                AllAbilityList.Add(new Ability(row[0], row[1], row[2], row[3], row[4], row[5]));
             }
             else
             {
-                AllAbilityList.Add(new Ability(row[0].Substring(1), row[1], row[2]));
+                AllAbilityList.Add(new Ability(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5]));
             }
         }
         
@@ -283,6 +313,21 @@ public class DataManager : MonoBehaviour
             else
             {
                 AllStageList.Add(new Stage(row[0].Substring(1), row[1], row[2]));
+            }
+        }
+
+        AllItemList = new List<Item>();
+        line = ItemDB.text.Substring(0, ItemDB.text.Length).Split('\r');
+        for(int i=1;i<line.Length;i++)
+        {
+            string[] row = line[i].Split('\t');
+            if(i == 0)
+            {
+                AllItemList.Add(new Item(row[0], row[1], row[2], row[3], row[4], row[5], row[6]));
+            }
+            else
+            {
+                AllItemList.Add(new Item(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5], row[6]));
             }
         }
     }

@@ -1,5 +1,5 @@
-AbilityID	AbilityNameKR	AbilityExplainKR
-0000	스켈레톤 라이징	20초마다 스켈톤 하수인 1마리 소환
-0001	거미줄 뱉기	적중시 공격속도, 이동속도 -20%
-0002		기본공격으로 입힌 피해의 30%만큼 체력 회복
-0003	퀵드로우	치명타 발동시 5초동안 공격속도 50% 증가
+AbilityID	AbilityNameKR	AbilityAttributes	AbilityRareDegree	AbilityCoolTime	AbilityExplainKR
+0000	스켈레톤 라이징	암흑	0	10	10초마다 스켈톤 하수인 1마리 소환
+0001	거미줄 뱉기			0	적중시 공격속도, 이동속도 -30%
+0002				0	기본공격으로 입힌 피해의 30%만큼 체력 회복
+0003	퀵드로우	숲	0	0	치명타 발동시 5초동안 공격속도 50% 증가

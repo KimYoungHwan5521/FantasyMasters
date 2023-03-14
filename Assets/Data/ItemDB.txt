@@ -1,0 +1,3 @@
+ItemID	ItemNameKR	ItemAttributes	ItemRareDegree	ItemExplainKR	ItemBuffStat	ItemBuffValue
+0000	팔뼈	암흑	0	공격력 +20, 최대체력 -10	atkDmgCV|maxHPCV	20|-10
+0001	대퇴골	암흑	1	공격력 +50, 최대체력 -20	atkDmgCV|maxHPCV	50|-20

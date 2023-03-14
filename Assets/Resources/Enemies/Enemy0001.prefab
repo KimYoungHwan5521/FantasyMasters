@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 5863365251718829420}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -5.7752686, y: -2.166988, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -74,7 +74,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1662870407
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 4754826937556007664, guid: 58a1e3ce06e943b4a9be378ae25def76, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -147,6 +147,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemyID: 1
+  stringID: 
   enemyNameKR: 
   enemyMaxHP: 0
   enemyNowHP: 0
@@ -157,7 +158,9 @@ MonoBehaviour:
   enemyAtkRange: 0
   enemyArmor: 0
   enemyMoveSpeed: 0
+  enemyAbilities: []
   HPBar: {fileID: 0}
+  atkCoolTime: 0
   boxSize: {x: 0, y: 0}
 --- !u!95 &2732091650379244491
 Animator:

@@ -15,7 +15,6 @@ public class ProjectileScript : MonoBehaviour
         spawnPoint = summoner.transform.position;
         target = _target;
         isCritical = _isCritical;
-        print($"sum, tar: {summoner.tag}, {target.tag}");
         StartCoroutine(Launch());
     }
 

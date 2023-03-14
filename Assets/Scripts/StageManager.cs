@@ -38,7 +38,7 @@ public class StageManager : MonoBehaviour
         }
         stringID += _heroID.ToString();
         Hero = Instantiate(Resources.Load<GameObject>($"Heros/Hero{stringID}"));
-
+        Hero.GetComponent<HeroScript>().nowHP = Hero.GetComponent<HeroScript>().maxHP;
         CurStageList = DataManager.AllStageList.FindAll(x => x.mapID == "0000");
 
         StartCoroutine(StageStart());
@@ -60,7 +60,7 @@ public class StageManager : MonoBehaviour
         StartCoroutine(StageTimer());
         if(Hero.GetComponent<HeroScript>().abilities.Find(x => x.Equals("0000")) != null)
         {
-            StartCoroutine(SummonMinion("0000", 20.0f));
+            StartCoroutine(SummonMinion("0000", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0000").abilityCoolTime)));
         }
         StartCoroutine(SpawnEnemy(stageInfo));
     }
@@ -98,8 +98,8 @@ public class StageManager : MonoBehaviour
                         for(int x=0;x<8;x++) spawnPointID.Add(x);
                     }
                 }
-                spawnPointID = new List<int>();
             }
+            spawnPointID = new List<int>();
             for(int x=0;x<8;x++) spawnPointID.Add(x);
             yield return new WaitForSeconds(5);
         }
