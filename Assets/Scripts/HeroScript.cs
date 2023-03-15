@@ -441,6 +441,10 @@ public class HeroScript : MonoBehaviour
                 print($"wrong itemBuffStat name : '{_item.itemBuffStat[i]}'");
             }
         }
+        for(int i=0; i<_item.itemAbilities.Count; i++)
+        {
+            abilities.Add(_item.itemAbilities[i]);
+        }
         HeroItems.Add(_item);
 
     }
