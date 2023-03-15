@@ -115,14 +115,14 @@ public class Ability
         abilityID = _ID;
         abilityNameKR = _NameKR;
         abilityAttributes = _Attributes.Split(' ');
-        abilityRareDegree = int.Parse(_RareDegree);
+        abilityRareDegree = _RareDegree;
         abilityCoolTime = _CoolTime;
         abilityExplainKR = _ExplainKR;
     }
     public string abilityID;
     public string abilityNameKR;
     public string[] abilityAttributes;
-    public int abilityRareDegree;
+    public string abilityRareDegree;
     public string abilityCoolTime;
     public string abilityExplainKR;
 }
@@ -169,7 +169,7 @@ public class Item
         itemID = _ID;
         itemNameKR = _NameKR;
         itemAttributes = _Attributes.Split(' ');
-        itemRareDegree = int.Parse(_RareDegree);
+        itemRareDegree = _RareDegree;
         itemExplainKR = _ExplainKR;
         itemBuffStat = _buffStat.Split('|');
         itemBuffValue = _buffValue.Split('|');
@@ -177,7 +177,7 @@ public class Item
     public string itemID;
     public string itemNameKR;
     public string[] itemAttributes;
-    public int itemRareDegree;
+    public string itemRareDegree;
     public string itemExplainKR;
     public string[] itemBuffStat;
     public string[] itemBuffValue;

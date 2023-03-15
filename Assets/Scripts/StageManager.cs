@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class StageManager : MonoBehaviour
 {
@@ -14,6 +15,15 @@ public class StageManager : MonoBehaviour
     public string stageInfo;
     public Text StageTime;
     public int stageTime = 60;
+    public class Product
+    {
+        public string productType;
+        public string inheritanceID;
+        public string productName;
+        public string[] attributes;
+        public string rareDegree;
+    }
+    public List<Product> AllProductList;
     
     GameObject Hero;
     void Start()
@@ -38,8 +48,34 @@ public class StageManager : MonoBehaviour
         }
         stringID += _heroID.ToString();
         Hero = Instantiate(Resources.Load<GameObject>($"Heros/Hero{stringID}"));
-        Hero.GetComponent<HeroScript>().nowHP = Hero.GetComponent<HeroScript>().maxHP;
         CurStageList = DataManager.AllStageList.FindAll(x => x.mapID == "0000");
+        AllProductList = new List<Product>();
+        for(int i=0; i<DataManager.AllAbilityList.Count; i++)
+        {
+            if(DataManager.AllAbilityList[i].abilityRareDegree != null)
+            {
+                Product pd = new Product();
+                pd.productType = "능력";
+                pd.inheritanceID = DataManager.AllAbilityList[i].abilityID;
+                pd.productName = DataManager.AllAbilityList[i].abilityNameKR;
+                pd.attributes = DataManager.AllAbilityList[i].abilityAttributes;
+                pd.rareDegree = DataManager.AllAbilityList[i].abilityRareDegree;
+                AllProductList.Add(pd);
+            }
+        }
+        for(int i=0; i<DataManager.AllItemList.Count; i++)
+        {
+            if(DataManager.AllItemList[i].itemRareDegree != null)
+            {
+                Product pd = new Product();
+                pd.productType = "아이템";
+                pd.inheritanceID = DataManager.AllItemList[i].itemID;
+                pd.productName = DataManager.AllItemList[i].itemNameKR;
+                pd.rareDegree = DataManager.AllItemList[i].itemRareDegree;
+                pd.attributes = DataManager.AllItemList[i].itemAttributes;
+                AllProductList.Add(pd);
+            }
+        }
 
         StartCoroutine(StageStart());
     }
@@ -47,6 +83,8 @@ public class StageManager : MonoBehaviour
     IEnumerator StageStart()
     {
         stageInfo = CurStageList.Find(x => x.stageNumber == stageNumber.ToString()).stageInfo;
+        Hero.GetComponent<HeroScript>().nowHP = Hero.GetComponent<HeroScript>().maxHP;
+        Hero.transform.position = new Vector2(0, 0);
         for(int i=3; i>-1; i--)
         {
             FloatingText CountText = Instantiate(Resources.Load<FloatingText>("Effects/FloatingText"), new Vector2(0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
@@ -123,8 +161,63 @@ public class StageManager : MonoBehaviour
     }
 
     public GameObject Shop;
+    public GameObject[] ProductsSimple;
+    public List<Product> CurProductList;
     IEnumerator ReadyToNextStage()
     {
+        CurProductList = new List<Product>();
+        for(int i=0;i<5;i++)
+        {
+            int rd = 0;
+            int random = Random.Range(0, 1000);
+            if(random < 700) rd = 0;
+            else if(random < 970) rd = 1;
+            else if(random < 997) rd = 2;
+            else rd = 3;
+            List<Product> tempPdl = new List<Product>();
+            if(i<4)
+            {
+                if(Hero.GetComponent<HeroScript>().attributes.Length > 1 && i > 1)
+                {
+                    tempPdl = AllProductList.FindAll(x => x.attributes.ToList().Contains(Hero.GetComponent<HeroScript>().attributes[1]));
+                }
+                else
+                {
+                    tempPdl = AllProductList.FindAll(x => x.attributes.ToList().Contains(Hero.GetComponent<HeroScript>().attributes[0]));
+                }
+            }
+            else
+            {
+                if(Hero.GetComponent<HeroScript>().attributes.Length > 1)
+                {
+                    tempPdl = AllProductList.FindAll(x => !(x.attributes.ToList().Contains(Hero.GetComponent<HeroScript>().attributes[0])) && !(x.attributes.ToList().Contains(Hero.GetComponent<HeroScript>().attributes[1])));
+                }
+                else
+                {
+                    tempPdl = AllProductList.FindAll(x => !(x.attributes.ToList().Contains(Hero.GetComponent<HeroScript>().attributes[0])));
+                }
+            }
+            tempPdl = tempPdl.FindAll(x => x.rareDegree == rd.ToString());
+            int r = Random.Range(0, tempPdl.Count);
+            if(!CurProductList.Contains(tempPdl[r])) CurProductList.Add(tempPdl[r]);
+            // else i--;
+        }
+        for(int i=0; i<CurProductList.Count; i++)
+        {
+            Text[] ProductSimpleTexts = ProductsSimple[i].GetComponentsInChildren<Text>();
+            ProductSimpleTexts[0].text = CurProductList[i].productName;
+            ProductSimpleTexts[1].text = "";
+            for(int j=0; j<CurProductList[i].attributes.Length; j++)
+            {
+                if(j>0) ProductSimpleTexts[1].text += " ";
+                ProductSimpleTexts[1].text += CurProductList[i].attributes[j];
+            }
+            ProductSimpleTexts[2].text = CurProductList[i].productType;
+            if(CurProductList[i].rareDegree == "0") ProductSimpleTexts[3].text = "일반";
+            else if(CurProductList[i].rareDegree == "1") ProductSimpleTexts[3].text = "<color=blue>희귀</color>";
+            else if(CurProductList[i].rareDegree == "2") ProductSimpleTexts[3].text = "<color=purple>신화</color>";
+            else ProductSimpleTexts[3].text = "<color=yellow>전설</color>";
+        }
         Shop.SetActive(true);
         yield return null;
     }
