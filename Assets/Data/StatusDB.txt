@@ -1,3 +1,5 @@
 StatusID	StatusNameKR	StatusExplainKR	BuffStat	BuffValue	BuffTime
 0000	퀵드로우	공격 속도 +50%	atkSpeedCVM	0.5	5
-0001	거미줄	공격속도, 이동속도 -20%	atkSpeedCVM|moveSpeedCVM	-0.2|-0.2	2
+0001	거미줄	공격속도, 이동속도 -20%	atkSpeedCVM|moveSpeedCVM	-0.3|-0.3	2
+0002	저주	공격력, 방어력 -20	atkDmgCV|armorCV	-20|-20	5
+0003	강한저주	공격력, 방어력 -30	atkDmgCV|armorCV	-30|-30	5

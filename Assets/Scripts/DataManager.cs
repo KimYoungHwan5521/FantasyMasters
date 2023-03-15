@@ -110,7 +110,7 @@ public class Minion
 [System.Serializable]
 public class Ability
 {
-    public Ability(string _ID, string _NameKR, string _Attributes, string _RareDegree, string _CoolTime, string _ExplainKR)
+    public Ability(string _ID, string _NameKR, string _Attributes, string _RareDegree, string _CoolTime, string _ExplainKR, string _RelatedStatus)
     {
         abilityID = _ID;
         abilityNameKR = _NameKR;
@@ -118,6 +118,7 @@ public class Ability
         abilityRareDegree = _RareDegree;
         abilityCoolTime = _CoolTime;
         abilityExplainKR = _ExplainKR;
+        relatedStatus = _RelatedStatus.Split(',').ToList();
     }
     public string abilityID;
     public string abilityNameKR;
@@ -125,6 +126,7 @@ public class Ability
     public string abilityRareDegree;
     public string abilityCoolTime;
     public string abilityExplainKR;
+    public List<string> relatedStatus;
 }
 
 [System.Serializable]
@@ -164,7 +166,7 @@ public class Stage
 [System.Serializable]
 public class Item
 {
-    public Item(string _ID, string _NameKR, string _Attributes, string _RareDegree, string _ExplainKR, string _buffStat, string _buffValue)
+    public Item(string _ID, string _NameKR, string _Attributes, string _RareDegree, string _ExplainKR, string _buffStat, string _buffValue, string _AbilityID)
     {
         itemID = _ID;
         itemNameKR = _NameKR;
@@ -173,6 +175,7 @@ public class Item
         itemExplainKR = _ExplainKR;
         itemBuffStat = _buffStat.Split('|');
         itemBuffValue = _buffValue.Split('|');
+        itemAbilities = _AbilityID.Split(',').ToList();
     }
     public string itemID;
     public string itemNameKR;
@@ -181,6 +184,7 @@ public class Item
     public string itemExplainKR;
     public string[] itemBuffStat;
     public string[] itemBuffValue;
+    public List<string> itemAbilities;
 }
 
 public class DataManager : MonoBehaviour
@@ -278,11 +282,11 @@ public class DataManager : MonoBehaviour
             string[] row = line[i].Split('\t');
             if(i == 0)
             {
-                AllAbilityList.Add(new Ability(row[0], row[1], row[2], row[3], row[4], row[5]));
+                AllAbilityList.Add(new Ability(row[0], row[1], row[2], row[3], row[4], row[5], row[6]));
             }
             else
             {
-                AllAbilityList.Add(new Ability(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5]));
+                AllAbilityList.Add(new Ability(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5], row[6]));
             }
         }
         
@@ -323,11 +327,11 @@ public class DataManager : MonoBehaviour
             string[] row = line[i].Split('\t');
             if(i == 0)
             {
-                AllItemList.Add(new Item(row[0], row[1], row[2], row[3], row[4], row[5], row[6]));
+                AllItemList.Add(new Item(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7]));
             }
             else
             {
-                AllItemList.Add(new Item(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5], row[6]));
+                AllItemList.Add(new Item(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5], row[6], row[7]));
             }
         }
     }

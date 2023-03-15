@@ -17,20 +17,24 @@ public class HeroScript : MonoBehaviour
     public string heroNameKR;
     public string[] attributes;
     public float maxHP;
+    public float maxHPCV = 0;
     public float nowHP;
     public float HPRegeneration;
     public int atkType;
     public float atkDmg;
+    public float atkDmgCV = 0;
     public float atkSpeed;
     public float atkSpeedCVM = 1;
     public float atkRange;
     public float criticalDmg;
     public float criticalChance;
     public float armor;
+    public float armorCV = 0;
     public float moveSpeed;
     public float moveSpeedCVM = 1;
     public List<string> abilities;
     public List<StatusV> HeroStatus;
+    public List<Item> HeroItems;
     public GameObject StatusSprites;
 
     private float curTime;
@@ -92,6 +96,7 @@ public class HeroScript : MonoBehaviour
         abilities = heroInfo.heroAbilities.ToList();
         HeroStatus = new List<StatusV>();
         StatusSprites = GameObject.Find("HeroStatus");
+        HeroItems = new List<Item>();
 
         animator = GetComponentInChildren<Animator>();
         transform.position = new Vector2(0, 0);
@@ -116,9 +121,11 @@ public class HeroScript : MonoBehaviour
         else HPbar.color = Color.green;
         atkSpeed = float.Parse(DataManager.AllHeroList[_heroID].heroAtkSpeed) * atkSpeedCVM;
         animator.SetFloat("AttackSpeed", atkSpeedCVM);
+        atkCoolTime = 10 / atkSpeed;
         moveSpeed = float.Parse(DataManager.AllHeroList[_heroID].heroMoveSpeed) * moveSpeedCVM;
         animator.SetFloat("MoveSpeed", moveSpeedCVM);
-        atkCoolTime = 10 / atkSpeed;
+        atkDmg = float.Parse(DataManager.AllHeroList[_heroID].heroAtkDmg.Split('x')[0]) + atkDmgCV;
+        armor = float.Parse(DataManager.AllHeroList[_heroID].heroArmor) + armorCV;
 
         // status timer
         if(HeroStatus.Count > 0)
@@ -358,6 +365,14 @@ public class HeroScript : MonoBehaviour
                 {
                     moveSpeedCVM += float.Parse(_status.buffValue[i]);
                 }
+                else if(_status.buffStat[i] == "atkDmgCV")
+                {
+                    atkDmgCV += float.Parse(_status.buffValue[i]);
+                }
+                else if(_status.buffStat[i] == "armorCV")
+                {
+                    armorCV += float.Parse(_status.buffValue[i]);
+                }
                 else
                 {
                     print($"wrong buffStat name : '{_status.buffStat[i]}'");
@@ -382,7 +397,52 @@ public class HeroScript : MonoBehaviour
             {
                 moveSpeedCVM -= HeroStatus[idx].buffValue[i];
             }
+            else if(HeroStatus[idx].buffStat[i] == "atkDmgCV")
+            {
+                atkDmgCV -= HeroStatus[idx].buffValue[i];
+            }
+            else if(HeroStatus[idx].buffStat[i] == "armorCV")
+            {
+                armorCV -= HeroStatus[idx].buffValue[i];
+            }
         }
+    }
+
+    public void AddItem(string _itemID)
+    {
+        Item _item = DataManager.AllItemList.Find(x => x.itemID == _itemID);
+        
+        for(int i=0; i<_item.itemBuffStat.Length; i++)
+        {
+            if(_item.itemBuffStat[i] == "atkSpeedCVM")
+            {
+                atkSpeedCVM += float.Parse(_item.itemBuffValue[i]);
+            }
+            else if(_item.itemBuffStat[i] == "moveSpeedCVM")
+            {
+                moveSpeedCVM += float.Parse(_item.itemBuffValue[i]);
+            }
+            else if(_item.itemBuffStat[i] == "atkDmgCV")
+            {
+                atkDmgCV += float.Parse(_item.itemBuffValue[i]);
+            }
+            else if(_item.itemBuffStat[i] == "armorCV")
+            {
+                armorCV += float.Parse(_item.itemBuffValue[i]);
+            }
+            else if(_item.itemBuffStat[i] == "maxHPCV")
+            {
+                maxHPCV += float.Parse(_item.itemBuffValue[i]);
+                maxHP = float.Parse(DataManager.AllHeroList[_heroID].heroMaxHP) + maxHPCV;
+                if(maxHP < 1) maxHP = 1;
+            }
+            else
+            {
+                print($"wrong itemBuffStat name : '{_item.itemBuffStat[i]}'");
+            }
+        }
+        HeroItems.Add(_item);
+
     }
 
 }

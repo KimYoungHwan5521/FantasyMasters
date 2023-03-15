@@ -6,6 +6,7 @@ using System.Linq;
 
 public class StageManager : MonoBehaviour
 {
+    NoticeUI _notice;
     public GameObject[] SpawnPoint;
     public float spawnCool;
     public int _heroID;
@@ -26,6 +27,11 @@ public class StageManager : MonoBehaviour
     public List<Product> AllProductList;
     
     GameObject Hero;
+    void Awake()
+    {
+        _notice = FindObjectOfType<NoticeUI>();
+    }
+
     void Start()
     {
         _heroID = DataManager.selectedHeroID;
@@ -96,9 +102,13 @@ public class StageManager : MonoBehaviour
         }
         stageTime = 60;
         StartCoroutine(StageTimer());
-        if(Hero.GetComponent<HeroScript>().abilities.Find(x => x.Equals("0000")) != null)
+        if(Hero.GetComponent<HeroScript>().abilities.Contains("0000"))
         {
             StartCoroutine(SummonMinion("0000", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0000").abilityCoolTime)));
+        }
+        if(Hero.GetComponent<HeroScript>().abilities.Contains("0002"))
+        {
+            StartCoroutine(SummonMinion("0001", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0002").abilityCoolTime)));
         }
         StartCoroutine(SpawnEnemy(stageInfo));
     }
@@ -166,6 +176,7 @@ public class StageManager : MonoBehaviour
     IEnumerator ReadyToNextStage()
     {
         CurProductList = new List<Product>();
+        selectedProduct = -1;
         for(int i=0;i<5;i++)
         {
             int rd = 0;
@@ -198,8 +209,11 @@ public class StageManager : MonoBehaviour
                 }
             }
             tempPdl = tempPdl.FindAll(x => x.rareDegree == rd.ToString());
-            int r = Random.Range(0, tempPdl.Count);
-            if(!CurProductList.Contains(tempPdl[r])) CurProductList.Add(tempPdl[r]);
+            if(tempPdl != null)
+            {
+                int r = Random.Range(0, tempPdl.Count);
+                if(!CurProductList.Contains(tempPdl[r])) CurProductList.Add(tempPdl[r]);
+            }
             // else i--;
         }
         for(int i=0; i<CurProductList.Count; i++)
@@ -222,10 +236,44 @@ public class StageManager : MonoBehaviour
         yield return null;
     }
 
+    public int selectedProduct;
+    public void SelectProduct(int _pdnum)
+    {
+        selectedProduct = _pdnum;
+        for(int i=0; i < 5; i++)
+        {
+            if(i == _pdnum)
+            {
+                ProductsSimple[i].GetComponent<Outline>().effectColor = new Color(0, 1, 0, 1);
+                ProductsSimple[i].GetComponent<Outline>().effectDistance = new Vector2(3, -3);
+            }
+            else
+            {
+                ProductsSimple[i].GetComponent<Outline>().effectColor = new Color(0, 0, 0, 1);
+                ProductsSimple[i].GetComponent<Outline>().effectDistance = new Vector2(1, -1);
+            }
+        }
+    }
+
     public void OnClickStartNextStage()
     {
-        Shop.SetActive(false);
-        StartCoroutine(StageStart());
+        if(selectedProduct != -1)
+        {
+            if(CurProductList[selectedProduct].productType == "능력")
+            {
+                Hero.GetComponent<HeroScript>().abilities.Add(CurProductList[selectedProduct].inheritanceID);
+            }
+            else
+            {
+                Hero.GetComponent<HeroScript>().AddItem(CurProductList[selectedProduct].inheritanceID);
+            }
+            Shop.SetActive(false);
+            StartCoroutine(StageStart());
+        }
+        else
+        {
+            _notice.SUB("보상을 선택 해주세요");
+        }
     }
 
     IEnumerator ClearMap()

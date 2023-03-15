@@ -1,5 +1,8 @@
-AbilityID	AbilityNameKR	AbilityAttributes	AbilityRareDegree	AbilityCoolTime	AbilityExplainKR
-0000	스켈레톤 라이징	암흑	0	10	10초마다 스켈톤 하수인 1마리 소환
-0001	거미줄 뱉기			0	적중시 공격속도, 이동속도 -30%
-0002				0	기본공격으로 입힌 피해의 30%만큼 체력 회복
-0003	퀵드로우	숲	0	0	치명타 발동시 5초동안 공격속도 50% 증가
+AbilityID	AbilityNameKR	AbilityAttributes	AbilityRareDegree	AbilityCoolTime	AbilityExplainKR	RelatedStatus
+0000	스켈레톤 라이징	암흑	0	10	10초마다 스켈레톤 소드맨 1마리 소환	
+0001	거미줄 뱉기			0	기본공격 적중시 대상 2초간 공격속도, 이동속도 -30%	0001
+0002	스켈레톤 라이징2	암흑	1	10	10초마다 스켈레톤 액스맨 1마리 소환	
+0003	퀵드로우	숲	0	0	치명타 발동시 5초동안 공격속도 50% 증가	
+0004	방어무시			0	기본공격시 상대의 방어력을 무시하고 공격	
+0005	저주공격	암흑		0	기본공격 적중시 5초간 상대의 공격력, 방어력 -20	0002
+0006	강한저주공격	암흑		0	기본공격 적중시 5초간 상대의 공격력, 방어력 -30	0003

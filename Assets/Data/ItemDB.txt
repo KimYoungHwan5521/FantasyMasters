@@ -1,3 +1,8 @@
-ItemID	ItemNameKR	ItemAttributes	ItemRareDegree	ItemExplainKR	ItemBuffStat	ItemBuffValue
-0000	팔뼈	암흑	0	공격력 +20, 최대체력 -10	atkDmgCV|maxHPCV	20|-10
-0001	대퇴골	암흑	1	공격력 +50, 최대체력 -20	atkDmgCV|maxHPCV	50|-20
+ItemID	ItemNameKR	ItemAttributes	ItemRareDegree	ItemExplainKR	ItemBuffStat	ItemBuffValue	ItemAbilityID
+0000	팔뼈	암흑	0	공격력 +30, 최대체력 -10	atkDmgCV|maxHPCV	30|-10	
+0001	대퇴골	암흑	1	공격력 +60, 최대체력 -20	atkDmgCV|maxHPCV	60|-20	
+0002	뼈방패	암흑	0	방어력 +10, 최대체력 -10	armorCV|maxHPCV	10|-10	
+0003	큰 낫	암흑	2	공격력 +60, 최대체력 -15, 방어무시	atkDmgCV|maxHPCV	60|-15	0004
+0004	다크 로브	암흑	0	최대체력 +30	maxHPCV	30	
+0005	두개골	암흑	2	최대체력 -10, 저주공격	maxHPCV	-10	0005
+0006	흑마법서	암흑	3	최대체력 -20, 강한저주공격	maxHPCV	-20	0006
