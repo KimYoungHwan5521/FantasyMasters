@@ -15,7 +15,7 @@ public class FloatingText : MonoBehaviour
     void Start()
     {
         moveSpeed = 4.0f;
-        alphaSpeed = 2.0f;
+        alphaSpeed = 3.0f;
         destroyTime = 2.0f;
 
         Invoke("DestroyObject", destroyTime);

@@ -79,11 +79,12 @@ public class EnemyScript : MonoBehaviour
         enemyAtkSpeed = float.Parse(enemyInfo.enemyAtkSpeed);
         atkCoolTime = 10 / enemyAtkSpeed;
         enemyAtkRange = float.Parse(enemyInfo.enemyAtkRange);
-        if(enemyAtkRange < 2) boxSize = new Vector2(2, 2);
-        else boxSize = new Vector2(enemyAtkRange, enemyAtkRange);
+        boxSize = new Vector2(enemyAtkRange, enemyAtkRange);
+        TrackingBox = new Vector2(2, 2);
         enemyArmor = float.Parse(enemyInfo.enemyArmor);
         enemyMoveSpeed = float.Parse(enemyInfo.enemyMoveSpeed);
         enemyAbilities = enemyInfo.enemyAbilities.ToList();
+        EnemyStatus = new List<StatusV>();
 
         animator = GetComponent<Animator>();
         HPBar = Instantiate(Resources.Load<RectTransform>("UIs/HPBar"), new Vector3(0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
@@ -183,7 +184,7 @@ public class EnemyScript : MonoBehaviour
 
     private void UpdateTarget()
     {
-        Collider2D[] tempCols = Physics2D.OverlapBoxAll(GetComponent<Collider2D>().bounds.center, boxSize, 0);
+        Collider2D[] tempCols = Physics2D.OverlapBoxAll(GetComponent<Collider2D>().bounds.center, TrackingBox, 0);
         int cnt = 0;
         for(int i=0; i<tempCols.Length; i++)
         {
@@ -268,6 +269,7 @@ public class EnemyScript : MonoBehaviour
 
     Vector2 center;
     public Vector2 boxSize;
+    public Vector2 TrackingBox;
     private void OnDrawGizmos()
     {
         center = GetComponent<Collider2D>().bounds.center;

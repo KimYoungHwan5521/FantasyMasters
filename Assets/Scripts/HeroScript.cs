@@ -274,6 +274,15 @@ public class HeroScript : MonoBehaviour
                 {
                     collider.GetComponent<EnemyScript>().BeAttacked(atkDmg, 0.3f, isCritical);
                 }
+
+                if(abilities.Contains("0005"))
+                {
+                    collider.GetComponent<EnemyScript>().AddStatus("0002");
+                }
+                if(abilities.Contains("0006"))
+                {
+                    collider.GetComponent<EnemyScript>().AddStatus("0003");
+                }
             }
         }
     }
