@@ -58,7 +58,7 @@ public class StageManager : MonoBehaviour
         AllProductList = new List<Product>();
         for(int i=0; i<DataManager.AllAbilityList.Count; i++)
         {
-            if(DataManager.AllAbilityList[i].abilityRareDegree != null)
+            if(DataManager.AllAbilityList[i].abilityRareDegree != "")
             {
                 Product pd = new Product();
                 pd.productType = "능력";
@@ -82,7 +82,6 @@ public class StageManager : MonoBehaviour
                 AllProductList.Add(pd);
             }
         }
-
         StartCoroutine(StageStart());
     }
 
@@ -94,7 +93,6 @@ public class StageManager : MonoBehaviour
         for(int i=3; i>-1; i--)
         {
             FloatingText CountText = Instantiate(Resources.Load<FloatingText>("Effects/FloatingText"), new Vector2(0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
-            // CountText.gameObject.GetComponent<RectTransform>().position = Camera.main.WorldToScreenPoint(new Vector3(0, 0, 0));
             CountText.gameObject.GetComponent<RectTransform>().position = Camera.main.WorldToScreenPoint(new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, 0));
             if(i == 0) CountText.SetText("<size=100>Start!</size>", "#FF0000");
             else CountText.SetText($"<size=100>{i.ToString()}</size>", "#FF0000");
@@ -209,7 +207,7 @@ public class StageManager : MonoBehaviour
                 }
             }
             tempPdl = tempPdl.FindAll(x => x.rareDegree == rd.ToString());
-            if(tempPdl != null)
+            if(tempPdl.Count > 0)
             {
                 int r = Random.Range(0, tempPdl.Count);
                 if(!CurProductList.Contains(tempPdl[r])) CurProductList.Add(tempPdl[r]);

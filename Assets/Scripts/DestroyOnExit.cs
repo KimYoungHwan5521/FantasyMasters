@@ -19,13 +19,15 @@ public class DestroyOnExit : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if(animator.GetComponent<EnemyScript>() != null)
+        if(animator.gameObject.tag == "Enemy")
         {
             GameObject.Destroy(animator.GetComponent<EnemyScript>().HPBar.gameObject);
+            GameObject.Destroy(animator.GetComponent<MinionScript>().StatusBar.gameObject);
         }
-        else if(animator.GetComponent<MinionScript>() != null)
+        else if(animator.gameObject.tag == "Minion")
         {
             GameObject.Destroy(animator.GetComponent<MinionScript>().HPBar.gameObject);
+            GameObject.Destroy(animator.GetComponent<MinionScript>().StatusBar.gameObject);
         }
         GameObject.Destroy(animator.gameObject);
     }

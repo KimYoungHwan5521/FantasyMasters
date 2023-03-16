@@ -73,14 +73,13 @@ public class Enemy
 [System.Serializable]
 public class Minion
 {
-    public Minion(string _ID, string _NameKR, string _Attributes, string _HP, string _Existencetime, string _AtkType, string _AtkDmg, string _AtkSpeed, string _AtkRange,
+    public Minion(string _ID, string _NameKR, string _Attributes, string _HP, string _AtkType, string _AtkDmg, string _AtkSpeed, string _AtkRange,
     string _CriticalDmg, string _CriticalChance, string _Armor, string _MoveSpeed, string _AbilityID)
     {
         minionID = _ID;
         minionNameKR = _NameKR;
         minionAttributes = _Attributes.Split(' ');
         minionMaxHP = _HP;
-        minionExistencetime = _Existencetime;
         minionAtkType = _AtkType;
         minionAtkDmg = _AtkDmg;
         minionAtkSpeed = _AtkSpeed;
@@ -95,7 +94,6 @@ public class Minion
     public string minionNameKR;
     public string[] minionAttributes;
     public string minionMaxHP;
-    public string minionExistencetime;
     public string minionAtkType;
     public string minionAtkDmg;
     public string minionAtkSpeed;
@@ -267,11 +265,11 @@ public class DataManager : MonoBehaviour
             string[] row = line[i].Split('\t');
             if(i == 0)
             {
-                AllMinionList.Add(new Minion(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13]));
+                AllMinionList.Add(new Minion(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12]));
             }
             else
             {
-                AllMinionList.Add(new Minion(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13]));
+                AllMinionList.Add(new Minion(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12]));
             }
         }
 

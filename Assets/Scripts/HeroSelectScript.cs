@@ -12,7 +12,6 @@ public class HeroSelectScript : MonoBehaviour
 
     public GameObject HeroSelect;
     public int selectedHeroID;
-    public Outline[] HeroOutlines;
     NoticeUI _notice;
 
     void Awake()
@@ -275,17 +274,17 @@ public class HeroSelectScript : MonoBehaviour
     public void SelectHero(int _heroID)
     {
         selectedHeroID = _heroID;
-        for(int i=0; i < HeroOutlines.Length; i++)
+        for(int i=0; i < HerosSimple.Length; i++)
         {
             if(i == _heroID)
             {
-                HeroOutlines[i].effectColor = new Color(0, 1, 0, 1);
-                HeroOutlines[i].effectDistance = new Vector2(3, -3);
+                HerosSimple[i].GetComponent<Outline>().effectColor = new Color(0, 1, 0, 1);
+                HerosSimple[i].GetComponent<Outline>().effectDistance = new Vector2(3, -3);
             }
             else
             {
-                HeroOutlines[i].effectColor = new Color(0, 0, 0, 1);
-                HeroOutlines[i].effectDistance = new Vector2(1, -1);
+                HerosSimple[i].GetComponent<Outline>().effectColor = new Color(0, 0, 0, 1);
+                HerosSimple[i].GetComponent<Outline>().effectDistance = new Vector2(1, -1);
             }
         }
     }

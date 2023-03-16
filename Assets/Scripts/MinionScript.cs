@@ -14,15 +14,19 @@ public class MinionScript : MonoBehaviour
     public string[] minionAttributes;
     public float minionMaxHP;
     public float minionNowHP;
-    public float minionExistencetime;
     public int minionAtkType;
     public float minionAtkDmg;
+    public float atkDmgCV = 0;
     public float minionAtkSpeed;
     public float atkSpeedCVM = 1;
     public float minionAtkRange;
+    public float atkRangeCV = 0;
     public float minionCriticalDmg;
+    public float criticalDmgCV = 0;
     public float minionCriticalChance;
+    public float criticalChanceCV = 0;
     public float minionArmor;
+    public float armorCV = 0;
     public float minionMoveSpeed;
     public float moveSpeedCVM = 1;
     public List<string> minionAbilities;
@@ -30,6 +34,7 @@ public class MinionScript : MonoBehaviour
 
     Animator animator;
     public RectTransform HPBar;
+    public RectTransform StatusBar;
 
     private float curTime;
     public float atkCoolTime;
@@ -71,7 +76,6 @@ public class MinionScript : MonoBehaviour
         minionAttributes = minionInfo.minionAttributes;
         minionMaxHP = float.Parse(minionInfo.minionMaxHP);
         minionNowHP = minionMaxHP;
-        minionExistencetime = float.Parse(minionInfo.minionExistencetime);
         minionAtkType = int.Parse(minionInfo.minionAtkType);
         minionAtkDmg = float.Parse(minionInfo.minionAtkDmg);
         minionAtkSpeed = float.Parse(minionInfo.minionAtkSpeed);
@@ -88,6 +92,7 @@ public class MinionScript : MonoBehaviour
 
         animator = GetComponent<Animator>();
         HPBar = Instantiate(Resources.Load<RectTransform>("UIs/HPBar"), new Vector3(0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
+        StatusBar = Instantiate(Resources.Load<RectTransform>("UIs/StatusBar"), new Vector3(0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
 
         target = null;
         InvokeRepeating("UpdateTarget", 0, 0.25f);
@@ -99,6 +104,17 @@ public class MinionScript : MonoBehaviour
     bool isCritical = false;
     void Update()
     {
+        minionAtkSpeed = float.Parse(DataManager.AllMinionList[_minionID].minionAtkSpeed) * atkSpeedCVM;
+        animator.SetFloat("AttackSpeed", atkSpeedCVM);
+        atkCoolTime = 10 / minionAtkSpeed;
+        minionMoveSpeed = float.Parse(DataManager.AllMinionList[_minionID].minionMoveSpeed) * moveSpeedCVM;
+        animator.SetFloat("MoveSpeed", moveSpeedCVM);
+        minionAtkDmg = float.Parse(DataManager.AllMinionList[_minionID].minionAtkDmg.Split('x')[0]) + atkDmgCV;
+        minionArmor = float.Parse(DataManager.AllMinionList[_minionID].minionArmor) + armorCV;
+        minionAtkRange = float.Parse(DataManager.AllMinionList[_minionID].minionAtkRange) + atkRangeCV;
+        boxSize = new Vector2(minionAtkRange, minionAtkRange);
+        minionCriticalDmg = float.Parse(DataManager.AllMinionList[_minionID].minionCriticalDmg) + criticalDmgCV;
+        minionCriticalChance = float.Parse(DataManager.AllMinionList[_minionID].minionCriticalChance) + criticalChanceCV;
         // status timer
         if(MinionStatus.Count > 0)
         {
@@ -109,6 +125,7 @@ public class MinionScript : MonoBehaviour
                 {
                     RemoveStatus(MinionStatus[i].statusID);
                     MinionStatus.RemoveAt(i);
+                    Destroy(StatusBar.transform.GetChild(i).gameObject);
                 }
             }
         }
@@ -116,6 +133,7 @@ public class MinionScript : MonoBehaviour
         if(minionNowHP <= 0)
         {
             HPBar.GetComponent<Image>().fillAmount = 0;
+            StatusBar.gameObject.SetActive(false);
             animator.SetTrigger("Dead");
             animator.SetBool("isMoving", false);
         }
@@ -123,6 +141,7 @@ public class MinionScript : MonoBehaviour
         {
             HPBar.position = Camera.main.WorldToScreenPoint(new Vector3(transform.GetComponent<Collider2D>().bounds.center.x, transform.GetComponent<Collider2D>().bounds.center.y - GetComponent<BoxCollider2D>().size.y * transform.localScale.y, 0));
             HPBar.GetComponent<Image>().fillAmount = minionNowHP / minionMaxHP;
+            StatusBar.position = Camera.main.WorldToScreenPoint(new Vector3(transform.GetComponent<Collider2D>().bounds.center.x, transform.GetComponent<Collider2D>().bounds.center.y + GetComponent<BoxCollider2D>().size.y * transform.localScale.y, 0));
             if(target != null)
             {
                 if(Vector2.Distance(transform.GetComponent<Collider2D>().bounds.center, target.GetComponent<Collider2D>().bounds.center) * Mathf.Abs(transform.localScale.x) < minionAtkRange)
@@ -325,12 +344,32 @@ public class MinionScript : MonoBehaviour
                 {
                     moveSpeedCVM += float.Parse(_status.buffValue[i]);
                 }
+                else if(_status.buffStat[i] == "atkDmgCV")
+                {
+                    atkDmgCV += float.Parse(_status.buffValue[i]);
+                }
+                else if(_status.buffStat[i] == "armorCV")
+                {
+                    armorCV += float.Parse(_status.buffValue[i]);
+                }
+                else if(_status.buffStat[i] == "atkRangeCV")
+                {
+                    atkRangeCV += float.Parse(_status.buffValue[i]);
+                }
+                else if(_status.buffStat[i] == "criticalDmgCV")
+                {
+                    criticalDmgCV += float.Parse(_status.buffValue[i]);
+                }
+                else if(_status.buffStat[i] == "criticalChanceCV")
+                {
+                    criticalChanceCV += float.Parse(_status.buffValue[i]);
+                }
                 else
                 {
                     print($"wrong buffStat name : '{_status.buffStat[i]}'");
                 }
             }
-            Instantiate(Resources.Load($"UIs/Icons/Status{_statusID}"), new Vector2(0, 0), Quaternion.identity, GameObject.Find("HeroStatus").transform);
+            Instantiate(Resources.Load($"UIs/Icons/Status{_statusID}"), new Vector2(0, 0), Quaternion.identity, StatusBar.transform);
             tempStatus.buffTime = float.Parse(_status.buffTime);
             MinionStatus.Add(tempStatus);
         }
@@ -348,6 +387,26 @@ public class MinionScript : MonoBehaviour
             else if(MinionStatus[idx].buffStat[i] == "moveSpeedCVM")
             {
                 moveSpeedCVM -= MinionStatus[idx].buffValue[i];
+            }
+            else if(MinionStatus[idx].buffStat[i] == "atkDmgCV")
+            {
+                atkDmgCV -= MinionStatus[idx].buffValue[i];
+            }
+            else if(MinionStatus[idx].buffStat[i] == "armorCV")
+            {
+                armorCV -= MinionStatus[idx].buffValue[i];
+            }
+            else if(MinionStatus[idx].buffStat[i] == "atkRangeCV")
+            {
+                atkRangeCV -= MinionStatus[idx].buffValue[i];
+            }
+            else if(MinionStatus[idx].buffStat[i] == "criticalDmgCV")
+            {
+                criticalDmgCV -= MinionStatus[idx].buffValue[i];
+            }
+            else if(MinionStatus[idx].buffStat[i] == "criticalChanceCV")
+            {
+                criticalChanceCV -= MinionStatus[idx].buffValue[i];
             }
         }
     }

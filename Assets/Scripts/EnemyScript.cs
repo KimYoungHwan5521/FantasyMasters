@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,19 +15,36 @@ public class EnemyScript : MonoBehaviour
     public float enemyNowHP;
     public int enemyAtkType;
     public float enemyAtkDmg;
+    public float atkDmgCV = 0;
     public float enemyCollisionDmg;
     public float enemyAtkSpeed;
+    public float atkSpeedCVM = 1;
     public float enemyAtkRange;
+    public float atkRangeCV = 0;
     public float enemyArmor;
+    public float armorCV = 0;
     public float enemyMoveSpeed;
+    public float moveSpeedCVM = 1;
     public List<string> enemyAbilities;
+    public List<StatusV> EnemyStatus;
 
     Animator animator;
     public RectTransform HPBar;
+    public RectTransform StatusBar;
 
     private float curTime;
     public float atkCoolTime;
     private int projectileCount = 0;
+
+    public class StatusV
+    {
+        public string statusID;
+        public string statusNameKR;
+        public string statusExplainKR;
+        public string[] buffStat;
+        public float[] buffValue;
+        public float buffTime;
+    }
 
     void Start()
     {
@@ -69,6 +87,7 @@ public class EnemyScript : MonoBehaviour
 
         animator = GetComponent<Animator>();
         HPBar = Instantiate(Resources.Load<RectTransform>("UIs/HPBar"), new Vector3(0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
+        StatusBar = Instantiate(Resources.Load<RectTransform>("UIs/StatusBar"), new Vector3(0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
 
         // 타겟 추적
         target = Hero;
@@ -82,9 +101,34 @@ public class EnemyScript : MonoBehaviour
 
     void Update()
     {
+        enemyAtkSpeed = float.Parse(DataManager.AllEnemyList[_enemyID].enemyAtkSpeed) * atkSpeedCVM;
+        animator.SetFloat("AttackSpeed", atkSpeedCVM);
+        atkCoolTime = 10 / enemyAtkSpeed;
+        enemyMoveSpeed = float.Parse(DataManager.AllEnemyList[_enemyID].enemyMoveSpeed) * moveSpeedCVM;
+        animator.SetFloat("MoveSpeed", enemyMoveSpeed);
+        enemyAtkDmg = float.Parse(DataManager.AllEnemyList[_enemyID].enemyAtkDmg.Split('x')[0]) + atkDmgCV;
+        enemyArmor = float.Parse(DataManager.AllEnemyList[_enemyID].enemyArmor) + armorCV;
+        enemyAtkRange = float.Parse(DataManager.AllEnemyList[_enemyID].enemyAtkRange) + atkRangeCV;
+        boxSize = new Vector2(enemyAtkRange, enemyAtkRange);
+        // status timer
+        if(EnemyStatus.Count > 0)
+        {
+            for(int i=0; i<EnemyStatus.Count; i++)
+            {
+                EnemyStatus[i].buffTime -= Time.deltaTime;
+                if(EnemyStatus[i].buffTime <= 0)
+                {
+                    RemoveStatus(EnemyStatus[i].statusID);
+                    EnemyStatus.RemoveAt(i);
+                    Destroy(StatusBar.transform.GetChild(i).gameObject);
+                }
+            }
+        }
+
         if(enemyNowHP <= 0)
         {
             HPBar.GetComponent<Image>().fillAmount = 0;
+            StatusBar.gameObject.SetActive(false);
             animator.SetBool("isMoving", false);
             animator.SetTrigger("Dead");
         }
@@ -92,6 +136,7 @@ public class EnemyScript : MonoBehaviour
         {
             HPBar.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y - GetComponent<BoxCollider2D>().size.y * transform.localScale.y, 0));
             HPBar.GetComponent<Image>().fillAmount = enemyNowHP / enemyMaxHP;
+            StatusBar.position = Camera.main.WorldToScreenPoint(new Vector3(transform.GetComponent<Collider2D>().bounds.center.x, transform.GetComponent<Collider2D>().bounds.center.y + GetComponent<BoxCollider2D>().size.y * transform.localScale.y, 0));
             if(target != null)
             {
                 if(Vector2.Distance(transform.GetComponent<Collider2D>().bounds.center, target.GetComponent<Collider2D>().bounds.center) * Mathf.Abs(transform.localScale.x) < enemyAtkRange)
@@ -221,8 +266,6 @@ public class EnemyScript : MonoBehaviour
         spriteRenderer.color = new Color(1, 1, 1, 1);
     }
 
-
-
     Vector2 center;
     public Vector2 boxSize;
     private void OnDrawGizmos()
@@ -232,5 +275,84 @@ public class EnemyScript : MonoBehaviour
         Gizmos.DrawWireCube(center, boxSize);
         Gizmos.color = Color.blue;
         Gizmos.DrawWireCube(GetComponent<Collider2D>().bounds.center, new Vector2(enemyAtkRange, enemyAtkRange));
+    }
+    
+    public void AddStatus(string _statusID)
+    {
+        int isAlreadyGotIt = EnemyStatus.FindIndex(x => x.statusID == _statusID);
+        if(isAlreadyGotIt != -1)
+        {
+            EnemyStatus[isAlreadyGotIt].buffTime = float.Parse(DataManager.AllStatusList.Find(x => x.statusID == _statusID).buffTime);
+        }
+        else
+        {
+            Status _status = DataManager.AllStatusList.Find(x => x.statusID == _statusID);
+            StatusV tempStatus = new StatusV(); 
+            tempStatus.statusID = _status.statusID;
+            tempStatus.statusNameKR = _status.statusNameKR;
+            tempStatus.statusExplainKR = _status.statusExplainKR;
+            tempStatus.buffStat = new string[_status.buffStat.Length];
+            Array.Copy(_status.buffStat, tempStatus.buffStat, _status.buffStat.Length);
+            tempStatus.buffValue = Array.ConvertAll(_status.buffValue, x => float.Parse(x));
+
+            for(int i=0; i<_status.buffStat.Length; i++)
+            {
+                if(_status.buffStat[i] == "atkSpeedCVM")
+                {
+                    atkSpeedCVM += float.Parse(_status.buffValue[i]);
+                }
+                else if(_status.buffStat[i] == "moveSpeedCVM")
+                {
+                    moveSpeedCVM += float.Parse(_status.buffValue[i]);
+                }
+                else if(_status.buffStat[i] == "atkDmgCV")
+                {
+                    atkDmgCV += float.Parse(_status.buffValue[i]);
+                }
+                else if(_status.buffStat[i] == "armorCV")
+                {
+                    armorCV += float.Parse(_status.buffValue[i]);
+                }
+                else if(_status.buffStat[i] == "atkRangeCV")
+                {
+                    atkRangeCV += float.Parse(_status.buffValue[i]);
+                }
+                else
+                {
+                    print($"wrong buffStat name : '{_status.buffStat[i]}'");
+                }
+            }
+            Instantiate(Resources.Load($"UIs/Icons/Status{_statusID}"), new Vector2(0, 0), Quaternion.identity, StatusBar.transform);
+            tempStatus.buffTime = float.Parse(_status.buffTime);
+            EnemyStatus.Add(tempStatus);
+        }
+    }
+    
+    public void RemoveStatus(string _statusID)
+    {
+        int idx = EnemyStatus.FindIndex(x => x.statusID == _statusID);
+        for(int i=0; i<EnemyStatus[idx].buffStat.Length; i++)
+        {
+            if(EnemyStatus[idx].buffStat[i] == "atkSpeedCVM")
+            {
+                atkSpeedCVM -= EnemyStatus[idx].buffValue[i];
+            }
+            else if(EnemyStatus[idx].buffStat[i] == "moveSpeedCVM")
+            {
+                moveSpeedCVM -= EnemyStatus[idx].buffValue[i];
+            }
+            else if(EnemyStatus[idx].buffStat[i] == "atkDmgCV")
+            {
+                atkDmgCV -= EnemyStatus[idx].buffValue[i];
+            }
+            else if(EnemyStatus[idx].buffStat[i] == "armorCV")
+            {
+                armorCV -= EnemyStatus[idx].buffValue[i];
+            }
+            else if(EnemyStatus[idx].buffStat[i] == "atkRangeCV")
+            {
+                atkRangeCV -= EnemyStatus[idx].buffValue[i];
+            }
+        }
     }
 }

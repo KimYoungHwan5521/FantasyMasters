@@ -26,8 +26,11 @@ public class HeroScript : MonoBehaviour
     public float atkSpeed;
     public float atkSpeedCVM = 1;
     public float atkRange;
+    public float atkRangeCV = 0;
     public float criticalDmg;
+    public float criticalDmgCV = 0;
     public float criticalChance;
+    public float criticalChanceCV = 0;
     public float armor;
     public float armorCV = 0;
     public float moveSpeed;
@@ -126,6 +129,10 @@ public class HeroScript : MonoBehaviour
         animator.SetFloat("MoveSpeed", moveSpeedCVM);
         atkDmg = float.Parse(DataManager.AllHeroList[_heroID].heroAtkDmg.Split('x')[0]) + atkDmgCV;
         armor = float.Parse(DataManager.AllHeroList[_heroID].heroArmor) + armorCV;
+        atkRange = float.Parse(DataManager.AllHeroList[_heroID].heroAtkRange) + atkRangeCV;
+        boxSize = new Vector2(atkRange, atkRange);
+        criticalDmg = float.Parse(DataManager.AllHeroList[_heroID].heroCriticalDmg) + criticalDmgCV;
+        criticalChance = float.Parse(DataManager.AllHeroList[_heroID].heroCriticalChance) + criticalChanceCV;
 
         // status timer
         if(HeroStatus.Count > 0)
@@ -373,6 +380,18 @@ public class HeroScript : MonoBehaviour
                 {
                     armorCV += float.Parse(_status.buffValue[i]);
                 }
+                else if(_status.buffStat[i] == "atkRangeCV")
+                {
+                    atkRangeCV += float.Parse(_status.buffValue[i]);
+                }
+                else if(_status.buffStat[i] == "criticalDmgCV")
+                {
+                    criticalDmgCV += float.Parse(_status.buffValue[i]);
+                }
+                else if(_status.buffStat[i] == "criticalChanceCV")
+                {
+                    criticalChanceCV += float.Parse(_status.buffValue[i]);
+                }
                 else
                 {
                     print($"wrong buffStat name : '{_status.buffStat[i]}'");
@@ -405,6 +424,18 @@ public class HeroScript : MonoBehaviour
             {
                 armorCV -= HeroStatus[idx].buffValue[i];
             }
+            else if(HeroStatus[idx].buffStat[i] == "atkRangeCV")
+            {
+                atkRangeCV -= HeroStatus[idx].buffValue[i];
+            }
+            else if(HeroStatus[idx].buffStat[i] == "criticalDmgCV")
+            {
+                criticalDmgCV -= HeroStatus[idx].buffValue[i];
+            }
+            else if(HeroStatus[idx].buffStat[i] == "criticalChanceCV")
+            {
+                criticalChanceCV -= HeroStatus[idx].buffValue[i];
+            }
         }
     }
 
@@ -435,6 +466,18 @@ public class HeroScript : MonoBehaviour
                 maxHPCV += float.Parse(_item.itemBuffValue[i]);
                 maxHP = float.Parse(DataManager.AllHeroList[_heroID].heroMaxHP) + maxHPCV;
                 if(maxHP < 1) maxHP = 1;
+            }
+            else if(_item.itemBuffStat[i] == "atkRangeCV")
+            {
+                atkRangeCV += float.Parse(_item.itemBuffValue[i]);
+            }
+            else if(_item.itemBuffStat[i] == "criticalDmgCV")
+            {
+                criticalDmgCV += float.Parse(_item.itemBuffValue[i]);
+            }
+            else if(_item.itemBuffStat[i] == "criticalChanceCV")
+            {
+                criticalChanceCV += float.Parse(_item.itemBuffValue[i]);
             }
             else
             {

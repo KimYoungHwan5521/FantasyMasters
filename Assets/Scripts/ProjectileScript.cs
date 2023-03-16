@@ -85,7 +85,7 @@ public class ProjectileScript : MonoBehaviour
                 if(isCritical) 
                 {
                     dmg *= summoner.GetComponent<MinionScript>().minionCriticalDmg;
-                    // if(summoner.GetComponent<MinionScript>().minionAbilities.Find(x => x == "0003") != null)
+                    // if(summoner.GetComponent<MinionScript>().minionAbilities.Contains("0003"))
                     // {
                     //     summoner.GetComponent<MinionScript>().AddStatus("0000");
                     // }
@@ -107,6 +107,10 @@ public class ProjectileScript : MonoBehaviour
             else if(collision.gameObject.tag == "Minion")
             {
                 collision.gameObject.GetComponent<MinionScript>().BeAttacked(dmg);
+                if(summoner.GetComponent<EnemyScript>().enemyAbilities.Contains("0001"))
+                {
+                    collision.gameObject.GetComponent<MinionScript>().AddStatus("0001");
+                }
             }
         }
         Destroy(transform.parent.gameObject);
