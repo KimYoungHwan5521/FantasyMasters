@@ -108,6 +108,10 @@ public class StageManager : MonoBehaviour
         {
             StartCoroutine(SummonMinion("0001", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0002").abilityCoolTime)));
         }
+        if(Hero.GetComponent<HeroScript>().abilities.Contains("0008"))
+        {
+            StartCoroutine(LifeDrain(float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0008").abilityCoolTime)));
+        }
         StartCoroutine(SpawnEnemy(stageInfo));
     }
     
@@ -212,10 +216,13 @@ public class StageManager : MonoBehaviour
                 int r = Random.Range(0, tempPdl.Count);
                 if(!CurProductList.Contains(tempPdl[r])) CurProductList.Add(tempPdl[r]);
             }
-            // else i--;
+            else i--;
         }
         for(int i=0; i<CurProductList.Count; i++)
         {
+            Image ProductImage = ProductsSimple[i].GetComponentsInChildren<Image>()[1];
+            if(CurProductList[i].productType == "아이템") ProductImage.sprite = Resources.Load<Sprite>($"UIs/Icons/Products/Items/Item{CurProductList[i].inheritanceID}");
+            else ProductImage.sprite = Resources.Load<Sprite>($"UIs/Icons/Products/Abilities/Ability{CurProductList[i].inheritanceID}");
             Text[] ProductSimpleTexts = ProductsSimple[i].GetComponentsInChildren<Text>();
             ProductSimpleTexts[0].text = CurProductList[i].productName;
             ProductSimpleTexts[1].text = "";
@@ -288,6 +295,24 @@ public class StageManager : MonoBehaviour
             Vector3 summonPositon = Hero.GetComponent<Collider2D>().bounds.center;
             Instantiate(minionToSummon, summonPositon, Quaternion.identity);
             yield return new WaitForSeconds(summonCoolTime);
+        }
+    }
+
+    IEnumerator LifeDrain(float coolTime)
+    {
+        var effect = Resources.Load<GameObject>($"Projectiles/ProjectileLifeDrain");
+        while(true)
+        {   
+            if(StageTime.text == "0") break;
+            GameObject te = GameObject.FindWithTag("Enemy");
+            if(te != null)
+            {
+                te.GetComponent<EnemyScript>().enemyNowHP -= 30;
+                GameObject Pjt = Instantiate(effect, te.transform.position, Quaternion.identity);
+                Pjt.GetComponentInChildren<ProjectileScript>().SetProjectile(te, Hero, false, "LifeDrain");
+                yield return new WaitForSeconds(coolTime);
+            }
+            else yield return new WaitForSeconds(1);
         }
     }
 }

@@ -92,6 +92,7 @@ public class MinionScript : MonoBehaviour
 
         animator = GetComponent<Animator>();
         HPBar = Instantiate(Resources.Load<RectTransform>("UIs/HPBar"), new Vector3(0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
+        HPBar.localScale = new Vector2(GetComponent<BoxCollider2D>().size.x * 10, 1);
         StatusBar = Instantiate(Resources.Load<RectTransform>("UIs/StatusBar"), new Vector3(0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
 
         target = null;
@@ -236,11 +237,25 @@ public class MinionScript : MonoBehaviour
             {
                 if(isCritical)
                 {
-                    collider.GetComponent<EnemyScript>().BeAttacked(minionAtkDmg * minionCriticalDmg, 0.6f, isCritical);
+                    if(collider.gameObject.GetComponent<EnemyScript>().enemyAbilities.Contains("0004"))
+                    {
+                        collider.gameObject.GetComponent<EnemyScript>().BeAttacked(minionAtkDmg * minionCriticalDmg + collider.GetComponent<EnemyScript>().enemyArmor, 0.6f, isCritical);
+                    }
+                    else
+                    {
+                        collider.gameObject.GetComponent<EnemyScript>().BeAttacked(minionAtkDmg * minionCriticalDmg, 0.6f, isCritical);
+                    }
                 }
                 else
                 {
-                    collider.GetComponent<EnemyScript>().BeAttacked(minionAtkDmg, 0.3f, isCritical);
+                    if(collider.gameObject.GetComponent<EnemyScript>().enemyAbilities.Contains("0004"))
+                    {
+                        collider.gameObject.GetComponent<EnemyScript>().BeAttacked(minionAtkDmg + collider.GetComponent<EnemyScript>().enemyArmor, 0.3f, isCritical);
+                    }
+                    else
+                    {
+                        collider.gameObject.GetComponent<EnemyScript>().BeAttacked(minionAtkDmg, 0.3f, isCritical);
+                    }
                 }
             }
         }
@@ -369,7 +384,7 @@ public class MinionScript : MonoBehaviour
                     print($"wrong buffStat name : '{_status.buffStat[i]}'");
                 }
             }
-            Instantiate(Resources.Load($"UIs/Icons/Status{_statusID}"), new Vector2(0, 0), Quaternion.identity, StatusBar.transform);
+            Instantiate(Resources.Load($"UIs/Icons/Status/Status{_statusID}"), new Vector2(0, 0), Quaternion.identity, StatusBar.transform);
             tempStatus.buffTime = float.Parse(_status.buffTime);
             MinionStatus.Add(tempStatus);
         }

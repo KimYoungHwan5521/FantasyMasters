@@ -20,6 +20,7 @@ public class HeroScript : MonoBehaviour
     public float maxHPCV = 0;
     public float nowHP;
     public float HPRegeneration;
+    public float HPRegenerationCV = 0;
     public int atkType;
     public float atkDmg;
     public float atkDmgCV = 0;
@@ -255,7 +256,7 @@ public class HeroScript : MonoBehaviour
 
     private void HPRegenerationMethod()
     {
-        nowHP += 1;
+        if(HPRegeneration + HPRegenerationCV > 0) nowHP += HPRegeneration + HPRegenerationCV;
         if(nowHP > maxHP) nowHP = maxHP;
     }
 
@@ -268,20 +269,34 @@ public class HeroScript : MonoBehaviour
             {
                 if(isCritical)
                 {
-                    collider.GetComponent<EnemyScript>().BeAttacked(atkDmg * criticalDmg, 0.6f, isCritical);
+                    if(abilities.Contains("0004"))
+                    {
+                        collider.gameObject.GetComponent<EnemyScript>().BeAttacked(atkDmg * criticalDmg + collider.GetComponent<EnemyScript>().enemyArmor, 0.6f, isCritical);
+                    }
+                    else
+                    {
+                        collider.gameObject.GetComponent<EnemyScript>().BeAttacked(atkDmg * criticalDmg, 0.6f, isCritical);
+                    }
                 }
                 else
                 {
-                    collider.GetComponent<EnemyScript>().BeAttacked(atkDmg, 0.3f, isCritical);
+                    if(abilities.Contains("0004"))
+                    {
+                        collider.gameObject.GetComponent<EnemyScript>().BeAttacked(atkDmg + collider.GetComponent<EnemyScript>().enemyArmor, 0.6f, isCritical);
+                    }
+                    else
+                    {
+                        collider.gameObject.GetComponent<EnemyScript>().BeAttacked(atkDmg, 0.6f, isCritical);
+                    }
                 }
 
                 if(abilities.Contains("0005"))
                 {
-                    collider.GetComponent<EnemyScript>().AddStatus("0002");
+                    collider.gameObject.GetComponent<EnemyScript>().AddStatus("0002");
                 }
                 if(abilities.Contains("0006"))
                 {
-                    collider.GetComponent<EnemyScript>().AddStatus("0003");
+                    collider.gameObject.GetComponent<EnemyScript>().AddStatus("0003");
                 }
             }
         }
@@ -381,6 +396,10 @@ public class HeroScript : MonoBehaviour
                 {
                     moveSpeedCVM += float.Parse(_status.buffValue[i]);
                 }
+                else if(_status.buffStat[i] == "HPRegenerationCV")
+                {
+                    HPRegenerationCV += float.Parse(_status.buffValue[i]);
+                }
                 else if(_status.buffStat[i] == "atkDmgCV")
                 {
                     atkDmgCV += float.Parse(_status.buffValue[i]);
@@ -406,7 +425,7 @@ public class HeroScript : MonoBehaviour
                     print($"wrong buffStat name : '{_status.buffStat[i]}'");
                 }
             }
-            Instantiate(Resources.Load($"UIs/Icons/Status{_statusID}"), new Vector2(0, 0), Quaternion.identity, GameObject.Find("HeroStatus").transform);
+            Instantiate(Resources.Load($"UIs/Icons/Status/Status{_statusID}"), new Vector2(0, 0), Quaternion.identity, GameObject.Find("HeroStatus").transform);
             tempStatus.buffTime = float.Parse(_status.buffTime);
             HeroStatus.Add(tempStatus);
         }
@@ -475,6 +494,10 @@ public class HeroScript : MonoBehaviour
                 maxHPCV += float.Parse(_item.itemBuffValue[i]);
                 maxHP = float.Parse(DataManager.AllHeroList[_heroID].heroMaxHP) + maxHPCV;
                 if(maxHP < 1) maxHP = 1;
+            }
+            else if(_item.itemBuffStat[i] == "HPRegenerationCV")
+            {
+                HPRegenerationCV += float.Parse(_item.itemBuffValue[i]);
             }
             else if(_item.itemBuffStat[i] == "atkRangeCV")
             {

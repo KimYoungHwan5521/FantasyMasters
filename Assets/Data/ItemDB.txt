@@ -1,8 +1,13 @@
 ItemID	ItemNameKR	ItemAttributes	ItemRareDegree	ItemExplainKR	ItemBuffStat	ItemBuffValue	ItemAbilityID
-0000	팔뼈	암흑	0	공격력 +30, 최대체력 -10	atkDmgCV|maxHPCV	30|-10	
-0001	대퇴골	암흑	1	공격력 +60, 최대체력 -20	atkDmgCV|maxHPCV	60|-20	
-0002	뼈방패	암흑	0	방어력 +10, 최대체력 -10	armorCV|maxHPCV	10|-10	
-0003	큰 낫	암흑	2	공격력 +60, 최대체력 -15, 방어무시	atkDmgCV|maxHPCV	60|-15	0004
+0000	팔뼈	암흑	0	공격력 +20, 최대체력 -10	atkDmgCV|maxHPCV	20|-10	
+0001	대퇴골	암흑	1	공격력 +40, 최대체력 -20	atkDmgCV|maxHPCV	40|-20	
+0002	뼈방패	암흑	0	방어력 +20, 최대체력 -10	armorCV|maxHPCV	20|-10	
+0003	사신의 낫	암흑	2	공격력 +40, 최대체력 -15, 방어무시	atkDmgCV|maxHPCV	40|-15	0004
 0004	다크 로브	암흑	0	최대체력 +30	maxHPCV	30	
 0005	두개골	암흑	2	최대체력 -10, 저주공격	maxHPCV	-10	0005
 0006	흑마법서	암흑	3	최대체력 -20, 강한저주공격	maxHPCV	-20	0006
+0007	좀비의 팔	암흑	0	체력재생 +2, 최대체력 -10	HPRegenerationCV|maxHPCV	2|-10	
+0008	좀비의 다리	암흑	0	이동속도 +20%, 최대체력 -10	moveSpeedCVM|maxHPCV	0.2|-10	
+0009	늑골	암흑	1	방어력 +40, 최대체력 -20	armorCV|maxHPCV	40|-20	
+0010	좀비의 육체	암흑	1	체력재생 +5, 최대체력 -20	HPRegenerationCV|maxHPCV	5|-20	
+0011	사슴 머리뼈	암흑	1	공격력 +20, 방어력 +20, 최대체력 -10, 공포 면역	atkDmgCV|armorCV|maxHPCV	20|20|-10	0017

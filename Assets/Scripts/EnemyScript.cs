@@ -88,6 +88,7 @@ public class EnemyScript : MonoBehaviour
 
         animator = GetComponent<Animator>();
         HPBar = Instantiate(Resources.Load<RectTransform>("UIs/HPBar"), new Vector3(0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
+        HPBar.localScale = new Vector2(GetComponent<BoxCollider2D>().size.x * 10, 1);
         StatusBar = Instantiate(Resources.Load<RectTransform>("UIs/StatusBar"), new Vector3(0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
 
         // 타겟 추적
@@ -135,9 +136,9 @@ public class EnemyScript : MonoBehaviour
         }
         else
         {
-            HPBar.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y - GetComponent<BoxCollider2D>().size.y * transform.localScale.y, 0));
+            HPBar.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y - GetComponent<BoxCollider2D>().size.y * transform.localScale.y - 0.1f, 0));
             HPBar.GetComponent<Image>().fillAmount = enemyNowHP / enemyMaxHP;
-            StatusBar.position = Camera.main.WorldToScreenPoint(new Vector3(transform.GetComponent<Collider2D>().bounds.center.x, transform.GetComponent<Collider2D>().bounds.center.y + GetComponent<BoxCollider2D>().size.y * transform.localScale.y, 0));
+            StatusBar.position = Camera.main.WorldToScreenPoint(new Vector3(transform.GetComponent<Collider2D>().bounds.center.x, transform.GetComponent<Collider2D>().bounds.center.y + GetComponent<BoxCollider2D>().size.y * transform.localScale.y + 0.1f, 0));
             if(target != null)
             {
                 if(Vector2.Distance(transform.GetComponent<Collider2D>().bounds.center, target.GetComponent<Collider2D>().bounds.center) * Mathf.Abs(transform.localScale.x) < enemyAtkRange)
@@ -224,11 +225,25 @@ public class EnemyScript : MonoBehaviour
         {
             if(collider.tag == "Player")
             {
-                collider.GetComponent<HeroScript>().BeAttacked(enemyAtkDmg);
+                if(enemyAbilities.Contains("0004"))
+                {
+                    collider.GetComponent<HeroScript>().BeAttacked(enemyAtkDmg + collider.GetComponent<HeroScript>().armor);
+                }
+                else
+                {
+                    collider.GetComponent<HeroScript>().BeAttacked(enemyAtkDmg);
+                }
             }
             else if(collider.tag == "Minion")
             {
-                collider.GetComponent<MinionScript>().BeAttacked(enemyAtkDmg);
+                if(enemyAbilities.Contains("0004"))
+                {
+                    collider.GetComponent<MinionScript>().BeAttacked(enemyAtkDmg + collider.GetComponent<MinionScript>().minionArmor);
+                }
+                else
+                {
+                    collider.GetComponent<MinionScript>().BeAttacked(enemyAtkDmg);
+                }
             }
         }
     }
@@ -257,7 +272,7 @@ public class EnemyScript : MonoBehaviour
         spriteRenderer.color = new Color(1, 0, 0, 1);
         Vector2 moveDirection = GetComponent<Collider2D>().bounds.center - Hero.GetComponent<Collider2D>().bounds.center;
         moveDirection.Normalize();
-        transform.Translate(moveDirection * knockback);
+        if(!enemyAbilities.Contains("0007")) transform.Translate(moveDirection * knockback);
         Invoke("OffDamaged", 0.3f);
     }
     
@@ -324,7 +339,7 @@ public class EnemyScript : MonoBehaviour
                     print($"wrong buffStat name : '{_status.buffStat[i]}'");
                 }
             }
-            Instantiate(Resources.Load($"UIs/Icons/Status{_statusID}"), new Vector2(0, 0), Quaternion.identity, StatusBar.transform);
+            Instantiate(Resources.Load($"UIs/Icons/Status/Status{_statusID}"), new Vector2(0, 0), Quaternion.identity, StatusBar.transform);
             tempStatus.buffTime = float.Parse(_status.buffTime);
             EnemyStatus.Add(tempStatus);
         }
