@@ -232,7 +232,7 @@ public class HeroSelectScript : MonoBehaviour
         HeroDetailValues[4].text = CurHeroList[_heroID].heroAtkDmg;
         HeroDetailValues[5].text = CurHeroList[_heroID].heroAtkSpeed;
         HeroDetailValues[6].text = CurHeroList[_heroID].heroAtkRange;
-        HeroDetailValues[7].text = "x" +CurHeroList[_heroID].heroCriticalDmg;
+        HeroDetailValues[7].text = Mathf.Round(float.Parse(CurHeroList[_heroID].heroCriticalDmg) * 100).ToString() + "%";
         HeroDetailValues[8].text = CurHeroList[_heroID].heroCriticalChance + "%";
         HeroDetailValues[9].text = CurHeroList[_heroID].heroArmor;
         HeroDetailValues[10].text = CurHeroList[_heroID].heroMoveSpeed;

@@ -98,7 +98,7 @@ public class StageManager : MonoBehaviour
             else CountText.SetText($"<size=100>{i.ToString()}</size>", "#FF0000");
             yield return new WaitForSeconds(1);
         }
-        stageTime = 60;
+        stageTime = 1;
         StartCoroutine(StageTimer());
         if(Hero.GetComponent<HeroScript>().abilities.Contains("0000"))
         {
@@ -179,6 +179,7 @@ public class StageManager : MonoBehaviour
     {
         CurProductList = new List<Product>();
         selectedProduct = -1;
+        string[] hAttributes = Hero.GetComponent<HeroScript>().attributes;
         for(int i=0;i<5;i++)
         {
             int rd = 0;
@@ -190,33 +191,33 @@ public class StageManager : MonoBehaviour
             List<Product> tempPdl = new List<Product>();
             if(i<4)
             {
-                if(Hero.GetComponent<HeroScript>().attributes.Length > 1 && i > 1)
+                if(hAttributes.Length > 1 && i > 1)
                 {
-                    tempPdl = AllProductList.FindAll(x => x.attributes.ToList().Contains(Hero.GetComponent<HeroScript>().attributes[1]));
+                    tempPdl = AllProductList.FindAll(x => x.attributes.ToList().Contains(hAttributes[1]));
                 }
                 else
                 {
-                    tempPdl = AllProductList.FindAll(x => x.attributes.ToList().Contains(Hero.GetComponent<HeroScript>().attributes[0]));
+                    tempPdl = AllProductList.FindAll(x => x.attributes.ToList().Contains(hAttributes[0]));
                 }
             }
             else
             {
-                if(Hero.GetComponent<HeroScript>().attributes.Length > 1)
+                if(hAttributes.Length > 1)
                 {
-                    tempPdl = AllProductList.FindAll(x => !(x.attributes.ToList().Contains(Hero.GetComponent<HeroScript>().attributes[0])) && !(x.attributes.ToList().Contains(Hero.GetComponent<HeroScript>().attributes[1])));
+                    tempPdl = AllProductList.FindAll(x => !(x.attributes.ToList().Contains(hAttributes[0])) && !(x.attributes.ToList().Contains(hAttributes[1])));
                 }
                 else
                 {
-                    tempPdl = AllProductList.FindAll(x => !(x.attributes.ToList().Contains(Hero.GetComponent<HeroScript>().attributes[0])));
+                    tempPdl = AllProductList.FindAll(x => !(x.attributes.ToList().Contains(hAttributes[0])));
                 }
             }
             tempPdl = tempPdl.FindAll(x => x.rareDegree == rd.ToString());
             if(tempPdl.Count > 0)
             {
                 int r = Random.Range(0, tempPdl.Count);
-                if(!CurProductList.Contains(tempPdl[r])) CurProductList.Add(tempPdl[r]);
+                print($"tempPdl[r].productName: {tempPdl[r].productName}");
+                if(!CurProductList.Contains(tempPdl[r]) && !Hero.GetComponent<HeroScript>().abilities.Contains(tempPdl[r].inheritanceID)) CurProductList.Add(tempPdl[r]);
             }
-            else i--;
         }
         for(int i=0; i<CurProductList.Count; i++)
         {

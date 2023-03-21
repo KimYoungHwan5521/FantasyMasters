@@ -1,35 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6229738065893499164
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6229738065893499165}
-  m_Layer: 9
-  m_Name: HitBox
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6229738065893499165
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6229738065893499164}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.053, y: -0.125, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 6229738066027970464}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6229738066027970466
 GameObject:
   m_ObjectHideFlags: 0
@@ -62,8 +32,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.357, y: 0.288, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 1}
-  m_Children:
-  - {fileID: 6229738065893499165}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -105,7 +74,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1662870407
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 043969fc14e8f16409ea4981b085d9d5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -183,17 +152,24 @@ MonoBehaviour:
   minionAttributes: []
   minionMaxHP: 0
   minionNowHP: 0
-  minionExistencetime: 0
   minionAtkType: 0
   minionAtkDmg: 0
+  atkDmgCV: 0
   minionAtkSpeed: 0
+  atkSpeedCVM: 1
   minionAtkRange: 0
+  atkRangeCV: 0
   minionCriticalDmg: 0
+  criticalDmgCV: 0
   minionCriticalChance: 0
+  criticalChanceCV: 0
   minionArmor: 0
+  armorCV: 0
   minionMoveSpeed: 0
+  moveSpeedCVM: 1
   minionAbilities: []
   HPBar: {fileID: 0}
+  StatusBar: {fileID: 0}
   atkCoolTime: 0
   TrackingBox: {x: 10, y: 10}
   boxSize: {x: 1, y: 1}
@@ -228,5 +204,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a3d658df8c4ac54da684473deee6ca8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: {r: 1, g: 1, b: 1, a: 1}
+  color: {r: 0, g: 1, b: 0, a: 1}
   outlineSize: 1

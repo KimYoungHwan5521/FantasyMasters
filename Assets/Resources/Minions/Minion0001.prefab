@@ -1,35 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &7688000475198371559
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7688000475198371558}
-  m_Layer: 9
-  m_Name: HitBox
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7688000475198371558
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7688000475198371559}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.053, y: -0.125, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 7688000475331258459}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7688000475331258457
 GameObject:
   m_ObjectHideFlags: 0
@@ -62,8 +32,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -5.3740387, y: -1.8858278, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 1}
-  m_Children:
-  - {fileID: 7688000475198371558}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -105,7 +74,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1662870407
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 7928858964255100155, guid: 9b72396cb86f52b45a49267be6f5cd04, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -216,17 +185,24 @@ MonoBehaviour:
   minionAttributes: []
   minionMaxHP: 0
   minionNowHP: 0
-  minionExistencetime: 0
   minionAtkType: 0
   minionAtkDmg: 0
+  atkDmgCV: 0
   minionAtkSpeed: 0
+  atkSpeedCVM: 1
   minionAtkRange: 0
+  atkRangeCV: 0
   minionCriticalDmg: 0
+  criticalDmgCV: 0
   minionCriticalChance: 0
+  criticalChanceCV: 0
   minionArmor: 0
+  armorCV: 0
   minionMoveSpeed: 0
+  moveSpeedCVM: 1
   minionAbilities: []
   HPBar: {fileID: 0}
+  StatusBar: {fileID: 0}
   atkCoolTime: 0
   TrackingBox: {x: 0, y: 0}
   boxSize: {x: 0, y: 0}
