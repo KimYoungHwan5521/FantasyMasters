@@ -1,6 +1,6 @@
 ItemID	ItemNameKR	ItemAttributes	ItemRareDegree	ItemExplainKR	ItemBuffStat	ItemBuffValue	ItemAbilityID
 0000	팔뼈	암흑	0	공격력 +20, 최대체력 -10	atkDmgCV|maxHPCV	20|-10	
-0001	대퇴골	암흑	1	공격력 +40, 최대체력 -20	atkDmgCV|maxHPCV	40|-20	
+0001	대퇴골	암흑	0	공격력 +30, 최대체력 -15	atkDmgCV|maxHPCV	30|-15	
 0002	뼈방패	암흑	0	방어력 +20, 최대체력 -10	armorCV|maxHPCV	20|-10	
 0003	사신의 낫	암흑	2	공격력 +40, 최대체력 -15, 방어무시	atkDmgCV|maxHPCV	40|-15	0004
 0004	다크 로브	암흑	0	최대체력 +30	maxHPCV	30	
@@ -10,4 +10,7 @@ ItemID	ItemNameKR	ItemAttributes	ItemRareDegree	ItemExplainKR	ItemBuffStat	ItemB
 0008	좀비의 다리	암흑	0	이동속도 +20%, 최대체력 -10	moveSpeedCVM|maxHPCV	0.2|-10	
 0009	늑골	암흑	1	방어력 +40, 최대체력 -20	armorCV|maxHPCV	40|-20	
 0010	좀비의 육체	암흑	1	체력재생 +5, 최대체력 -20	HPRegenerationCV|maxHPCV	5|-20	
-0011	사슴 머리뼈	암흑	1	공격력 +20, 방어력 +20, 최대체력 -10, 공포 면역	atkDmgCV|armorCV|maxHPCV	20|20|-10	0017
+0011	양 머리뼈	암흑	1	공격력 +20, 방어력 +20, 최대체력 -10, 공포 면역	atkDmgCV|armorCV|maxHPCV	20|20|-10	0017
+0012	뼈화살	암흑 숲	0	치명타 데미지 +100%, 최대체력 -10	criticalDmgCV|maxHPCV	1|-10	
+0013	좀비 턱	암흑	1	최대체력 -20, 좀비 물림	maxHPCV	-20	0011
+0014	생선 가시	암흑 물	0	치명타 확률 +30%, 최대체력 -10	criticalChanceCV|maxHPCV	30|-10	

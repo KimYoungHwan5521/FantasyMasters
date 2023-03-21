@@ -103,6 +103,7 @@ public class MinionScript : MonoBehaviour
     Vector2 moveDirection;
     GameObject target;
     bool isCritical = false;
+    public bool attackedByZombie = false;
     void Update()
     {
         minionAtkSpeed = float.Parse(DataManager.AllMinionList[_minionID].minionAtkSpeed) * atkSpeedCVM;
@@ -256,6 +257,11 @@ public class MinionScript : MonoBehaviour
                     {
                         collider.gameObject.GetComponent<EnemyScript>().BeAttacked(minionAtkDmg, 0.3f, isCritical);
                     }
+                }
+
+                if(minionAbilities.Contains("0011"))
+                {
+                    collider.gameObject.GetComponent<EnemyScript>().attackedByZombie = true;
                 }
             }
         }

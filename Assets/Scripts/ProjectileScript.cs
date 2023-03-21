@@ -119,9 +119,14 @@ public class ProjectileScript : MonoBehaviour
                     {
                         collision.gameObject.GetComponent<EnemyScript>().BeAttacked(dmg, 0.1f + 0.2f * isCf, isCritical);
                     }
+
+                    if(summoner.abilities.Contains("0011"))
+                    {
+                        collision.gameObject.GetComponent<EnemyScript>().attackedByZombie = true;
+                    }
                     
+                    Destroy(transform.parent.gameObject);
                 }
-                Destroy(transform.parent.gameObject);
             }
             else if(summoner.tag == "Minion")
             {
@@ -144,6 +149,11 @@ public class ProjectileScript : MonoBehaviour
                     else
                     {
                         GetComponent<Collider>().GetComponent<EnemyScript>().BeAttacked(dmg, 0.1f + 0.2f * isCf, isCritical);
+                    }
+
+                    if(summoner.abilities.Contains("0011"))
+                    {
+                        collision.gameObject.GetComponent<EnemyScript>().attackedByZombie = true;
                     }
                     Destroy(transform.parent.gameObject);
                 }
@@ -175,32 +185,32 @@ public class ProjectileScript : MonoBehaviour
                         {
                             collision.gameObject.GetComponent<HeroScript>().AddStatus("0001");
                         }
+
                     }
                     Destroy(transform.parent.gameObject);
                 }
                 else if(collision.gameObject.tag == "Minion")
                 {
-                    if(special == "LifeDrain")
+
+                    if(summoner.abilities.Contains("0004"))
                     {
-                        
+                        collision.gameObject.GetComponent<MinionScript>().BeAttacked(dmg + GetComponent<Collider>().GetComponent<HeroScript>().armor);
                     }
                     else
                     {
-                        if(summoner.abilities.Contains("0004"))
-                        {
-                            collision.gameObject.GetComponent<MinionScript>().BeAttacked(dmg + GetComponent<Collider>().GetComponent<HeroScript>().armor);
-                        }
-                        else
-                        {
-                            collision.gameObject.GetComponent<MinionScript>().BeAttacked(dmg);
-                        }
-                        
-                        if(summoner.abilities.Contains("0001"))
-                        {
-                            collision.gameObject.GetComponent<MinionScript>().AddStatus("0001");
-                        }
-                        Destroy(transform.parent.gameObject);
+                        collision.gameObject.GetComponent<MinionScript>().BeAttacked(dmg);
                     }
+                    
+                    if(summoner.abilities.Contains("0001"))
+                    {
+                        collision.gameObject.GetComponent<MinionScript>().AddStatus("0001");
+                    }
+                    if(summoner.abilities.Contains("0011"))
+                    {
+                        collision.gameObject.GetComponent<MinionScript>().attackedByZombie = true;
+                    }
+                    Destroy(transform.parent.gameObject);
+
                 }
             }
         }

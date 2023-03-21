@@ -7,22 +7,46 @@ public class DestroyOnExit : StateMachineBehaviour
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if(GameObject.FindWithTag("Player").GetComponent<HeroScript>().abilities.Contains("0009") && animator.gameObject.tag == "Minion")
+        GameObject StageTimer = GameObject.Find("StageTimer");
+        if(StageTimer != null)
         {
-            Instantiate(Resources.Load<GameObject>($"Effects/Explosion00"), animator.GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
-            Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(animator.GetComponent<Collider2D>().bounds.center, new Vector2(2, 2), 0);
-            foreach(Collider2D collider in collider2Ds)
+            if(animator.gameObject.tag == "Minion")
             {
-                if(collider.tag == "Enemy")
+                animator.gameObject.layer = 10;
+
+                if(GameObject.FindWithTag("Player").GetComponent<HeroScript>().abilities.Contains("0009"))
                 {
-                    collider.gameObject.GetComponent<EnemyScript>().BeAttacked(animator.GetComponent<MinionScript>().minionMaxHP * 0.3f, 0.3f, false);
+                    Instantiate(Resources.Load<GameObject>($"Effects/Explosion00"), animator.GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
+                    Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(animator.GetComponent<Collider2D>().bounds.center, new Vector2(2, 2), 0);
+                    foreach(Collider2D collider in collider2Ds)
+                    {
+                        if(collider.tag == "Enemy")
+                        {
+                            collider.gameObject.GetComponent<EnemyScript>().BeAttacked(animator.GetComponent<MinionScript>().minionMaxHP * 0.3f, 0.3f, false);
+                        }
+                    }
+                }
+                if(animator.GetComponent<MinionScript>().attackedByZombie)
+                {
+                    int r = Random.Range(0, 5);
+                    if(r == 4) Instantiate(Resources.Load<GameObject>($"Enemies/Enemy0008"), animator.GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
                 }
             }
-        }
-        if(GameObject.FindWithTag("Player").GetComponent<HeroScript>().abilities.Contains("0010") && animator.gameObject.tag == "Enemy")
-        {
-            Instantiate(Resources.Load<GameObject>($"Minions/Minion0003"), animator.GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
-            Instantiate(Resources.Load<GameObject>($"Minions/Minion0003"), animator.GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
+            else if(animator.gameObject.tag == "Enemy")
+            {
+                animator.gameObject.layer = 8;
+
+                if(GameObject.FindWithTag("Player").GetComponent<HeroScript>().abilities.Contains("0010"))
+                {
+                    Instantiate(Resources.Load<GameObject>($"Minions/Minion0003"), animator.GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
+                    Instantiate(Resources.Load<GameObject>($"Minions/Minion0003"), animator.GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
+                }
+                if(animator.GetComponent<EnemyScript>().attackedByZombie)
+                {
+                    int r = Random.Range(0, 5);
+                    if(r == 4) Instantiate(Resources.Load<GameObject>($"Minions/Minion0002"), animator.GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
+                }
+            }
         }
     }
 

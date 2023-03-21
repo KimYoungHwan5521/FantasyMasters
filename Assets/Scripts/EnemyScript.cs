@@ -100,6 +100,7 @@ public class EnemyScript : MonoBehaviour
     Vector2 moveDirection;
     GameObject Hero;
     GameObject target;
+    public bool attackedByZombie = false;
 
     void Update()
     {
@@ -243,6 +244,11 @@ public class EnemyScript : MonoBehaviour
                 else
                 {
                     collider.GetComponent<MinionScript>().BeAttacked(enemyAtkDmg);
+                }
+
+                if(enemyAbilities.Contains("0011"))
+                {
+                    collider.GetComponent<MinionScript>().attackedByZombie = true;
                 }
             }
         }

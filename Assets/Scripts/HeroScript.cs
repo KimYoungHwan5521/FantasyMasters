@@ -298,6 +298,10 @@ public class HeroScript : MonoBehaviour
                 {
                     collider.gameObject.GetComponent<EnemyScript>().AddStatus("0003");
                 }
+                if(abilities.Contains("0011"))
+                {
+                    collider.gameObject.GetComponent<EnemyScript>().attackedByZombie = true;
+                }
             }
         }
     }
