@@ -23,7 +23,7 @@ TagManager:
   - PlayerInv
   - Projectile(alli)
   - Projectile(enemy)
-  - 
+  - Projectile(LifeDrain)
   - 
   - 
   - 

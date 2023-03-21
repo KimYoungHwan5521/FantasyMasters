@@ -98,7 +98,7 @@ public class StageManager : MonoBehaviour
             else CountText.SetText($"<size=100>{i.ToString()}</size>", "#FF0000");
             yield return new WaitForSeconds(1);
         }
-        stageTime = 1;
+        stageTime = 60;
         StartCoroutine(StageTimer());
         if(Hero.GetComponent<HeroScript>().abilities.Contains("0000"))
         {
@@ -157,15 +157,21 @@ public class StageManager : MonoBehaviour
 
     IEnumerator StageEnd()
     {
-        GameObject[] E = GameObject.FindGameObjectsWithTag("Enemy");
-        foreach(GameObject e in E)
+        int exception = 0;
+        while(true)
         {
-            e.GetComponent<EnemyScript>().enemyNowHP = 0;
-        }
-        GameObject[] M = GameObject.FindGameObjectsWithTag("Minion");
-        foreach(GameObject m in M)
-        {
-            m.GetComponent<MinionScript>().minionNowHP = 0;
+            GameObject[] E = GameObject.FindGameObjectsWithTag("Enemy");
+            foreach(GameObject e in E)
+            {
+                e.GetComponent<EnemyScript>().enemyNowHP = 0;
+            }
+            GameObject[] M = GameObject.FindGameObjectsWithTag("Minion");
+            foreach(GameObject m in M)
+            {
+                m.GetComponent<MinionScript>().minionNowHP = 0;
+            }
+            exception++;
+            if(exception > 100) break;
         }
         stageNumber++;
         if(CurStageList.Find(x => x.stageNumber == stageNumber.ToString()) != null) yield return StartCoroutine(ReadyToNextStage());
@@ -215,8 +221,21 @@ public class StageManager : MonoBehaviour
             if(tempPdl.Count > 0)
             {
                 int r = Random.Range(0, tempPdl.Count);
-                print($"tempPdl[r].productName: {tempPdl[r].productName}");
-                if(!CurProductList.Contains(tempPdl[r]) && !Hero.GetComponent<HeroScript>().abilities.Contains(tempPdl[r].inheritanceID)) CurProductList.Add(tempPdl[r]);
+                bool condition = true;
+                print($"i, tempPdl[r].productName : {i}, {tempPdl[r].productName}");
+                if(tempPdl[r].productType == "능력") condition = !Hero.GetComponent<HeroScript>().abilities.Contains(tempPdl[r].inheritanceID);
+                else if(condition)
+                {
+                    for(int j=0; j<Hero.GetComponent<HeroScript>().HeroItems.Count; j++)
+                    {
+                        if(Hero.GetComponent<HeroScript>().HeroItems[j].itemID == tempPdl[r].inheritanceID)
+                        {
+                            condition = false;
+                            break;
+                        }
+                    }
+                }
+                if(!CurProductList.Contains(tempPdl[r]) && condition) CurProductList.Add(tempPdl[r]);
             }
         }
         for(int i=0; i<CurProductList.Count; i++)

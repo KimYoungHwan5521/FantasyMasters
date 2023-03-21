@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 185649538796970450}
   - component: {fileID: 8736522087377052996}
   - component: {fileID: 4739645372864395641}
-  m_Layer: 14
+  m_Layer: 15
   m_Name: ProjectileLifeDrain
   m_TagString: Projectile
   m_Icon: {fileID: 0}

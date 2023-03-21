@@ -19,7 +19,11 @@ public class DestroyOnExit : StateMachineBehaviour
                 }
             }
         }
-       
+        if(GameObject.FindWithTag("Player").GetComponent<HeroScript>().abilities.Contains("0010") && animator.gameObject.tag == "Enemy")
+        {
+            Instantiate(Resources.Load<GameObject>($"Minions/Minion0003"), animator.GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
+            Instantiate(Resources.Load<GameObject>($"Minions/Minion0003"), animator.GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
+        }
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
