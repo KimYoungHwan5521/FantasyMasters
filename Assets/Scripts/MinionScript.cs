@@ -142,6 +142,7 @@ public class MinionScript : MonoBehaviour
         {
             HPBar.GetComponent<Image>().fillAmount = 0;
             StatusBar.gameObject.SetActive(false);
+            gameObject.layer = 10;
             animator.SetTrigger("Dead");
             animator.SetBool("isMoving", false);
         }

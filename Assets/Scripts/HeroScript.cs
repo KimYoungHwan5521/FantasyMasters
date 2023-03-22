@@ -305,40 +305,45 @@ public class HeroScript : MonoBehaviour
                 {
                     Instantiate(Resources.Load<GameObject>("Effects/Predate"), collider.GetComponent<Collider2D>().bounds.center, Quaternion.identity);
                     nowHP += 50;
+                    RectTransform text = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);
+                    text.GetComponent<FloatingText>().SetText("+50", "#00FF00");
+                    text.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y, 0));
                     collider.GetComponent<EnemyScript>().enemyNowHP = 0;
                     predateCurTime = predateCoolTime;
                 }
-                if(isCritical)
-                {
-                    if(abilities.Contains("0004"))
-                    {
-                        collider.gameObject.GetComponent<EnemyScript>().BeAttacked(atkDmg * criticalDmg + collider.GetComponent<EnemyScript>().enemyArmor, 0.6f, isCritical);
-                    }
-                    else
-                    {
-                        collider.gameObject.GetComponent<EnemyScript>().BeAttacked(atkDmg * criticalDmg, 0.6f, isCritical);
-                    }
-                }
                 else
                 {
-                    if(abilities.Contains("0004"))
+                    float isCf = 0;
+                    if(isCritical) isCf = 1;
+                    float isIA = 0;
+                    if(abilities.Contains("0004")) isIA = 1;
+                    float dmg = atkDmg;
+                    float eA = collider.GetComponent<EnemyScript>().enemyArmor;
+                    if(isCritical) dmg = atkDmg * criticalDmg + eA * isIA;
+                    else dmg = atkDmg + eA * isIA;
+                    collider.gameObject.GetComponent<EnemyScript>().BeAttacked(dmg, 0.3f + 0.3f * isCf, isCritical);
+
+                    if(abilities.Contains("0016")) 
                     {
-                        collider.gameObject.GetComponent<EnemyScript>().BeAttacked(atkDmg + collider.GetComponent<EnemyScript>().enemyArmor, 0.3f, isCritical);
+                        nowHP += (dmg - eA) / 10;
+                        if((dmg - eA) / 10 >= 1)
+                        {
+                            RectTransform text = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);
+                            text.GetComponent<FloatingText>().SetText($"+{Mathf.Round((dmg - eA) / 10)}", "#00FF00");
+                            text.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y, 0));
+                        }
+
                     }
-                    else
+                    if(abilities.Contains("0005"))
                     {
-                        collider.gameObject.GetComponent<EnemyScript>().BeAttacked(atkDmg, 0.3f, isCritical);
+                        collider.gameObject.GetComponent<EnemyScript>().AddStatus("0002");
+                    }
+                    if(abilities.Contains("0006"))
+                    {
+                        collider.gameObject.GetComponent<EnemyScript>().AddStatus("0003");
                     }
                 }
 
-                if(abilities.Contains("0005"))
-                {
-                    collider.gameObject.GetComponent<EnemyScript>().AddStatus("0002");
-                }
-                if(abilities.Contains("0006"))
-                {
-                    collider.gameObject.GetComponent<EnemyScript>().AddStatus("0003");
-                }
                 if(abilities.Contains("0011"))
                 {
                     collider.gameObject.GetComponent<EnemyScript>().attackedByZombie = true;

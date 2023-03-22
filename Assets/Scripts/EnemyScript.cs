@@ -138,6 +138,7 @@ public class EnemyScript : MonoBehaviour
         {
             HPBar.GetComponent<Image>().fillAmount = 0;
             StatusBar.gameObject.SetActive(false);
+            gameObject.layer = 8;
             animator.SetBool("isMoving", false);
             animator.SetTrigger("Dead");
         }
