@@ -1,5 +1,8 @@
 StatusID	StatusNameKR	StatusExplainKR	BuffStat	BuffValue	BuffTime
 0000	퀵드로우	공격 속도 +50%	atkSpeedCVM	0.5	5
 0001	거미줄	공격속도, 이동속도 -20%	atkSpeedCVM|moveSpeedCVM	-0.3|-0.3	2
-0002	저주	공격력, 방어력 -20	atkDmgCV|armorCV	-20|-20	5
-0003	강한저주	공격력, 방어력 -30	atkDmgCV|armorCV	-30|-30	5
+0002	저주	공격력, 방어력 -20, 치명타확률 -30%	atkDmgCV|armorCV|criticalChanceCV	-20|-20|-30	3
+0003	강한저주	공격력, 방어력 -30, 치명타확률 -45%	atkDmgCV|armorCV|criticalChanceCV	-30|-30|-45	3
+0004	공포	이동속도 -80% 상태로 영웅 반대방향으로 도망감	moveSpeedCVM|attackable	-0.8|-1	2
+0005	광기	공격력 +30%	atkDmgCVM	0.3	100
+0006	광폭	공격력 +30%, 공격속도 +30%, 이동속도 +30%, 방어력 -10	atkDmgCVM|atkSpeedCVM|moveSpeedCVM|armorCV	0.3|0.3|0.3|-10	100

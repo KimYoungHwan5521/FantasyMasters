@@ -104,6 +104,8 @@ public class MinionScript : MonoBehaviour
     GameObject target;
     bool isCritical = false;
     public bool attackedByZombie = false;
+    public bool movable = true;
+    public bool attackable = true;
     void Update()
     {
         minionAtkSpeed = float.Parse(DataManager.AllMinionList[_minionID].minionAtkSpeed) * atkSpeedCVM;
@@ -117,11 +119,14 @@ public class MinionScript : MonoBehaviour
         boxSize = new Vector2(minionAtkRange, minionAtkRange);
         minionCriticalDmg = float.Parse(DataManager.AllMinionList[_minionID].minionCriticalDmg) + criticalDmgCV;
         minionCriticalChance = float.Parse(DataManager.AllMinionList[_minionID].minionCriticalChance) + criticalChanceCV;
+        
+        bool fear = false;
         // status timer
         if(MinionStatus.Count > 0)
         {
             for(int i=0; i<MinionStatus.Count; i++)
             {
+                if(MinionStatus[i].statusID == "0004") fear = true;
                 MinionStatus[i].buffTime -= Time.deltaTime;
                 if(MinionStatus[i].buffTime <= 0)
                 {
@@ -148,7 +153,7 @@ public class MinionScript : MonoBehaviour
             {
                 if(Vector2.Distance(transform.GetComponent<Collider2D>().bounds.center, target.GetComponent<Collider2D>().bounds.center) * Mathf.Abs(transform.localScale.x) < minionAtkRange)
                 {
-                    if(curTime <= 0)
+                    if(curTime <= 0 && attackable)
                     {
                         if(UnityEngine.Random.Range(0, 100) < minionCriticalChance) isCritical = true;
                         else isCritical = false;
@@ -167,24 +172,30 @@ public class MinionScript : MonoBehaviour
                 }
                 else
                 {
-                    animator.SetBool("isMoving", true);
-                    moveDirection = target.GetComponent<Collider2D>().bounds.center - GetComponent<Collider2D>().bounds.center;
-                    if(target.GetComponent<Collider2D>().bounds.center.x < GetComponent<Collider2D>().bounds.center.x)
+                    if(movable)
                     {
-                        if(transform.localScale.x > 0)
+                        animator.SetBool("isMoving", true);
+                        if(fear) moveDirection = GetComponent<Collider2D>().bounds.center - target.GetComponent<Collider2D>().bounds.center;
+                        else moveDirection = target.GetComponent<Collider2D>().bounds.center - GetComponent<Collider2D>().bounds.center;
+                        if(target.GetComponent<Collider2D>().bounds.center.x < GetComponent<Collider2D>().bounds.center.x)
                         {
-                            transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+                            if(transform.localScale.x > 0)
+                            {
+                                transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+                            }
                         }
-                    }
-                    else
-                    {
-                        if(transform.localScale.x < 0)
+                        else
                         {
-                            transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+                            if(transform.localScale.x < 0)
+                            {
+                                transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+                            }
                         }
+                        if(fear) transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+                        moveDirection.Normalize();
+                        transform.Translate(moveDirection * Time.deltaTime * minionMoveSpeed);
                     }
-                    moveDirection.Normalize();
-                    transform.Translate(moveDirection * Time.deltaTime * minionMoveSpeed);
+                    else animator.SetBool("isMoving", false);
                 }
             }
             else
@@ -340,13 +351,13 @@ public class MinionScript : MonoBehaviour
     public void AddStatus(string _statusID)
     {
         int isAlreadyGotIt = MinionStatus.FindIndex(x => x.statusID == _statusID);
+        Status _status = DataManager.AllStatusList.Find(x => x.statusID == _statusID);
         if(isAlreadyGotIt != -1)
         {
-            MinionStatus[isAlreadyGotIt].buffTime = float.Parse(DataManager.AllStatusList.Find(x => x.statusID == _statusID).buffTime);
+            MinionStatus[isAlreadyGotIt].buffTime = float.Parse(_status.buffTime);
         }
-        else
+        else if(!(_status.statusID == "0004" && minionAbilities.Contains("0017")))
         {
-            Status _status = DataManager.AllStatusList.Find(x => x.statusID == _statusID);
             StatusV tempStatus = new StatusV(); 
             tempStatus.statusID = _status.statusID;
             tempStatus.statusNameKR = _status.statusNameKR;
@@ -384,6 +395,22 @@ public class MinionScript : MonoBehaviour
                 else if(_status.buffStat[i] == "criticalChanceCV")
                 {
                     criticalChanceCV += float.Parse(_status.buffValue[i]);
+                }
+                else if(_status.buffStat[i] == "attackable")
+                {
+                    if(float.Parse(_status.buffValue[i]) == -1)
+                    {
+                        attackable = false;
+                    }
+                    else attackable = true;
+                }
+                else if(_status.buffStat[i] == "movable")
+                {
+                    if(float.Parse(_status.buffValue[i]) == -1)
+                    {
+                        movable = false;
+                    }
+                    else movable = true;
                 }
                 else
                 {
@@ -428,6 +455,22 @@ public class MinionScript : MonoBehaviour
             else if(MinionStatus[idx].buffStat[i] == "criticalChanceCV")
             {
                 criticalChanceCV -= MinionStatus[idx].buffValue[i];
+            }
+            else if(MinionStatus[idx].buffStat[i] == "attackable")
+            {
+                if(MinionStatus[idx].buffValue[i] == -1)
+                {
+                    attackable = true;
+                }
+                else attackable = false;
+            }
+            else if(MinionStatus[idx].buffStat[i] == "movable")
+            {
+                if(MinionStatus[idx].buffValue[i] == -1)
+                {
+                    movable = true;
+                }
+                else movable = false;
             }
         }
     }

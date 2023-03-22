@@ -90,7 +90,6 @@ public class StageManager : MonoBehaviour
     {
         if(Hero.GetComponent<HeroScript>().nowHP <= 0 && deathEvent)
         {
-            print("deathev");
             deathEvent = false;
             StartCoroutine(DeathEvent());
         }
@@ -150,6 +149,10 @@ public class StageManager : MonoBehaviour
         if(hAbilities.Contains("0012"))
         {
             StartCoroutine(Polymorph("0010", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0012").abilityCoolTime)));
+        }
+        if(hAbilities.Contains("0014"))
+        {
+            StartCoroutine(Fear(float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0014").abilityCoolTime)));
         }
         StartCoroutine(SpawnEnemy(stageInfo));
     }
@@ -381,7 +384,7 @@ public class StageManager : MonoBehaviour
         int exception = 0;
         while(true)
         {
-            if(exception > 10000) break;
+            if(exception > 1000) break;
             if(StageTime.text == "0") break;
             GameObject te = GameObject.FindWithTag("Enemy");
             if(te != null)
@@ -395,7 +398,26 @@ public class StageManager : MonoBehaviour
             else yield return new WaitForSeconds(1);
             exception++;
         }
-    
+    }
+
+    IEnumerator Fear(float coolTime)
+    {
+        int exception = 0;
+        while(true)
+        {
+            if(exception > 1000)
+            if(StageTime.text == "0") break;
+            Collider2D[] cols = Physics2D.OverlapBoxAll(Hero.GetComponent<Collider2D>().bounds.center, new Vector2(3, 3), 0);
+            foreach(Collider2D col in cols)
+            {
+                if(col.tag == "Enemy")
+                {
+                    col.GetComponent<EnemyScript>().AddStatus("0004");
+                }
+            }
+            yield return new WaitForSeconds(coolTime);
+            exception++;
+        }
     }
 
 }

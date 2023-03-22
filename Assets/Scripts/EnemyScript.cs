@@ -101,7 +101,8 @@ public class EnemyScript : MonoBehaviour
     GameObject Hero;
     GameObject target;
     public bool attackedByZombie = false;
-
+    public bool movable = true;
+    public bool attackable = true;
     void Update()
     {
         enemyAtkSpeed = float.Parse(DataManager.AllEnemyList[_enemyID].enemyAtkSpeed) * atkSpeedCVM;
@@ -109,16 +110,19 @@ public class EnemyScript : MonoBehaviour
         if(enemyAtkSpeed > 0) atkCoolTime = 10 / enemyAtkSpeed;
         else atkCoolTime = 100;
         enemyMoveSpeed = float.Parse(DataManager.AllEnemyList[_enemyID].enemyMoveSpeed) * moveSpeedCVM;
-        animator.SetFloat("MoveSpeed", enemyMoveSpeed);
+        animator.SetFloat("MoveSpeed", moveSpeedCVM);
         enemyAtkDmg = float.Parse(DataManager.AllEnemyList[_enemyID].enemyAtkDmg.Split('x')[0]) + atkDmgCV;
         enemyArmor = float.Parse(DataManager.AllEnemyList[_enemyID].enemyArmor) + armorCV;
         enemyAtkRange = float.Parse(DataManager.AllEnemyList[_enemyID].enemyAtkRange) + atkRangeCV;
         boxSize = new Vector2(enemyAtkRange, enemyAtkRange);
+        
+        bool fear = false;
         // status timer
         if(EnemyStatus.Count > 0)
         {
             for(int i=0; i<EnemyStatus.Count; i++)
             {
+                if(EnemyStatus[i].statusID == "0004") fear = true;
                 EnemyStatus[i].buffTime -= Time.deltaTime;
                 if(EnemyStatus[i].buffTime <= 0)
                 {
@@ -145,7 +149,7 @@ public class EnemyScript : MonoBehaviour
             {
                 if(Vector2.Distance(transform.GetComponent<Collider2D>().bounds.center, target.GetComponent<Collider2D>().bounds.center) * Mathf.Abs(transform.localScale.x) < enemyAtkRange)
                 {
-                    if(curTime <= 0)
+                    if(curTime <= 0 && attackable)
                     {
                         if(enemyAtkType == 2) projectileCount++;
                         animator.SetTrigger("Attack");
@@ -158,24 +162,30 @@ public class EnemyScript : MonoBehaviour
                 }
                 else
                 {
-                    animator.SetBool("isMoving", true);
-                    moveDirection = target.GetComponent<Collider2D>().bounds.center - GetComponent<Collider2D>().bounds.center;
-                    if(target.GetComponent<Collider2D>().bounds.center.x < GetComponent<Collider2D>().bounds.center.x)
+                    if(movable)
                     {
-                        if(transform.localScale.x > 0)
+                        animator.SetBool("isMoving", true);
+                        if(fear) moveDirection = GetComponent<Collider2D>().bounds.center - target.GetComponent<Collider2D>().bounds.center;
+                        else moveDirection = target.GetComponent<Collider2D>().bounds.center - GetComponent<Collider2D>().bounds.center;
+                        if(target.GetComponent<Collider2D>().bounds.center.x < GetComponent<Collider2D>().bounds.center.x)
                         {
-                            transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+                            if(transform.localScale.x > 0)
+                            {
+                                transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+                            }
                         }
-                    }
-                    else
-                    {
-                        if(transform.localScale.x < 0)
+                        else
                         {
-                            transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+                            if(transform.localScale.x < 0)
+                            {
+                                transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+                            }
                         }
+                        if(fear) transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+                        moveDirection.Normalize();
+                        transform.Translate(moveDirection * Time.deltaTime * enemyMoveSpeed);
                     }
-                    moveDirection.Normalize();
-                    transform.Translate(moveDirection * Time.deltaTime * enemyMoveSpeed);
+                    else animator.SetBool("isMoving", false);
                 }
             }
             else
@@ -277,9 +287,12 @@ public class EnemyScript : MonoBehaviour
         // print($"enemyNowHP: {enemyNowHP}");
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.color = new Color(1, 0, 0, 1);
-        Vector2 moveDirection = GetComponent<Collider2D>().bounds.center - Hero.GetComponent<Collider2D>().bounds.center;
-        moveDirection.Normalize();
-        if(!enemyAbilities.Contains("0007")) transform.Translate(moveDirection * knockback);
+        if(Hero != null)
+        {
+            Vector2 moveDirection = GetComponent<Collider2D>().bounds.center - Hero.GetComponent<Collider2D>().bounds.center;
+            moveDirection.Normalize();
+            if(!enemyAbilities.Contains("0007")) transform.Translate(moveDirection * knockback);
+        }
         Invoke("OffDamaged", 0.3f);
     }
     
@@ -303,14 +316,14 @@ public class EnemyScript : MonoBehaviour
     
     public void AddStatus(string _statusID)
     {
+        Status _status = DataManager.AllStatusList.Find(x => x.statusID == _statusID);
         int isAlreadyGotIt = EnemyStatus.FindIndex(x => x.statusID == _statusID);
         if(isAlreadyGotIt != -1)
         {
-            EnemyStatus[isAlreadyGotIt].buffTime = float.Parse(DataManager.AllStatusList.Find(x => x.statusID == _statusID).buffTime);
+            EnemyStatus[isAlreadyGotIt].buffTime = float.Parse(_status.buffTime);
         }
-        else
+        else if(!(_status.statusID == "0004" && enemyAbilities.Contains("0017")))
         {
-            Status _status = DataManager.AllStatusList.Find(x => x.statusID == _statusID);
             StatusV tempStatus = new StatusV(); 
             tempStatus.statusID = _status.statusID;
             tempStatus.statusNameKR = _status.statusNameKR;
@@ -340,6 +353,22 @@ public class EnemyScript : MonoBehaviour
                 else if(_status.buffStat[i] == "atkRangeCV")
                 {
                     atkRangeCV += float.Parse(_status.buffValue[i]);
+                }
+                else if(_status.buffStat[i] == "attackable")
+                {
+                    if(float.Parse(_status.buffValue[i]) == -1)
+                    {
+                        attackable = false;
+                    }
+                    else attackable = true;
+                }
+                else if(_status.buffStat[i] == "movable")
+                {
+                    if(float.Parse(_status.buffValue[i]) == -1)
+                    {
+                        movable = false;
+                    }
+                    else movable = true;
                 }
                 else
                 {
@@ -376,6 +405,22 @@ public class EnemyScript : MonoBehaviour
             else if(EnemyStatus[idx].buffStat[i] == "atkRangeCV")
             {
                 atkRangeCV -= EnemyStatus[idx].buffValue[i];
+            }
+            else if(EnemyStatus[idx].buffStat[i] == "attackable")
+            {
+                if(EnemyStatus[idx].buffValue[i] == -1)
+                {
+                    attackable = true;
+                }
+                else attackable = false;
+            }
+            else if(EnemyStatus[idx].buffStat[i] == "movable")
+            {
+                if(EnemyStatus[idx].buffValue[i] == -1)
+                {
+                    movable = true;
+                }
+                else movable = false;
             }
         }
     }

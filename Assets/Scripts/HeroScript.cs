@@ -138,11 +138,13 @@ public class HeroScript : MonoBehaviour
         criticalDmg = float.Parse(DataManager.AllHeroList[_heroID].heroCriticalDmg) + criticalDmgCV;
         criticalChance = float.Parse(DataManager.AllHeroList[_heroID].heroCriticalChance) + criticalChanceCV;
 
+        bool fear = false;
         // status timer
         if(HeroStatus.Count > 0)
         {
             for(int i=0; i<HeroStatus.Count; i++)
             {
+                if(HeroStatus[i].statusID == "0004") fear = true;
                 HeroStatus[i].buffTime -= Time.deltaTime;
                 if(HeroStatus[i].buffTime <= 0)
                 {
@@ -194,8 +196,30 @@ public class HeroScript : MonoBehaviour
             moveDirection.Normalize();
             transform.Translate(moveDirection * Time.deltaTime * moveSpeed);
 
-            animator.SetBool("isMoving", moveDirection.magnitude > 0);
         }
+        if(fear)
+        {
+            if(target != null)
+            {
+                moveDirection = GetComponent<Collider2D>().bounds.center - target.GetComponent<Collider2D>().bounds.center;
+            }
+            if(target.GetComponent<Collider2D>().bounds.center.x < GetComponent<Collider2D>().bounds.center.x)
+            {
+                if(transform.localScale.x > 0)
+                {
+                    transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+                }
+            }
+            else
+            {
+                if(transform.localScale.x < 0)
+                {
+                    transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+                }
+            }
+            transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+        }
+        animator.SetBool("isMoving", moveDirection.magnitude > 0);
         
         // 공격
         if(curTime <= 0 && attackable)
@@ -380,13 +404,13 @@ public class HeroScript : MonoBehaviour
     public void AddStatus(string _statusID)
     {
         int isAlreadyGotIt = HeroStatus.FindIndex(x => x.statusID == _statusID);
+        Status _status = DataManager.AllStatusList.Find(x => x.statusID == _statusID);
         if(isAlreadyGotIt != -1)
         {
-            HeroStatus[isAlreadyGotIt].buffTime = float.Parse(DataManager.AllStatusList.Find(x => x.statusID == _statusID).buffTime);
+            HeroStatus[isAlreadyGotIt].buffTime = float.Parse(_status.buffTime);
         }
-        else
+        else if(!(_status.statusID == "0004" && abilities.Contains("0017")))
         {
-            Status _status = DataManager.AllStatusList.Find(x => x.statusID == _statusID);
             StatusV tempStatus = new StatusV(); 
             tempStatus.statusID = _status.statusID;
             tempStatus.statusNameKR = _status.statusNameKR;
@@ -428,6 +452,22 @@ public class HeroScript : MonoBehaviour
                 else if(_status.buffStat[i] == "criticalChanceCV")
                 {
                     criticalChanceCV += float.Parse(_status.buffValue[i]);
+                }
+                else if(_status.buffStat[i] == "attackable")
+                {
+                    if(float.Parse(_status.buffValue[i]) == -1)
+                    {
+                        attackable = false;
+                    }
+                    else attackable = true;
+                }
+                else if(_status.buffStat[i] == "movable")
+                {
+                    if(float.Parse(_status.buffValue[i]) == -1)
+                    {
+                        controllable = false;
+                    }
+                    else controllable = true;
                 }
                 else
                 {
@@ -472,6 +512,22 @@ public class HeroScript : MonoBehaviour
             else if(HeroStatus[idx].buffStat[i] == "criticalChanceCV")
             {
                 criticalChanceCV -= HeroStatus[idx].buffValue[i];
+            }
+            else if(HeroStatus[idx].buffStat[i] == "attackable")
+            {
+                if(HeroStatus[idx].buffValue[i] == -1)
+                {
+                    attackable = true;
+                }
+                else attackable = false;
+            }
+            else if(HeroStatus[idx].buffStat[i] == "movable")
+            {
+                if(HeroStatus[idx].buffValue[i] == -1)
+                {
+                    controllable = true;
+                }
+                else controllable = false;
             }
         }
     }
