@@ -24,6 +24,7 @@ public class HeroScript : MonoBehaviour
     public int atkType;
     public float atkDmg;
     public float atkDmgCV = 0;
+    public float atkDmgCVM = 1;
     public float atkSpeed;
     public float atkSpeedCVM = 1;
     public float atkRange;
@@ -44,6 +45,8 @@ public class HeroScript : MonoBehaviour
     private float curTime;
     public float atkCoolTime;
     public Vector2 boxSize;
+    private float predateCurTime;
+    public float predateCoolTime;
 
     public Image HPbar;
     public Text TextMaxHP;
@@ -131,12 +134,13 @@ public class HeroScript : MonoBehaviour
         atkCoolTime = 10 / atkSpeed;
         moveSpeed = float.Parse(DataManager.AllHeroList[_heroID].heroMoveSpeed) * moveSpeedCVM;
         animator.SetFloat("MoveSpeed", moveSpeedCVM);
-        atkDmg = float.Parse(DataManager.AllHeroList[_heroID].heroAtkDmg.Split('x')[0]) + atkDmgCV;
+        atkDmg = (float.Parse(DataManager.AllHeroList[_heroID].heroAtkDmg.Split('x')[0]) + atkDmgCV) * atkDmgCVM;
         armor = float.Parse(DataManager.AllHeroList[_heroID].heroArmor) + armorCV;
         atkRange = float.Parse(DataManager.AllHeroList[_heroID].heroAtkRange) + atkRangeCV;
         boxSize = new Vector2(atkRange, atkRange);
         criticalDmg = float.Parse(DataManager.AllHeroList[_heroID].heroCriticalDmg) + criticalDmgCV;
         criticalChance = float.Parse(DataManager.AllHeroList[_heroID].heroCriticalChance) + criticalChanceCV;
+        predateCoolTime = float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0015").abilityCoolTime);
 
         bool fear = false;
         // status timer
@@ -246,6 +250,7 @@ public class HeroScript : MonoBehaviour
         {
             curTime -= Time.deltaTime;
         }
+        predateCurTime -= Time.deltaTime;
     }
     
     private void UpdateTarget()
@@ -296,6 +301,13 @@ public class HeroScript : MonoBehaviour
         {
             if(collider.tag == "Enemy")
             {
+                if(collider.GetComponent<EnemyScript>().enemyNowHP <= collider.GetComponent<EnemyScript>().enemyMaxHP * 0.3 && predateCurTime <= 0)
+                {
+                    Instantiate(Resources.Load<GameObject>("Effects/Predate"), collider.GetComponent<Collider2D>().bounds.center, Quaternion.identity);
+                    nowHP += 50;
+                    collider.GetComponent<EnemyScript>().enemyNowHP = 0;
+                    predateCurTime = predateCoolTime;
+                }
                 if(isCritical)
                 {
                     if(abilities.Contains("0004"))
@@ -311,11 +323,11 @@ public class HeroScript : MonoBehaviour
                 {
                     if(abilities.Contains("0004"))
                     {
-                        collider.gameObject.GetComponent<EnemyScript>().BeAttacked(atkDmg + collider.GetComponent<EnemyScript>().enemyArmor, 0.6f, isCritical);
+                        collider.gameObject.GetComponent<EnemyScript>().BeAttacked(atkDmg + collider.GetComponent<EnemyScript>().enemyArmor, 0.3f, isCritical);
                     }
                     else
                     {
-                        collider.gameObject.GetComponent<EnemyScript>().BeAttacked(atkDmg, 0.6f, isCritical);
+                        collider.gameObject.GetComponent<EnemyScript>().BeAttacked(atkDmg, 0.3f, isCritical);
                     }
                 }
 
@@ -437,6 +449,10 @@ public class HeroScript : MonoBehaviour
                 {
                     atkDmgCV += float.Parse(_status.buffValue[i]);
                 }
+                else if(_status.buffStat[i] == "atkDmgCVM")
+                {
+                    atkDmgCVM += float.Parse(_status.buffValue[i]);
+                }
                 else if(_status.buffStat[i] == "armorCV")
                 {
                     armorCV += float.Parse(_status.buffValue[i]);
@@ -497,6 +513,10 @@ public class HeroScript : MonoBehaviour
             {
                 atkDmgCV -= HeroStatus[idx].buffValue[i];
             }
+            else if(HeroStatus[idx].buffStat[i] == "atkDmgCVM")
+            {
+                atkDmgCVM -= HeroStatus[idx].buffValue[i];
+            }
             else if(HeroStatus[idx].buffStat[i] == "armorCV")
             {
                 armorCV -= HeroStatus[idx].buffValue[i];
@@ -549,6 +569,10 @@ public class HeroScript : MonoBehaviour
             else if(_item.itemBuffStat[i] == "atkDmgCV")
             {
                 atkDmgCV += float.Parse(_item.itemBuffValue[i]);
+            }
+            else if(_item.itemBuffStat[i] == "atkDmgCVM")
+            {
+                atkDmgCVM += float.Parse(_item.itemBuffValue[i]);
             }
             else if(_item.itemBuffStat[i] == "armorCV")
             {

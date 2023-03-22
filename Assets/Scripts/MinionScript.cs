@@ -17,6 +17,7 @@ public class MinionScript : MonoBehaviour
     public int minionAtkType;
     public float minionAtkDmg;
     public float atkDmgCV = 0;
+    public float atkDmgCVM = 1;
     public float minionAtkSpeed;
     public float atkSpeedCVM = 1;
     public float minionAtkRange;
@@ -113,7 +114,7 @@ public class MinionScript : MonoBehaviour
         atkCoolTime = 10 / minionAtkSpeed;
         minionMoveSpeed = float.Parse(DataManager.AllMinionList[_minionID].minionMoveSpeed) * moveSpeedCVM;
         animator.SetFloat("MoveSpeed", moveSpeedCVM);
-        minionAtkDmg = float.Parse(DataManager.AllMinionList[_minionID].minionAtkDmg.Split('x')[0]) + atkDmgCV;
+        minionAtkDmg = (float.Parse(DataManager.AllMinionList[_minionID].minionAtkDmg.Split('x')[0]) + atkDmgCV * atkDmgCVM);
         minionArmor = float.Parse(DataManager.AllMinionList[_minionID].minionArmor) + armorCV;
         minionAtkRange = float.Parse(DataManager.AllMinionList[_minionID].minionAtkRange) + atkRangeCV;
         boxSize = new Vector2(minionAtkRange, minionAtkRange);
@@ -380,6 +381,10 @@ public class MinionScript : MonoBehaviour
                 {
                     atkDmgCV += float.Parse(_status.buffValue[i]);
                 }
+                else if(_status.buffStat[i] == "atkDmgCVM")
+                {
+                    atkDmgCVM += float.Parse(_status.buffValue[i]);
+                }
                 else if(_status.buffStat[i] == "armorCV")
                 {
                     armorCV += float.Parse(_status.buffValue[i]);
@@ -439,6 +444,10 @@ public class MinionScript : MonoBehaviour
             else if(MinionStatus[idx].buffStat[i] == "atkDmgCV")
             {
                 atkDmgCV -= MinionStatus[idx].buffValue[i];
+            }
+            else if(MinionStatus[idx].buffStat[i] == "atkDmgCVM")
+            {
+                atkDmgCVM -= MinionStatus[idx].buffValue[i];
             }
             else if(MinionStatus[idx].buffStat[i] == "armorCV")
             {

@@ -16,6 +16,7 @@ public class EnemyScript : MonoBehaviour
     public int enemyAtkType;
     public float enemyAtkDmg;
     public float atkDmgCV = 0;
+    public float atkDmgCVM = 1;
     public float enemyCollisionDmg;
     public float enemyAtkSpeed;
     public float atkSpeedCVM = 1;
@@ -111,7 +112,7 @@ public class EnemyScript : MonoBehaviour
         else atkCoolTime = 100;
         enemyMoveSpeed = float.Parse(DataManager.AllEnemyList[_enemyID].enemyMoveSpeed) * moveSpeedCVM;
         animator.SetFloat("MoveSpeed", moveSpeedCVM);
-        enemyAtkDmg = float.Parse(DataManager.AllEnemyList[_enemyID].enemyAtkDmg.Split('x')[0]) + atkDmgCV;
+        enemyAtkDmg = (float.Parse(DataManager.AllEnemyList[_enemyID].enemyAtkDmg.Split('x')[0]) + atkDmgCV) * atkDmgCVM;
         enemyArmor = float.Parse(DataManager.AllEnemyList[_enemyID].enemyArmor) + armorCV;
         enemyAtkRange = float.Parse(DataManager.AllEnemyList[_enemyID].enemyAtkRange) + atkRangeCV;
         boxSize = new Vector2(enemyAtkRange, enemyAtkRange);
@@ -346,6 +347,10 @@ public class EnemyScript : MonoBehaviour
                 {
                     atkDmgCV += float.Parse(_status.buffValue[i]);
                 }
+                else if(_status.buffStat[i] == "atkDmgCVM")
+                {
+                    atkDmgCVM += float.Parse(_status.buffValue[i]);
+                }
                 else if(_status.buffStat[i] == "armorCV")
                 {
                     armorCV += float.Parse(_status.buffValue[i]);
@@ -397,6 +402,10 @@ public class EnemyScript : MonoBehaviour
             else if(EnemyStatus[idx].buffStat[i] == "atkDmgCV")
             {
                 atkDmgCV -= EnemyStatus[idx].buffValue[i];
+            }
+            else if(EnemyStatus[idx].buffStat[i] == "atkDmgCVM")
+            {
+                atkDmgCVM -= EnemyStatus[idx].buffValue[i];
             }
             else if(EnemyStatus[idx].buffStat[i] == "armorCV")
             {
