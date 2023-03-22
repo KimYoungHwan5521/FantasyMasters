@@ -100,17 +100,22 @@ public class StageManager : MonoBehaviour
         }
         stageTime = 60;
         StartCoroutine(StageTimer());
-        if(Hero.GetComponent<HeroScript>().abilities.Contains("0000"))
+        List<string> hAbilities = Hero.GetComponent<HeroScript>().abilities;
+        if(hAbilities.Contains("0000"))
         {
             StartCoroutine(SummonMinion("0000", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0000").abilityCoolTime)));
         }
-        if(Hero.GetComponent<HeroScript>().abilities.Contains("0002"))
+        if(hAbilities.Contains("0002"))
         {
             StartCoroutine(SummonMinion("0001", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0002").abilityCoolTime)));
         }
-        if(Hero.GetComponent<HeroScript>().abilities.Contains("0008"))
+        if(hAbilities.Contains("0008"))
         {
             StartCoroutine(LifeDrain(float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0008").abilityCoolTime)));
+        }
+        if(hAbilities.Contains("0012"))
+        {
+            StartCoroutine(Polymorph("0010", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0012").abilityCoolTime)));
         }
         StartCoroutine(SpawnEnemy(stageInfo));
     }
@@ -191,8 +196,8 @@ public class StageManager : MonoBehaviour
             int rd = 0;
             int random = Random.Range(0, 1000);
             if(random < 700) rd = 0;
-            else if(random < 970) rd = 1;
-            else if(random < 997) rd = 2;
+            else if(random < 910) rd = 1;
+            else if(random < 973) rd = 2;
             else rd = 3;
             List<Product> tempPdl = new List<Product>();
             if(i<4)
@@ -335,4 +340,27 @@ public class StageManager : MonoBehaviour
             else yield return new WaitForSeconds(1);
         }
     }
+
+    IEnumerator Polymorph(string polymorphTo, float coolTime)
+    {
+        int exception = 0;
+        while(true)
+        {
+            if(exception > 10000) break;
+            if(StageTime.text == "0") break;
+            GameObject te = GameObject.FindWithTag("Enemy");
+            if(te != null)
+            {
+                Instantiate(Resources.Load<GameObject>($"Enemies/Enemy{polymorphTo}"), te.transform.position, Quaternion.identity);
+                Destroy(te.GetComponent<EnemyScript>().HPBar.gameObject);
+                Destroy(te.GetComponent<EnemyScript>().StatusBar.gameObject);
+                Destroy(te.gameObject);
+                yield return new WaitForSeconds(coolTime);
+            }
+            else yield return new WaitForSeconds(1);
+            exception++;
+        }
+    
+    }
+
 }

@@ -60,7 +60,7 @@ public class EnemyScript : MonoBehaviour
             else break;
         }
         stringID = "";
-        for(int i=0; i < 3 - cntDigit / 10; i++)
+        for(int i=0; i < 3 - cntDigit; i++)
         {
             stringID += "0";
         }
@@ -106,7 +106,8 @@ public class EnemyScript : MonoBehaviour
     {
         enemyAtkSpeed = float.Parse(DataManager.AllEnemyList[_enemyID].enemyAtkSpeed) * atkSpeedCVM;
         animator.SetFloat("AttackSpeed", atkSpeedCVM);
-        atkCoolTime = 10 / enemyAtkSpeed;
+        if(enemyAtkSpeed > 0) atkCoolTime = 10 / enemyAtkSpeed;
+        else atkCoolTime = 100;
         enemyMoveSpeed = float.Parse(DataManager.AllEnemyList[_enemyID].enemyMoveSpeed) * moveSpeedCVM;
         animator.SetFloat("MoveSpeed", enemyMoveSpeed);
         enemyAtkDmg = float.Parse(DataManager.AllEnemyList[_enemyID].enemyAtkDmg.Split('x')[0]) + atkDmgCV;

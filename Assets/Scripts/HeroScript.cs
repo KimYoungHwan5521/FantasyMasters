@@ -75,7 +75,7 @@ public class HeroScript : MonoBehaviour
             else break;
         }
         stringID = "";
-        for(int i=0;i<3 - cntDgit / 10; i++)
+        for(int i=0;i<3 - cntDgit; i++)
         {
             stringID += "0";
         }
