@@ -85,6 +85,40 @@ public class StageManager : MonoBehaviour
         StartCoroutine(StageStart());
     }
 
+    bool deathEvent = true;
+    void Update()
+    {
+        if(Hero.GetComponent<HeroScript>().nowHP <= 0 && deathEvent)
+        {
+            print("deathev");
+            deathEvent = false;
+            StartCoroutine(DeathEvent());
+        }
+    }
+
+    IEnumerator DeathEvent()
+    {
+        if(Hero.GetComponent<HeroScript>().resurrection > 0)
+        {
+            Hero.GetComponent<HeroScript>().resurrection--;
+            Instantiate(Resources.Load<GameObject>("Effects/Resurrection"), Hero.transform.position, Quaternion.identity);
+            Hero.layer = 12;
+            Hero.GetComponent<HeroScript>().controllable = false;
+            Hero.GetComponent<HeroScript>().attackable = false;
+            yield return new WaitForSeconds(3);
+            Hero.GetComponent<HeroScript>().nowHP = Hero.GetComponent<HeroScript>().maxHP;
+            Hero.GetComponent<HeroScript>().controllable = true;
+            Hero.GetComponent<HeroScript>().attackable = true;
+            yield return new WaitForSeconds(3);
+            Hero.layer = 11;
+            deathEvent = true;
+        }
+        else
+        {
+            // GameOver
+        }
+    }
+
     IEnumerator StageStart()
     {
         stageInfo = CurStageList.Find(x => x.stageNumber == stageNumber.ToString()).stageInfo;
@@ -292,6 +326,7 @@ public class StageManager : MonoBehaviour
             if(CurProductList[selectedProduct].productType == "능력")
             {
                 Hero.GetComponent<HeroScript>().abilities.Add(CurProductList[selectedProduct].inheritanceID);
+                if(CurProductList[selectedProduct].inheritanceID == "0013") Hero.GetComponent<HeroScript>().resurrection++;
             }
             else
             {

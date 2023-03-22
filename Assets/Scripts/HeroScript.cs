@@ -101,7 +101,7 @@ public class HeroScript : MonoBehaviour
         HeroStatus = new List<StatusV>();
         StatusSprites = GameObject.Find("HeroStatus");
         HeroItems = new List<Item>();
-
+        resurrection = 2;
         animator = GetComponentInChildren<Animator>();
         transform.position = new Vector2(0, 0);
 
@@ -116,6 +116,9 @@ public class HeroScript : MonoBehaviour
     public GameObject target = null;
     public bool isCritical = false;
     private int projectileCount = 0;
+    public bool controllable = true;
+    public bool attackable = true;
+    public int resurrection;
     void Update()
     {
         TextMaxHP.text = Mathf.Ceil(maxHP).ToString();
@@ -152,48 +155,50 @@ public class HeroScript : MonoBehaviour
 
         // 이동
         Vector2 moveDirection = Vector2.zero;
+        if(controllable)
+        {
+            if(Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+            {
+                moveDirection += Vector2.right;
+                if(transform.localScale.x < 0)
+                {
+                    transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+                }
+                else
+                {
+                    transform.localScale = new Vector2(transform.localScale.x, transform.localScale.y);
+                }
+            }
+            if(Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+            {
+                moveDirection += Vector2.left;
+                if(transform.localScale.x > 0)
+                {
+                    transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+                }
+                else
+                {
+                    transform.localScale = new Vector2(transform.localScale.x, transform.localScale.y);
+                }
+            }
+            if(Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
+            {
+                moveDirection += Vector2.up;
+                
+            }
+            if(Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
+            {
+                moveDirection += Vector2.down;
 
-        if(Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
-        {
-            moveDirection += Vector2.right;
-            if(transform.localScale.x < 0)
-            {
-                transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
             }
-            else
-            {
-                transform.localScale = new Vector2(transform.localScale.x, transform.localScale.y);
-            }
-        }
-        if(Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
-        {
-            moveDirection += Vector2.left;
-            if(transform.localScale.x > 0)
-            {
-                transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
-            }
-            else
-            {
-                transform.localScale = new Vector2(transform.localScale.x, transform.localScale.y);
-            }
-        }
-        if(Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
-        {
-            moveDirection += Vector2.up;
-            
-        }
-        if(Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
-        {
-            moveDirection += Vector2.down;
+            moveDirection.Normalize();
+            transform.Translate(moveDirection * Time.deltaTime * moveSpeed);
 
+            animator.SetBool("isMoving", moveDirection.magnitude > 0);
         }
-        moveDirection.Normalize();
-        transform.Translate(moveDirection * Time.deltaTime * moveSpeed);
-
-        animator.SetBool("isMoving", moveDirection.magnitude > 0);
         
         // 공격
-        if(curTime <= 0)
+        if(curTime <= 0 && attackable)
         {
             if(target != null)
             {
@@ -362,7 +367,7 @@ public class HeroScript : MonoBehaviour
         gameObject.layer = 12;
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.color = new Color(1, 1, 1, 0.4f);//무적시간일 때 플레이어가 투명하게
-        Invoke("OffDamaged", 0.3f);
+        Invoke("OffDamaged", 1);
     }
 
     void OffDamaged()

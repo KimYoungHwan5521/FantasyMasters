@@ -327,7 +327,7 @@ public class MinionScript : MonoBehaviour
         gameObject.layer = 10;
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.color = new Color(1, 1, 1, 0.4f);
-        Invoke("OffDamaged", 0.3f);
+        Invoke("OffDamaged", 1);
     }
 
     void OffDamaged()
