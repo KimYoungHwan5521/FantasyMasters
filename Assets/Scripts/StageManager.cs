@@ -154,6 +154,10 @@ public class StageManager : MonoBehaviour
         {
             StartCoroutine(Fear(float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0014").abilityCoolTime)));
         }
+        if(hAbilities.Contains("0018"))
+        {
+            StartCoroutine(SummonProjectile("SkullThrowing",float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0018").abilityCoolTime), 100));
+        }
         StartCoroutine(SpawnEnemy(stageInfo));
     }
     
@@ -349,6 +353,7 @@ public class StageManager : MonoBehaviour
         yield return null;
     }
     
+    // ↓↓↓ Abilities ↓↓↓
     IEnumerator SummonMinion(string _minionID, float summonCoolTime)
     {
         var minionToSummon = Resources.Load<GameObject>($"Minions/Minion{_minionID}");
@@ -417,6 +422,20 @@ public class StageManager : MonoBehaviour
             }
             yield return new WaitForSeconds(coolTime);
             exception++;
+        }
+    }
+
+    IEnumerator SummonProjectile(string _projectileName, float summonCoolTime, float _projectileDmg)
+    {
+        var projectileSummon = Resources.Load<GameObject>($"Projectiles/Projectile{_projectileName}");
+        while(true)
+        {
+            if(StageTime.text == "0") break;
+            GameObject tg = Hero.GetComponent<HeroScript>().target;
+            Vector3 summonPositon = Hero.GetComponent<Collider2D>().bounds.center;
+            GameObject pjt = Instantiate(projectileSummon, summonPositon, Quaternion.identity);
+            pjt.GetComponentInChildren<ProjectileScript>().SetProjectile(Hero, tg, false, "Straight", _projectileDmg);
+            yield return new WaitForSeconds(summonCoolTime);
         }
     }
 

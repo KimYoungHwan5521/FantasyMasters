@@ -7,11 +7,14 @@ public class ProjectileScript : MonoBehaviour
 {
     SummonerInfo summoner;
     GameObject target;
+    Vector3 targetInitialPosition;
     public bool isCritical = false;
-    public string special = "";
+    public string note = "";
     Vector2 spawnPoint;
     public float projectileSpeed = 10;
     public bool launchReady = false;
+    public float range;
+    public float abilityDmg;
 
     public class SummonerInfo
     {
@@ -22,7 +25,7 @@ public class ProjectileScript : MonoBehaviour
         public List<string> abilities;
     }
 
-    public void SetProjectile(GameObject _summoner, GameObject _target, bool _isCritical = false, string _special = "")
+    public void SetProjectile(GameObject _summoner, GameObject _target, bool _isCritical = false, string _note = "", float _abilityDmg = -1)
     {
         summoner = new SummonerInfo();
         summoner.tag = _summoner.tag;
@@ -51,7 +54,12 @@ public class ProjectileScript : MonoBehaviour
         spawnPoint = _summoner.transform.position;
         target = _target;
         isCritical = _isCritical;
-        special = _special;
+        note = _note;
+        if(note == "Basic") range = summoner.atkRange;
+        else if(note == "Straight") range = 10;
+        else if(note == "LifeDrain") range = 100;
+        else print("wrong projectile note");
+        abilityDmg = _abilityDmg;
         StartCoroutine(Launch());
     }
 
@@ -59,29 +67,44 @@ public class ProjectileScript : MonoBehaviour
     IEnumerator Launch()
     {
         launchReady = true;
-        float limit = 10;
+        float limit = 3;
+        if(note == "LifeDrain") limit = 60;
+        Vector3 randomVector = new Vector3(Random.Range(-1.0f,1.0f), Random.Range(-1.0f,1.0f), transform.position.z);
         while(limit > 0)
         {
-            isTargetOutOfRange = Vector2.Distance(transform.position, spawnPoint) > summoner.atkRange;
-            if(isTargetOutOfRange && special != "LifeDrain")
+            isTargetOutOfRange = Vector2.Distance(transform.position, spawnPoint) > range;
+            if(isTargetOutOfRange)
             {
                 Destroy(transform.parent.gameObject);
             }
-            if(target)
+            Vector2 moveDirection = Vector2.zero;
+            if(note == "Straight")
             {
-                float AngleRad = Mathf.Atan2(target.GetComponent<Transform>().position.y - transform.position.y, target.GetComponent<Transform>().position.x - transform.position.x);
-                float AngleDeg = (180 / Mathf.PI) * AngleRad;
-                transform.rotation = Quaternion.Euler(0, 0, AngleDeg);
-
-                Vector2 moveDirection = Vector2.zero;
-                moveDirection = target.transform.position - transform.position;
+                if(target) moveDirection = targetInitialPosition - transform.position;
+                else moveDirection = randomVector;
+                
                 moveDirection.Normalize();
                 transform.parent.transform.Translate(moveDirection * Time.deltaTime * projectileSpeed);
                 transform.position = transform.parent.transform.position;
+
             }
             else
             {
-                Destroy(transform.parent.gameObject);
+                if(target)
+                {
+                    float AngleRad = Mathf.Atan2(target.GetComponent<Transform>().position.y - transform.position.y, target.GetComponent<Transform>().position.x - transform.position.x);
+                    float AngleDeg = (180 / Mathf.PI) * AngleRad;
+                    transform.rotation = Quaternion.Euler(0, 0, AngleDeg);
+
+                    moveDirection = target.transform.position - transform.position;
+                    moveDirection.Normalize();
+                    transform.parent.transform.Translate(moveDirection * Time.deltaTime * projectileSpeed);
+                    transform.position = transform.parent.transform.position;
+                }
+                else
+                {
+                    Destroy(transform.parent.gameObject);
+                }
             }
             limit -= Time.deltaTime;
             yield return null;
@@ -96,35 +119,32 @@ public class ProjectileScript : MonoBehaviour
             float dmg = 0;
             float isCf = 0;
             if(isCritical) isCf = 1;
+            dmg = summoner.atkDmg;
+            if(isCritical) dmg *= summoner.criticalDmg;
             if(summoner.tag == "Player") 
             {
                 if(collision.gameObject.tag == "Enemy")
                 {
-                    dmg = summoner.atkDmg;
                     if(isCritical) 
                     {
-                        dmg *= summoner.criticalDmg;
-
                         if(summoner.abilities.Contains("0003"))
                         {
                             GameObject.FindWithTag("Player").GetComponent<HeroScript>().AddStatus("0000");
                         }
                     }
 
-                    if(summoner.abilities.Contains("0004"))
+                    if(note == "Basic")
                     {
-                        collision.gameObject.GetComponent<EnemyScript>().BeAttacked(dmg + GetComponent<Collider>().GetComponent<EnemyScript>().enemyArmor, 0.1f + 0.2f * isCf, isCritical);
+                        if(summoner.abilities.Contains("0004")) collision.gameObject.GetComponent<EnemyScript>().BeAttacked(dmg + GetComponent<Collider>().GetComponent<EnemyScript>().enemyArmor, 0.1f + 0.2f * isCf, isCritical);
+                        else collision.gameObject.GetComponent<EnemyScript>().BeAttacked(dmg, 0.1f + 0.2f * isCf, isCritical);
+                        
+                        if(summoner.abilities.Contains("0011")) collision.gameObject.GetComponent<EnemyScript>().attackedByZombie = true;
                     }
                     else
                     {
-                        collision.gameObject.GetComponent<EnemyScript>().BeAttacked(dmg, 0.1f + 0.2f * isCf, isCritical);
+                        collision.gameObject.GetComponent<EnemyScript>().BeAttacked(abilityDmg, 0.1f, isCritical);
                     }
-
-                    if(summoner.abilities.Contains("0011"))
-                    {
-                        collision.gameObject.GetComponent<EnemyScript>().attackedByZombie = true;
-                    }
-                    
+                                        
                     Destroy(transform.parent.gameObject);
                 }
             }
@@ -132,16 +152,6 @@ public class ProjectileScript : MonoBehaviour
             {
                 if(collision.gameObject.tag == "Enemy")
                 {
-                    dmg = summoner.atkDmg;
-                    if(isCritical) 
-                    {
-                        dmg *= summoner.criticalDmg;
-                        // if(summoner.GetComponent<MinionScript>().minionAbilities.Contains("0003"))
-                        // {
-                        //     summoner.GetComponent<MinionScript>().AddStatus("0000");
-                        // }
-                    }
-
                     if(summoner.abilities.Contains("0004"))
                     {
                         GetComponent<Collider>().GetComponent<EnemyScript>().BeAttacked(dmg + GetComponent<Collider>().GetComponent<EnemyScript>().enemyArmor, 0.1f + 0.2f * isCf, isCritical);
@@ -160,10 +170,9 @@ public class ProjectileScript : MonoBehaviour
             }
             else if(summoner.tag == "Enemy")
             {
-                dmg = summoner.atkDmg;
                 if(collision.gameObject.tag == "Player")
                 {
-                    if(special == "LifeDrain")
+                    if(note == "LifeDrain")
                     {
                         collision.gameObject.GetComponent<HeroScript>().nowHP += 30;
                         RectTransform LDtext = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);

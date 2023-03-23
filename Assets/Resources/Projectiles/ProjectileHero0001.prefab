@@ -128,9 +128,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e8babbfff42bc1429f8af64bc234344, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  summoner: {fileID: 0}
-  projectileSpeed: 10
   isCritical: 0
+  note: Basic
+  projectileSpeed: 10
+  launchReady: 0
 --- !u!50 &9089987463747297298
 Rigidbody2D:
   serializedVersion: 4
