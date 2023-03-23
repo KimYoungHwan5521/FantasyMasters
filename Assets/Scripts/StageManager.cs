@@ -158,6 +158,18 @@ public class StageManager : MonoBehaviour
         {
             StartCoroutine(SummonProjectile("SkullThrowing",float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0018").abilityCoolTime), 100));
         }
+        if(hAbilities.Contains("0021"))
+        {
+            StartCoroutine(SummonMinion("0002", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0021").abilityCoolTime), 3));
+        }
+        if(hAbilities.Contains("0022"))
+        {
+            StartCoroutine(BloodTransfusion(float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0022").abilityCoolTime)));
+        }
+        if(hAbilities.Contains("0023"))
+        {
+            Hero.GetComponent<HeroScript>().AddStatus("0006");
+        }
         StartCoroutine(SpawnEnemy(stageInfo));
     }
     
@@ -354,14 +366,17 @@ public class StageManager : MonoBehaviour
     }
     
     // ↓↓↓ Abilities ↓↓↓
-    IEnumerator SummonMinion(string _minionID, float summonCoolTime)
+    IEnumerator SummonMinion(string _minionID, float summonCoolTime, int n = 1)
     {
         var minionToSummon = Resources.Load<GameObject>($"Minions/Minion{_minionID}");
         while(true)
         {
             if(StageTime.text == "0") break;
             Vector3 summonPositon = Hero.GetComponent<Collider2D>().bounds.center;
-            Instantiate(minionToSummon, summonPositon, Quaternion.identity);
+            for(int i=0; i<n; i++)
+            {
+                Instantiate(minionToSummon, summonPositon, Quaternion.identity);
+            }
             yield return new WaitForSeconds(summonCoolTime);
         }
     }
@@ -437,6 +452,28 @@ public class StageManager : MonoBehaviour
             pjt.GetComponentInChildren<ProjectileScript>().SetProjectile(Hero, tg, false, "Straight", _projectileDmg);
             yield return new WaitForSeconds(summonCoolTime);
         }
+    }
+
+    IEnumerator BloodTransfusion(float coolTime)
+    {
+        int exception = 0;
+        while(true)
+        {
+            if(exception > 1000)
+            if(StageTime.text == "0") break;
+            GameObject tm = GameObject.FindWithTag("Minion");
+            if(tm != null && Hero.GetComponent<HeroScript>().nowHP <= Hero.GetComponent<HeroScript>().maxHP / 2)
+            {
+                Hero.GetComponent<HeroScript>().nowHP += tm.GetComponent<MinionScript>().minionMaxHP;
+                Destroy(tm.GetComponent<MinionScript>().HPBar.gameObject);
+                Destroy(tm.GetComponent<MinionScript>().StatusBar.gameObject);
+                Destroy(tm.gameObject);
+                yield return new WaitForSeconds(coolTime);
+            }
+            else yield return new WaitForSeconds(1);
+            exception++;
+        }
+
     }
 
 }

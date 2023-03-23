@@ -96,6 +96,10 @@ public class MinionScript : MonoBehaviour
         HPBar.localScale = new Vector2(GetComponent<BoxCollider2D>().size.x * 10, 1);
         StatusBar = Instantiate(Resources.Load<RectTransform>("UIs/StatusBar"), new Vector3(0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
 
+        GameObject Hero = GameObject.FindWithTag("Player");
+        if(Hero.GetComponent<HeroScript>().abilities.Contains("0019")) AddStatus("0005");
+        if(Hero.GetComponent<HeroScript>().abilities.Contains("0020")) AddStatus("0006");
+
         target = null;
         InvokeRepeating("UpdateTarget", 0, 0.25f);
 
@@ -148,9 +152,9 @@ public class MinionScript : MonoBehaviour
         }
         else
         {
-            HPBar.position = Camera.main.WorldToScreenPoint(new Vector3(transform.GetComponent<Collider2D>().bounds.center.x, transform.GetComponent<Collider2D>().bounds.center.y - GetComponent<BoxCollider2D>().size.y * transform.localScale.y, 0));
+            HPBar.position = Camera.main.WorldToScreenPoint(new Vector3(transform.GetComponent<Collider2D>().bounds.center.x, transform.GetComponent<Collider2D>().bounds.center.y - GetComponent<BoxCollider2D>().size.y * transform.localScale.y - 0.1f, 0));
             HPBar.GetComponent<Image>().fillAmount = minionNowHP / minionMaxHP;
-            StatusBar.position = Camera.main.WorldToScreenPoint(new Vector3(transform.GetComponent<Collider2D>().bounds.center.x, transform.GetComponent<Collider2D>().bounds.center.y + GetComponent<BoxCollider2D>().size.y * transform.localScale.y, 0));
+            StatusBar.position = Camera.main.WorldToScreenPoint(new Vector3(transform.GetComponent<Collider2D>().bounds.center.x, transform.GetComponent<Collider2D>().bounds.center.y + GetComponent<BoxCollider2D>().size.y * transform.localScale.y + 0.1f, 0));
             if(target != null)
             {
                 if(Vector2.Distance(transform.GetComponent<Collider2D>().bounds.center, target.GetComponent<Collider2D>().bounds.center) * Mathf.Abs(transform.localScale.x) < minionAtkRange)
