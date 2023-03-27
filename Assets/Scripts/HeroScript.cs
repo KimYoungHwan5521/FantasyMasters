@@ -104,7 +104,7 @@ public class HeroScript : MonoBehaviour
         HeroStatus = new List<StatusV>();
         StatusSprites = GameObject.Find("HeroStatus");
         HeroItems = new List<Item>();
-        resurrection = 2;
+        resurrection = 0;
         animator = GetComponentInChildren<Animator>();
         transform.position = new Vector2(0, 0);
 
@@ -117,6 +117,7 @@ public class HeroScript : MonoBehaviour
     }
 
     public GameObject target = null;
+    public GameObject target2 = null;
     public bool isCritical = false;
     private int projectileCount = 0;
     public bool controllable = true;
@@ -285,6 +286,7 @@ public class HeroScript : MonoBehaviour
                 }
             }
             target = cols[minDisIdx].gameObject;
+            target2 = cols[UnityEngine.Random.Range(0,cols.Length)].gameObject;
         }
     }
 
@@ -342,6 +344,11 @@ public class HeroScript : MonoBehaviour
                     {
                         collider.gameObject.GetComponent<EnemyScript>().AddStatus("0003");
                     }
+                    if(abilities.Contains("0025"))
+                    {
+                        collider.gameObject.GetComponent<EnemyScript>().AddStatus("0007");
+                    }
+                    
                 }
 
                 if(abilities.Contains("0011"))
@@ -358,7 +365,12 @@ public class HeroScript : MonoBehaviour
         {
             GameObject p = Instantiate(Resources.Load<GameObject>($"Projectiles/ProjectileHero{stringID}"), GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
             p.GetComponentInChildren<ProjectileScript>().SetProjectile(gameObject, target, isCritical);
-            // print($"spp, target: {gameObject}, {target}");
+            if(abilities.Contains("0024"))
+            {
+                Invoke(null, 0.3f);
+                GameObject p2 = Instantiate(Resources.Load<GameObject>($"Projectiles/ProjectileHero{stringID}"), GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
+                p2.GetComponentInChildren<ProjectileScript>().SetProjectile(gameObject, target2, isCritical);
+            }
             projectileCount--;
         }
     }
@@ -490,6 +502,10 @@ public class HeroScript : MonoBehaviour
                     }
                     else controllable = true;
                 }
+                else if(_status.buffStat[i] == "nowHPCV")
+                {
+                    StartCoroutine(ContinuousDmg(float.Parse(_status.buffValue[i]), float.Parse(_status.buffTime)));
+                }
                 else
                 {
                     print($"wrong buffStat name : '{_status.buffStat[i]}'");
@@ -554,6 +570,23 @@ public class HeroScript : MonoBehaviour
                 }
                 else controllable = false;
             }
+            else if(HeroStatus[idx].buffStat[i] == "nowHPCV")
+            {
+                StopCoroutine("ContinuousDmg");
+            }
+        }
+    }
+
+    IEnumerator ContinuousDmg(float dmg, float time)
+    {
+        int t = (int)time;
+        for(int i=0; i<t; i++)
+        {
+            nowHP -= dmg;
+            RectTransform DmgText = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);
+            DmgText.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y, 0));
+            DmgText.gameObject.GetComponent<FloatingText>().SetText($"{dmg}", "#FF0000");
+            yield return new WaitForSeconds(1);
         }
     }
 
@@ -615,7 +648,6 @@ public class HeroScript : MonoBehaviour
             abilities.Add(_item.itemAbilities[i]);
         }
         HeroItems.Add(_item);
-
     }
 
 }

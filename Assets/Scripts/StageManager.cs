@@ -131,7 +131,8 @@ public class StageManager : MonoBehaviour
             else CountText.SetText($"<size=100>{i.ToString()}</size>", "#FF0000");
             yield return new WaitForSeconds(1);
         }
-        stageTime = 60;
+        stageTime = stageInfo.Split('|').Length * 5;
+        // stageTime = 60;
         StartCoroutine(StageTimer());
         List<string> hAbilities = Hero.GetComponent<HeroScript>().abilities;
         if(hAbilities.Contains("0000"))
@@ -450,6 +451,12 @@ public class StageManager : MonoBehaviour
             Vector3 summonPositon = Hero.GetComponent<Collider2D>().bounds.center;
             GameObject pjt = Instantiate(projectileSummon, summonPositon, Quaternion.identity);
             pjt.GetComponentInChildren<ProjectileScript>().SetProjectile(Hero, tg, false, "Straight", _projectileDmg);
+            if(Hero.GetComponent<HeroScript>().abilities.Contains("0024"))
+            {
+                GameObject tg2 = Hero.GetComponent<HeroScript>().target2;
+                GameObject pjt2 = Instantiate(projectileSummon, summonPositon, Quaternion.identity);
+                pjt2.GetComponentInChildren<ProjectileScript>().SetProjectile(Hero, tg2, false, "Straight", _projectileDmg);
+            }
             yield return new WaitForSeconds(summonCoolTime);
         }
     }
@@ -464,16 +471,18 @@ public class StageManager : MonoBehaviour
             GameObject tm = GameObject.FindWithTag("Minion");
             if(tm != null && Hero.GetComponent<HeroScript>().nowHP <= Hero.GetComponent<HeroScript>().maxHP / 2)
             {
-                Hero.GetComponent<HeroScript>().nowHP += tm.GetComponent<MinionScript>().minionMaxHP;
-                Destroy(tm.GetComponent<MinionScript>().HPBar.gameObject);
-                Destroy(tm.GetComponent<MinionScript>().StatusBar.gameObject);
-                Destroy(tm.gameObject);
+                Instantiate(Resources.Load<GameObject>("Effects/Predate"), tm.GetComponent<Collider2D>().bounds.center, Quaternion.identity);
+                float h = tm.GetComponent<MinionScript>().minionMaxHP;
+                Hero.GetComponent<HeroScript>().nowHP += h;
+                RectTransform text = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), tm.GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);
+                text.GetComponent<FloatingText>().SetText($"{h}", "#00FF00");
+                text.position = Camera.main.WorldToScreenPoint(new Vector3(Hero.GetComponent<Collider2D>().bounds.center.x, Hero.GetComponent<Collider2D>().bounds.center.y, 0));
+                tm.GetComponent<MinionScript>().minionNowHP = 0;
                 yield return new WaitForSeconds(coolTime);
             }
             else yield return new WaitForSeconds(1);
             exception++;
         }
-
     }
 
 }

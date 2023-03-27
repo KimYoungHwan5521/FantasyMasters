@@ -15,6 +15,12 @@ public class ProjectileScript : MonoBehaviour
     public bool launchReady = false;
     public float range;
     public float abilityDmg;
+    GameObject Hero;
+
+    void Start()
+    {
+        Hero = GameObject.FindWithTag("Player");
+    }
 
     public class SummonerInfo
     {
@@ -25,7 +31,7 @@ public class ProjectileScript : MonoBehaviour
         public List<string> abilities;
     }
 
-    public void SetProjectile(GameObject _summoner, GameObject _target, bool _isCritical = false, string _note = "", float _abilityDmg = -1)
+    public void SetProjectile(GameObject _summoner, GameObject _target, bool _isCritical = false, string _note = "Basic", float _abilityDmg = -1)
     {
         summoner = new SummonerInfo();
         summoner.tag = _summoner.tag;
@@ -137,6 +143,30 @@ public class ProjectileScript : MonoBehaviour
                     {
                         if(summoner.abilities.Contains("0004")) collision.gameObject.GetComponent<EnemyScript>().BeAttacked(dmg + GetComponent<Collider>().GetComponent<EnemyScript>().enemyArmor, 0.1f + 0.2f * isCf, isCritical);
                         else collision.gameObject.GetComponent<EnemyScript>().BeAttacked(dmg, 0.1f + 0.2f * isCf, isCritical);
+
+                        if(summoner.abilities.Contains("0016")) 
+                        {
+                            Hero.GetComponent<HeroScript>().nowHP += (dmg - collision.gameObject.GetComponent<EnemyScript>().enemyArmor) / 10;
+                            if((dmg - collision.gameObject.GetComponent<EnemyScript>().enemyArmor) / 10 >= 1)
+                            {
+                                RectTransform text = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), Hero.GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);
+                                text.GetComponent<FloatingText>().SetText($"+{Mathf.Round((dmg - collision.gameObject.GetComponent<EnemyScript>().enemyArmor) / 10)}", "#00FF00");
+                                text.position = Camera.main.WorldToScreenPoint(new Vector3(Hero.GetComponent<Collider2D>().bounds.center.x, Hero.GetComponent<Collider2D>().bounds.center.y, 0));
+                            }
+
+                        }
+                        if(summoner.abilities.Contains("0005"))
+                        {
+                            collision.gameObject.GetComponent<EnemyScript>().AddStatus("0002");
+                        }
+                        if(summoner.abilities.Contains("0006"))
+                        {
+                            collision.gameObject.GetComponent<EnemyScript>().AddStatus("0003");
+                        }
+                        if(summoner.abilities.Contains("0025"))
+                        {
+                            collision.gameObject.GetComponent<EnemyScript>().AddStatus("0007");
+                        }
                         
                         if(summoner.abilities.Contains("0011")) collision.gameObject.GetComponent<EnemyScript>().attackedByZombie = true;
                     }
@@ -159,6 +189,19 @@ public class ProjectileScript : MonoBehaviour
                     else
                     {
                         GetComponent<Collider>().GetComponent<EnemyScript>().BeAttacked(dmg, 0.1f + 0.2f * isCf, isCritical);
+                    }
+                    
+                    if(summoner.abilities.Contains("0005"))
+                    {
+                        collision.gameObject.GetComponent<EnemyScript>().AddStatus("0002");
+                    }
+                    if(summoner.abilities.Contains("0006"))
+                    {
+                        collision.gameObject.GetComponent<EnemyScript>().AddStatus("0003");
+                    }
+                    if(summoner.abilities.Contains("0025"))
+                    {
+                        collision.gameObject.GetComponent<EnemyScript>().AddStatus("0007");
                     }
 
                     if(summoner.abilities.Contains("0011"))
@@ -190,6 +233,19 @@ public class ProjectileScript : MonoBehaviour
                             collision.gameObject.GetComponent<HeroScript>().BeAttacked(dmg);
                         }
 
+                        if(summoner.abilities.Contains("0005"))
+                        {
+                            collision.gameObject.GetComponent<HeroScript>().AddStatus("0002");
+                        }
+                        if(summoner.abilities.Contains("0006"))
+                        {
+                            collision.gameObject.GetComponent<HeroScript>().AddStatus("0003");
+                        }
+                        if(summoner.abilities.Contains("0025"))
+                        {
+                            collision.gameObject.GetComponent<HeroScript>().AddStatus("0007");
+                        }
+
                         if(summoner.abilities.Contains("0001"))
                         {
                             collision.gameObject.GetComponent<HeroScript>().AddStatus("0001");
@@ -214,6 +270,20 @@ public class ProjectileScript : MonoBehaviour
                     {
                         collision.gameObject.GetComponent<MinionScript>().AddStatus("0001");
                     }
+                    
+                    if(summoner.abilities.Contains("0005"))
+                    {
+                        collision.gameObject.GetComponent<MinionScript>().AddStatus("0002");
+                    }
+                    if(summoner.abilities.Contains("0006"))
+                    {
+                        collision.gameObject.GetComponent<MinionScript>().AddStatus("0003");
+                    }
+                    if(summoner.abilities.Contains("0025"))
+                    {
+                        collision.gameObject.GetComponent<MinionScript>().AddStatus("0007");
+                    }
+
                     if(summoner.abilities.Contains("0011"))
                     {
                         collision.gameObject.GetComponent<MinionScript>().attackedByZombie = true;

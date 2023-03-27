@@ -376,6 +376,10 @@ public class EnemyScript : MonoBehaviour
                     }
                     else movable = true;
                 }
+                else if(_status.buffStat[i] == "nowHPCV")
+                {
+                    StartCoroutine(ContinuousDmg(float.Parse(_status.buffValue[i]), float.Parse(_status.buffTime)));
+                }
                 else
                 {
                     print($"wrong buffStat name : '{_status.buffStat[i]}'");
@@ -432,6 +436,23 @@ public class EnemyScript : MonoBehaviour
                 }
                 else movable = false;
             }
+            else if(EnemyStatus[idx].buffStat[i] == "nowHPCV")
+            {
+                StopCoroutine("ContinuousDmg");
+            }
+        }
+    }
+
+    IEnumerator ContinuousDmg(float dmg, float time)
+    {
+        int t = (int)time;
+        for(int i=0; i<t; i++)
+        {
+            enemyNowHP -= dmg;
+            RectTransform DmgText = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);
+            DmgText.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y, 0));
+            DmgText.gameObject.GetComponent<FloatingText>().SetText($"{dmg}", "#FF0000");
+            yield return new WaitForSeconds(1);
         }
     }
 }

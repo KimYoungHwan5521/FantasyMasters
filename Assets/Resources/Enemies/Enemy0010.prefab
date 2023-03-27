@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 3662615351543615002}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.6557065, y: -4.2772894, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: -1662870407
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 5352286359449648278, guid: bfedbf01206c50c4a88f0432bf5b3fba, type: 3}
+  m_Sprite: {fileID: 6729655974114099293, guid: 3146f12a02adaf549a6517ac48c03ad3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -100,18 +100,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.0074062347, y: 0.049626827}
+  m_Offset: {x: -0.010670885, y: -0.11350834}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.64, y: 0.64}
+    oldSize: {x: 0.32, y: 0.32}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.06419563, y: 0.056113243}
+  m_Size: {x: 0.0940232, y: 0.08445287}
   m_EdgeRadius: 0
 --- !u!50 &3600638605926030945
 Rigidbody2D:
@@ -154,6 +154,7 @@ MonoBehaviour:
   enemyAtkType: 0
   enemyAtkDmg: 0
   atkDmgCV: 0
+  atkDmgCVM: 1
   enemyCollisionDmg: 0
   enemyAtkSpeed: 0
   atkSpeedCVM: 1
@@ -168,6 +169,8 @@ MonoBehaviour:
   StatusBar: {fileID: 0}
   atkCoolTime: 0
   attackedByZombie: 0
+  movable: 1
+  attackable: 1
   boxSize: {x: 0, y: 0}
   TrackingBox: {x: 0, y: 0}
 --- !u!95 &5071251097647970493
