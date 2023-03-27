@@ -123,6 +123,8 @@ public class HeroScript : MonoBehaviour
     public bool controllable = true;
     public bool attackable = true;
     public int resurrection;
+
+    public bool fired = false;
     void Update()
     {
         TextMaxHP.text = Mathf.Ceil(maxHP).ToString();
@@ -144,12 +146,14 @@ public class HeroScript : MonoBehaviour
         predateCoolTime = float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0015").abilityCoolTime);
 
         bool fear = false;
+        fired = false;
         // status timer
         if(HeroStatus.Count > 0)
         {
             for(int i=0; i<HeroStatus.Count; i++)
             {
                 if(HeroStatus[i].statusID == "0004") fear = true;
+                else if(HeroStatus[i].statusID == "0008") fired = true;
                 HeroStatus[i].buffTime -= Time.deltaTime;
                 if(HeroStatus[i].buffTime <= 0)
                 {
@@ -292,7 +296,9 @@ public class HeroScript : MonoBehaviour
 
     private void HPRegenerationMethod()
     {
-        if(HPRegeneration + HPRegenerationCV > 0) nowHP += HPRegeneration + HPRegenerationCV;
+        float totalre = HPRegeneration + HPRegenerationCV;
+        if(fired) totalre /= 2;
+        if(totalre > 0) nowHP += totalre;
         if(nowHP > maxHP) nowHP = maxHP;
     }
 
@@ -306,9 +312,11 @@ public class HeroScript : MonoBehaviour
                 if(collider.GetComponent<EnemyScript>().enemyNowHP <= collider.GetComponent<EnemyScript>().enemyMaxHP * 0.3 && predateCurTime <= 0)
                 {
                     Instantiate(Resources.Load<GameObject>("Effects/Predate"), collider.GetComponent<Collider2D>().bounds.center, Quaternion.identity);
-                    nowHP += 50;
+                    float rec = 50;
+                    if(fired) rec /= 2;
+                    nowHP += rec;
                     RectTransform text = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);
-                    text.GetComponent<FloatingText>().SetText("+50", "#00FF00");
+                    text.GetComponent<FloatingText>().SetText($"+{rec}", "#00FF00");
                     text.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y, 0));
                     collider.GetComponent<EnemyScript>().enemyNowHP = 0;
                     predateCurTime = predateCoolTime;
@@ -327,11 +335,13 @@ public class HeroScript : MonoBehaviour
 
                     if(abilities.Contains("0016")) 
                     {
-                        nowHP += (dmg - eA) / 10;
-                        if((dmg - eA) / 10 >= 1)
+                        float rec = (dmg - eA) / 10;
+                        if(fired) rec /= 2;
+                        nowHP += rec;
+                        if(rec >= 1)
                         {
                             RectTransform text = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);
-                            text.GetComponent<FloatingText>().SetText($"+{Mathf.Round((dmg - eA) / 10)}", "#00FF00");
+                            text.GetComponent<FloatingText>().SetText($"+{Mathf.Round(rec)}", "#00FF00");
                             text.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y, 0));
                         }
 
@@ -344,9 +354,13 @@ public class HeroScript : MonoBehaviour
                     {
                         collider.gameObject.GetComponent<EnemyScript>().AddStatus("0003");
                     }
-                    if(abilities.Contains("0025"))
+                    if(abilities.Contains("0025") && !collider.gameObject.GetComponent<EnemyScript>().enemyAbilities.Contains("0027"))
                     {
                         collider.gameObject.GetComponent<EnemyScript>().AddStatus("0007");
+                    }
+                    if(abilities.Contains("0026") && !collider.gameObject.GetComponent<EnemyScript>().enemyAbilities.Contains("0028"))
+                    {
+                        collider.gameObject.GetComponent<EnemyScript>().AddStatus("0008");
                     }
                     
                 }

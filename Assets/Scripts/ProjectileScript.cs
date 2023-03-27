@@ -163,9 +163,13 @@ public class ProjectileScript : MonoBehaviour
                         {
                             collision.gameObject.GetComponent<EnemyScript>().AddStatus("0003");
                         }
-                        if(summoner.abilities.Contains("0025"))
+                        if(summoner.abilities.Contains("0025") && !collision.gameObject.GetComponent<EnemyScript>().enemyAbilities.Contains("0027"))
                         {
                             collision.gameObject.GetComponent<EnemyScript>().AddStatus("0007");
+                        }
+                        if(summoner.abilities.Contains("0026") && !collision.gameObject.GetComponent<EnemyScript>().enemyAbilities.Contains("0028"))
+                        {
+                            collision.gameObject.GetComponent<EnemyScript>().AddStatus("0008");
                         }
                         
                         if(summoner.abilities.Contains("0011")) collision.gameObject.GetComponent<EnemyScript>().attackedByZombie = true;
@@ -199,9 +203,13 @@ public class ProjectileScript : MonoBehaviour
                     {
                         collision.gameObject.GetComponent<EnemyScript>().AddStatus("0003");
                     }
-                    if(summoner.abilities.Contains("0025"))
+                    if(summoner.abilities.Contains("0025") && !collision.gameObject.GetComponent<EnemyScript>().enemyAbilities.Contains("0027"))
                     {
                         collision.gameObject.GetComponent<EnemyScript>().AddStatus("0007");
+                    }
+                    if(summoner.abilities.Contains("0026") && !collision.gameObject.GetComponent<EnemyScript>().enemyAbilities.Contains("0028"))
+                    {
+                        collision.gameObject.GetComponent<EnemyScript>().AddStatus("0008");
                     }
 
                     if(summoner.abilities.Contains("0011"))
@@ -241,9 +249,13 @@ public class ProjectileScript : MonoBehaviour
                         {
                             collision.gameObject.GetComponent<HeroScript>().AddStatus("0003");
                         }
-                        if(summoner.abilities.Contains("0025"))
+                        if(summoner.abilities.Contains("0025") && !collision.gameObject.GetComponent<HeroScript>().abilities.Contains("0027"))
                         {
                             collision.gameObject.GetComponent<HeroScript>().AddStatus("0007");
+                        }
+                        if(summoner.abilities.Contains("0026") && !collision.gameObject.GetComponent<HeroScript>().abilities.Contains("0028"))
+                        {
+                            collision.gameObject.GetComponent<HeroScript>().AddStatus("0008");
                         }
 
                         if(summoner.abilities.Contains("0001"))
@@ -279,9 +291,13 @@ public class ProjectileScript : MonoBehaviour
                     {
                         collision.gameObject.GetComponent<MinionScript>().AddStatus("0003");
                     }
-                    if(summoner.abilities.Contains("0025"))
+                    if(summoner.abilities.Contains("0025") && !collision.gameObject.GetComponent<MinionScript>().minionAbilities.Contains("0027"))
                     {
                         collision.gameObject.GetComponent<MinionScript>().AddStatus("0007");
+                    }
+                    if(summoner.abilities.Contains("0026") && !collision.gameObject.GetComponent<MinionScript>().minionAbilities.Contains("0028"))
+                    {
+                        collision.gameObject.GetComponent<MinionScript>().AddStatus("0008");
                     }
 
                     if(summoner.abilities.Contains("0011"))

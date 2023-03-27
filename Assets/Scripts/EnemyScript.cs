@@ -104,6 +104,8 @@ public class EnemyScript : MonoBehaviour
     public bool attackedByZombie = false;
     public bool movable = true;
     public bool attackable = true;
+
+    public bool fired = false;
     void Update()
     {
         enemyAtkSpeed = float.Parse(DataManager.AllEnemyList[_enemyID].enemyAtkSpeed) * atkSpeedCVM;
@@ -118,12 +120,14 @@ public class EnemyScript : MonoBehaviour
         boxSize = new Vector2(enemyAtkRange, enemyAtkRange);
         
         bool fear = false;
+        fired = false;
         // status timer
         if(EnemyStatus.Count > 0)
         {
             for(int i=0; i<EnemyStatus.Count; i++)
             {
                 if(EnemyStatus[i].statusID == "0004") fear = true;
+                else if(EnemyStatus[i].statusID == "0008") fired = true;
                 EnemyStatus[i].buffTime -= Time.deltaTime;
                 if(EnemyStatus[i].buffTime <= 0)
                 {
@@ -247,6 +251,23 @@ public class EnemyScript : MonoBehaviour
                 {
                     collider.GetComponent<HeroScript>().BeAttacked(enemyAtkDmg);
                 }
+
+                if(enemyAbilities.Contains("0005"))
+                {
+                    collider.gameObject.GetComponent<HeroScript>().AddStatus("0002");
+                }
+                if(enemyAbilities.Contains("0006"))
+                {
+                    collider.gameObject.GetComponent<HeroScript>().AddStatus("0003");
+                }
+                if(enemyAbilities.Contains("0025") && !collider.gameObject.GetComponent<HeroScript>().abilities.Contains("0027"))
+                {
+                    collider.gameObject.GetComponent<HeroScript>().AddStatus("0007");
+                }
+                if(enemyAbilities.Contains("0026") && !collider.gameObject.GetComponent<HeroScript>().abilities.Contains("0028"))
+                {
+                    collider.gameObject.GetComponent<HeroScript>().AddStatus("0008");
+                }
             }
             else if(collider.tag == "Minion")
             {
@@ -257,6 +278,23 @@ public class EnemyScript : MonoBehaviour
                 else
                 {
                     collider.GetComponent<MinionScript>().BeAttacked(enemyAtkDmg);
+                }
+
+                if(enemyAbilities.Contains("0005"))
+                {
+                    collider.gameObject.GetComponent<MinionScript>().AddStatus("0002");
+                }
+                if(enemyAbilities.Contains("0006"))
+                {
+                    collider.gameObject.GetComponent<MinionScript>().AddStatus("0003");
+                }
+                if(enemyAbilities.Contains("0025") && !collider.gameObject.GetComponent<MinionScript>().minionAbilities.Contains("0027"))
+                {
+                    collider.gameObject.GetComponent<MinionScript>().AddStatus("0007");
+                }
+                if(enemyAbilities.Contains("0026") && !collider.gameObject.GetComponent<MinionScript>().minionAbilities.Contains("0028"))
+                {
+                    collider.gameObject.GetComponent<MinionScript>().AddStatus("0008");
                 }
 
                 if(enemyAbilities.Contains("0011"))

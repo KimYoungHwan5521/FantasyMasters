@@ -111,6 +111,8 @@ public class MinionScript : MonoBehaviour
     public bool attackedByZombie = false;
     public bool movable = true;
     public bool attackable = true;
+
+    public bool fired = false;
     void Update()
     {
         minionAtkSpeed = float.Parse(DataManager.AllMinionList[_minionID].minionAtkSpeed) * atkSpeedCVM;
@@ -126,12 +128,14 @@ public class MinionScript : MonoBehaviour
         minionCriticalChance = float.Parse(DataManager.AllMinionList[_minionID].minionCriticalChance) + criticalChanceCV;
         
         bool fear = false;
+        fired = false;
         // status timer
         if(MinionStatus.Count > 0)
         {
             for(int i=0; i<MinionStatus.Count; i++)
             {
                 if(MinionStatus[i].statusID == "0004") fear = true;
+                else if(MinionStatus[i].statusID == "0008") fired = true;
                 MinionStatus[i].buffTime -= Time.deltaTime;
                 if(MinionStatus[i].buffTime <= 0)
                 {
@@ -275,10 +279,22 @@ public class MinionScript : MonoBehaviour
                         collider.gameObject.GetComponent<EnemyScript>().BeAttacked(minionAtkDmg, 0.3f, isCritical);
                     }
                 }
-
-                if(minionAbilities.Contains("0025"))
+                
+                if(minionAbilities.Contains("0005"))
+                {
+                    collider.gameObject.GetComponent<EnemyScript>().AddStatus("0002");
+                }
+                if(minionAbilities.Contains("0006"))
+                {
+                    collider.gameObject.GetComponent<EnemyScript>().AddStatus("0003");
+                }
+                if(minionAbilities.Contains("0025") && !collider.gameObject.GetComponent<EnemyScript>().enemyAbilities.Contains("0027"))
                 {
                     collider.gameObject.GetComponent<EnemyScript>().AddStatus("0007");
+                }
+                if(minionAbilities.Contains("0026") && !collider.gameObject.GetComponent<EnemyScript>().enemyAbilities.Contains("0028"))
+                {
+                    collider.gameObject.GetComponent<EnemyScript>().AddStatus("0008");
                 }
 
                 if(minionAbilities.Contains("0011"))

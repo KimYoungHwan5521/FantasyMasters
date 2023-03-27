@@ -245,8 +245,11 @@ public class StageManager : MonoBehaviour
         CurProductList = new List<Product>();
         selectedProduct = -1;
         string[] hAttributes = Hero.GetComponent<HeroScript>().attributes;
-        for(int i=0;i<5;i++)
+        int exception = 0;
+        int ip=0;
+        while(CurProductList.Count < 5)
         {
+            if(exception > 100) break;
             int rd = 0;
             int random = Random.Range(0, 1000);
             if(random < 700) rd = 0;
@@ -254,9 +257,9 @@ public class StageManager : MonoBehaviour
             else if(random < 973) rd = 2;
             else rd = 3;
             List<Product> tempPdl = new List<Product>();
-            if(i<4)
+            if(ip<4)
             {
-                if(hAttributes.Length > 1 && i > 1)
+                if(hAttributes.Length > 1 && ip > 1)
                 {
                     tempPdl = AllProductList.FindAll(x => x.attributes.ToList().Contains(hAttributes[1]));
                 }
@@ -281,7 +284,7 @@ public class StageManager : MonoBehaviour
             {
                 int r = Random.Range(0, tempPdl.Count);
                 bool condition = true;
-                print($"i, tempPdl[r].productName : {i}, {tempPdl[r].productName}");
+                print($"i, tempPdl[r].productName : {ip}, {tempPdl[r].productName}");
                 if(tempPdl[r].productType == "능력") condition = !Hero.GetComponent<HeroScript>().abilities.Contains(tempPdl[r].inheritanceID);
                 else if(condition)
                 {
@@ -295,7 +298,10 @@ public class StageManager : MonoBehaviour
                     }
                 }
                 if(!CurProductList.Contains(tempPdl[r]) && condition) CurProductList.Add(tempPdl[r]);
+                else ip--;
             }
+            ip++;
+            exception++;
         }
         for(int i=0; i<CurProductList.Count; i++)
         {
