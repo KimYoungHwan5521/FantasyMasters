@@ -13,6 +13,7 @@ public class MinionScript : MonoBehaviour
     public string minionNameKR;
     public string[] minionAttributes;
     public float minionMaxHP;
+    public float maxHPCVM = 1;
     public float minionNowHP;
     public int minionAtkType;
     public float minionAtkDmg;
@@ -28,8 +29,10 @@ public class MinionScript : MonoBehaviour
     public float criticalChanceCV = 0;
     public float minionArmor;
     public float armorCV = 0;
+    public float armorCVM = 1;
     public float minionMoveSpeed;
     public float moveSpeedCVM = 1;
+    public float sizeCVM = 1;
     public List<string> minionAbilities;
     public List<StatusV> MinionStatus;
 
@@ -99,6 +102,7 @@ public class MinionScript : MonoBehaviour
         GameObject Hero = GameObject.FindWithTag("Player");
         if(Hero.GetComponent<HeroScript>().abilities.Contains("0019")) AddStatus("0005");
         if(Hero.GetComponent<HeroScript>().abilities.Contains("0020")) AddStatus("0006");
+        if(Hero.GetComponent<HeroScript>().abilities.Contains("0030") && minionAtkDmg <= 30) AddStatus("0009");
 
         target = null;
         InvokeRepeating("UpdateTarget", 0, 0.25f);
@@ -120,9 +124,11 @@ public class MinionScript : MonoBehaviour
         atkCoolTime = 10 / minionAtkSpeed;
         minionMoveSpeed = float.Parse(DataManager.AllMinionList[_minionID].minionMoveSpeed) * moveSpeedCVM;
         animator.SetFloat("MoveSpeed", moveSpeedCVM);
-        minionAtkDmg = (float.Parse(DataManager.AllMinionList[_minionID].minionAtkDmg.Split('x')[0]) + atkDmgCV * atkDmgCVM);
-        minionArmor = float.Parse(DataManager.AllMinionList[_minionID].minionArmor) + armorCV;
-        minionAtkRange = float.Parse(DataManager.AllMinionList[_minionID].minionAtkRange) + atkRangeCV;
+        minionMaxHP = float.Parse(DataManager.AllMinionList[_minionID].minionMaxHP) * maxHPCVM;
+        if(minionNowHP > minionMaxHP) minionNowHP = minionMaxHP;
+        minionAtkDmg = (float.Parse(DataManager.AllMinionList[_minionID].minionAtkDmg.Split('x')[0]) + atkDmgCV) * atkDmgCVM;
+        minionArmor = (float.Parse(DataManager.AllMinionList[_minionID].minionArmor) + armorCV) * armorCVM;
+        minionAtkRange = (float.Parse(DataManager.AllMinionList[_minionID].minionAtkRange) + atkRangeCV) * sizeCVM;
         boxSize = new Vector2(minionAtkRange, minionAtkRange);
         minionCriticalDmg = float.Parse(DataManager.AllMinionList[_minionID].minionCriticalDmg) + criticalDmgCV;
         minionCriticalChance = float.Parse(DataManager.AllMinionList[_minionID].minionCriticalChance) + criticalChanceCV;
@@ -415,6 +421,10 @@ public class MinionScript : MonoBehaviour
                 {
                     armorCV += float.Parse(_status.buffValue[i]);
                 }
+                else if(_status.buffStat[i] == "armorCVM")
+                {
+                    armorCVM += float.Parse(_status.buffValue[i]);
+                }
                 else if(_status.buffStat[i] == "atkRangeCV")
                 {
                     atkRangeCV += float.Parse(_status.buffValue[i]);
@@ -446,6 +456,16 @@ public class MinionScript : MonoBehaviour
                 else if(_status.buffStat[i] == "nowHPCV")
                 {
                     StartCoroutine(ContinuousDmg(float.Parse(_status.buffValue[i]), float.Parse(_status.buffTime)));
+                }
+                else if(_status.buffStat[i] == "maxHPCVM")
+                {
+                    maxHPCVM += float.Parse(_status.buffValue[i]);
+                    minionNowHP += float.Parse(DataManager.AllMinionList.Find(x => x.minionID == stringID).minionMaxHP) * float.Parse(_status.buffValue[i]);
+                }
+                else if(_status.buffStat[i] == "sizeCVM")
+                {
+                    sizeCVM += float.Parse(_status.buffValue[i]);
+                    transform.localScale = new Vector2(transform.localScale.x * (1 + float.Parse(_status.buffValue[i])), transform.localScale.y * (1 + float.Parse(_status.buffValue[i])));
                 }
                 else
                 {
@@ -483,6 +503,10 @@ public class MinionScript : MonoBehaviour
             {
                 armorCV -= MinionStatus[idx].buffValue[i];
             }
+            else if(MinionStatus[idx].buffStat[i] == "armorCVM")
+            {
+                armorCVM -= MinionStatus[idx].buffValue[i];
+            }
             else if(MinionStatus[idx].buffStat[i] == "atkRangeCV")
             {
                 atkRangeCV -= MinionStatus[idx].buffValue[i];
@@ -514,6 +538,15 @@ public class MinionScript : MonoBehaviour
             else if(MinionStatus[idx].buffStat[i] == "nowHPCV")
             {
                 StopCoroutine("ContinuousDmg");
+            }
+            else if(MinionStatus[idx].buffStat[i] == "maxHPCVM")
+            {
+                maxHPCVM -= MinionStatus[idx].buffValue[i];
+            }
+            else if(MinionStatus[idx].buffStat[i] == "sizeCVM")
+            {
+                sizeCVM -= MinionStatus[idx].buffValue[i];
+                transform.localScale = new Vector2(transform.localScale.x / (1 + MinionStatus[idx].buffValue[i]), transform.localScale.y / (1 + MinionStatus[idx].buffValue[i]));
             }
         }
     }
