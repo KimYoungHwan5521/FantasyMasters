@@ -1,19 +1,19 @@
 fileFormatVersion: 2
-guid: e94a8943936248d4388d4c4752a26fa0
+guid: e01165fbfe298e04f95fb11827b4a78b
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1150626330401856288
-    second: Mantis_0
+      213: -6732235979096606853
+    second: cute mushroom walk_0
   - first:
-      213: 7321263602077836880
-    second: Mantis_1
+      213: 6063229545318949324
+    second: cute mushroom walk_1
   - first:
-      213: 930101872328489080
-    second: Mantis_2
+      213: 3705076766247281095
+    second: cute mushroom walk_2
   - first:
-      213: 5151334506856069894
-    second: Mantis_3
+      213: -2627055131603777121
+    second: cute mushroom walk_3
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -103,55 +103,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Mantis_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 32
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 02b50dc1d88d7ff00800000000000000
-      internalID: 1150626330401856288
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Mantis_1
-      rect:
-        serializedVersion: 2
-        x: 32
-        y: 32
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 056a8d4d47a5a9560800000000000000
-      internalID: 7321263602077836880
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Mantis_2
+      name: cute mushroom walk_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 32
-        height: 32
+        width: 48
+        height: 48
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -159,20 +117,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 878b01999b268ec00800000000000000
-      internalID: 930101872328489080
+      spriteID: b77b7d1cb0b4292a0800000000000000
+      internalID: -6732235979096606853
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Mantis_3
+      name: cute mushroom walk_1
       rect:
         serializedVersion: 2
-        x: 32
+        x: 48
         y: 0
-        width: 32
-        height: 32
+        width: 48
+        height: 48
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -180,8 +138,50 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 60b3e58e0773d7740800000000000000
-      internalID: 5151334506856069894
+      spriteID: cc1a368a52be42450800000000000000
+      internalID: 6063229545318949324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cute mushroom walk_2
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7c1e8b540b31b6330800000000000000
+      internalID: 3705076766247281095
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cute mushroom walk_3
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 0
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f99c36bc643da8bd0800000000000000
+      internalID: -2627055131603777121
       vertices: []
       indices: 
       edges: []

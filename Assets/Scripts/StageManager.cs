@@ -171,6 +171,10 @@ public class StageManager : MonoBehaviour
         {
             Hero.GetComponent<HeroScript>().AddStatus("0006");
         }
+        if(hAbilities.Contains("0029"))
+        {
+            StartCoroutine(SummonMinion("0004", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0029").abilityCoolTime)));
+        }
         StartCoroutine(SpawnEnemy(stageInfo));
     }
     

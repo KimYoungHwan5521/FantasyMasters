@@ -1,25 +1,34 @@
 fileFormatVersion: 2
-guid: 2e79e07eda8c7594d96c70cddaecd1a5
+guid: a65576a02e91183408c48fca2fcf0be2
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1937807326998932550
-    second: AcidSplat_0
+      213: 301630678067255945
+    second: cute mushroom idle_0
   - first:
-      213: -4854881654088601127
-    second: AcidSplat_1
+      213: -7993782013697050230
+    second: cute mushroom idle_1
   - first:
-      213: 1063237056770142624
-    second: AcidSplat_2
+      213: -9217859290380688346
+    second: cute mushroom idle_2
   - first:
-      213: 5511812139553003973
-    second: AcidSplat_3
+      213: 7570868918165996506
+    second: cute mushroom idle_3
   - first:
-      213: -8831887280285884464
-    second: AcidSplat_4
+      213: -1004661760803787524
+    second: cute mushroom idle_4
   - first:
-      213: -2352627107771326926
-    second: AcidSplat_5
+      213: 3936986550408097797
+    second: cute mushroom idle_5
+  - first:
+      213: -1174705834077729386
+    second: cute mushroom idle_6
+  - first:
+      213: 2332339636757225989
+    second: cute mushroom idle_7
+  - first:
+      213: -3782318053959018301
+    second: cute mushroom idle_8
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -109,13 +118,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: AcidSplat_0
+      name: cute mushroom idle_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 64
-        height: 64
+        width: 48
+        height: 48
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -123,20 +132,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ab35417c0868b15e0800000000000000
-      internalID: -1937807326998932550
+      spriteID: 98a1f8be08b9f2400800000000000000
+      internalID: 301630678067255945
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: AcidSplat_1
+      name: cute mushroom idle_1
       rect:
         serializedVersion: 2
-        x: 64
+        x: 48
         y: 0
-        width: 64
-        height: 64
+        width: 48
+        height: 48
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -144,20 +153,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9d1fc7d9bdeff9cb0800000000000000
-      internalID: -4854881654088601127
+      spriteID: a893ea58c91601190800000000000000
+      internalID: -7993782013697050230
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: AcidSplat_2
+      name: cute mushroom idle_2
       rect:
         serializedVersion: 2
-        x: 128
+        x: 96
         y: 0
-        width: 64
-        height: 64
+        width: 48
+        height: 48
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -165,20 +174,41 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0a1f0d8487061ce00800000000000000
-      internalID: 1063237056770142624
+      spriteID: 624235f40d5931080800000000000000
+      internalID: -9217859290380688346
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: AcidSplat_3
+      name: cute mushroom idle_3
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 0
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ad3845c3b21211960800000000000000
+      internalID: 7570868918165996506
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cute mushroom idle_4
       rect:
         serializedVersion: 2
         x: 192
         y: 0
-        width: 64
-        height: 64
+        width: 48
+        height: 48
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -186,20 +216,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5c91eb620f3ed7c40800000000000000
-      internalID: 5511812139553003973
+      spriteID: cfc2fd39379be02f0800000000000000
+      internalID: -1004661760803787524
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: AcidSplat_4
+      name: cute mushroom idle_5
       rect:
         serializedVersion: 2
-        x: 256
+        x: 240
         y: 0
-        width: 64
-        height: 64
+        width: 48
+        height: 48
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -207,20 +237,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0dfd44adf45de6580800000000000000
-      internalID: -8831887280285884464
+      spriteID: 500b096986cf2a630800000000000000
+      internalID: 3936986550408097797
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: AcidSplat_5
+      name: cute mushroom idle_6
       rect:
         serializedVersion: 2
-        x: 320
+        x: 288
         y: 0
-        width: 64
-        height: 64
+        width: 48
+        height: 48
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -228,8 +258,50 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 23ed5583c1ac95fd0800000000000000
-      internalID: -2352627107771326926
+      spriteID: 69dc73c844b92bfe0800000000000000
+      internalID: -1174705834077729386
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cute mushroom idle_7
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 0
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5026a78da822e5020800000000000000
+      internalID: 2332339636757225989
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cute mushroom idle_8
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3c8d93ef4c1828bc0800000000000000
+      internalID: -3782318053959018301
       vertices: []
       indices: 
       edges: []
