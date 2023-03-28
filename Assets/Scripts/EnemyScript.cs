@@ -486,7 +486,7 @@ public class EnemyScript : MonoBehaviour
         int t = (int)time;
         for(int i=0; i<t; i++)
         {
-            enemyNowHP -= dmg;
+            enemyNowHP += dmg;
             RectTransform DmgText = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);
             DmgText.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y, 0));
             DmgText.gameObject.GetComponent<FloatingText>().SetText($"{dmg}", "#FF0000");

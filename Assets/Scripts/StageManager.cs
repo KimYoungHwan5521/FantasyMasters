@@ -23,6 +23,7 @@ public class StageManager : MonoBehaviour
         public string productName;
         public string[] attributes;
         public string rareDegree;
+        public string explain;
     }
     public List<Product> AllProductList;
     
@@ -66,6 +67,7 @@ public class StageManager : MonoBehaviour
                 pd.productName = DataManager.AllAbilityList[i].abilityNameKR;
                 pd.attributes = DataManager.AllAbilityList[i].abilityAttributes;
                 pd.rareDegree = DataManager.AllAbilityList[i].abilityRareDegree;
+                pd.explain = DataManager.AllAbilityList[i].abilityExplainKR;
                 AllProductList.Add(pd);
             }
         }
@@ -79,6 +81,7 @@ public class StageManager : MonoBehaviour
                 pd.productName = DataManager.AllItemList[i].itemNameKR;
                 pd.rareDegree = DataManager.AllItemList[i].itemRareDegree;
                 pd.attributes = DataManager.AllItemList[i].itemAttributes;
+                pd.explain = DataManager.AllItemList[i].itemExplainKR;
                 AllProductList.Add(pd);
             }
         }
@@ -244,6 +247,8 @@ public class StageManager : MonoBehaviour
     public GameObject Shop;
     public GameObject[] ProductsSimple;
     public List<Product> CurProductList;
+    public GameObject[] HaveAbilities;
+    public GameObject[] HaveItems;
     IEnumerator ReadyToNextStage()
     {
         CurProductList = new List<Product>();
@@ -325,9 +330,50 @@ public class StageManager : MonoBehaviour
             else if(CurProductList[i].rareDegree == "1") ProductSimpleTexts[3].text = "<color=blue>희귀</color>";
             else if(CurProductList[i].rareDegree == "2") ProductSimpleTexts[3].text = "<color=purple>신화</color>";
             else ProductSimpleTexts[3].text = "<color=yellow>전설</color>";
+            ProductSimpleTexts[4].text = CurProductList[i].explain;
+        }
+        List<string> hAbilities = Hero.GetComponent<HeroScript>().abilities;
+        for(int i=0; i<hAbilities.Count; i++)
+        {
+            HaveAbilities[i].SetActive(i < hAbilities.Count);
+            Image HaveAbilityImage = HaveAbilities[i].GetComponentInChildren<Image>();
+            HaveAbilityImage.sprite = Resources.Load<Sprite>($"UIs/Icons/Products/Abilities/Ability{hAbilities[i]}");
+        }
+        List<Item> hItems = Hero.GetComponent<HeroScript>().HeroItems;
+        for(int i=0; i<hItems.Count; i++)
+        {
+            HaveItems[i].SetActive(i<hItems.Count);
+            Image HaveItemImage = HaveItems[i].GetComponentInChildren<Image>();
+            HaveItemImage.sprite = Resources.Load<Sprite>($"UIs/Icons/Products/Items/Item{hItems[i].itemID}");
         }
         Shop.SetActive(true);
         yield return null;
+    }
+
+    public GameObject Explain;
+    public void MouseEnterHaveAbility(int ID)
+    {
+        Text ExplainText = Explain.GetComponentInChildren<Text>();
+        ExplainText.text = "";
+        ExplainText.text += $"<b>{DataManager.AllAbilityList.Find(x => x.abilityID == Hero.GetComponent<HeroScript>().abilities[ID]).abilityNameKR}</b>\n";
+        ExplainText.text += DataManager.AllAbilityList.Find(x => x.abilityID == Hero.GetComponent<HeroScript>().abilities[ID]).abilityExplainKR;
+        Explain.GetComponent<RectTransform>().anchoredPosition = new Vector2(HaveAbilities[ID].GetComponent<RectTransform>().anchoredPosition.x + HaveAbilities[ID].GetComponent<RectTransform>().rect.width, HaveAbilities[ID].GetComponent<RectTransform>().anchoredPosition.y - Explain.GetComponent<RectTransform>().rect.height);
+        Explain.SetActive(true);
+    }
+
+    public void MouseEnterHaveItems(int ID)
+    {
+        Text ExplainText = Explain.GetComponentInChildren<Text>();
+        ExplainText.text = "";
+        ExplainText.text += $"<b>{DataManager.AllItemList.Find(x => x.itemID == Hero.GetComponent<HeroScript>().HeroItems[ID].itemID).itemNameKR}</b>\n";
+        ExplainText.text = DataManager.AllItemList.Find(x => x.itemID == Hero.GetComponent<HeroScript>().HeroItems[ID].itemID).itemExplainKR;
+        Explain.GetComponent<RectTransform>().anchoredPosition = new Vector2(HaveItems[ID].GetComponent<RectTransform>().anchoredPosition.x + HaveItems[ID].GetComponent<RectTransform>().rect.width, HaveItems[ID].GetComponent<RectTransform>().anchoredPosition.y - Explain.GetComponent<RectTransform>().rect.height);
+        Explain.SetActive(true);
+    }
+
+    public void MouseExitHaveAbility()
+    {
+        Explain.SetActive(false);
     }
 
     public int selectedProduct;
