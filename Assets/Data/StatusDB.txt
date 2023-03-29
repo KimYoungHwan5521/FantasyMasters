@@ -6,8 +6,9 @@ StatusID	StatusNameKR	StatusExplainKR	BuffStat	BuffValue	BuffTime
 0004	공포	이동속도 -80% 상태로 적 반대방향으로 도망감	moveSpeedCVM|attackable	-0.8|-1	2
 0005	광기	공격력 +30%	atkDmgCVM	0.3	100
 0006	광폭	공격력 +30%, 공격속도 +30%, 이동속도 +30%, 방어력 -10	atkDmgCVM|atkSpeedCVM|moveSpeedCVM|armorCV	0.3|0.3|0.3|-10	100
-0007	중독	공격력, 방어력 -10, 이동속도 -30%, 매초 체력 -10	atkDmgCV|armorCV|moveSpeedCVM|nowHPCV	-10|-10|-0.3|-10	3
+0007	중독	공격력, 방어력 -10, 이동속도 -30%, 매초 체력 -20	atkDmgCV|armorCV|moveSpeedCVM|nowHPCV	-10|-10|-0.3|-20	3
 0008	화염	방어력 -20, 매초 체력 -20, 대상의 모든 치유효과 -50%	armorCV|nowHPCV	-20|-20	3
 0009	거대화	공격력, 방어력, 최대체력, 크기 x2	atkDmgCVM|armorCVM|maxHPCVM|sizeCVM	1|1|1|1	100
 0010	무리공격	공격력 + 아군 하수인 수x5	atkDmgCV	0	100
 0011	무리방어	방어력 + 아군 하수인 수	armorCV	0	100
+0012	속박	3초간 움직일 수 없음	movable	-1	3

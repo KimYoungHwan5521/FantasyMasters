@@ -7,5 +7,13 @@ AnimatorOverrideController:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Minion0005
-  m_Controller: {fileID: 0}
-  m_Clips: []
+  m_Controller: {fileID: 9100000, guid: c9e0e2d7b4eb5034a8d6c887e3e812a4, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 1edb9ce374841e04e8391178986856ed, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 7ba9e1c49f78d1d4ba46d0ec7080bdfa, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: bc0b6aa5fec1778479d0e0d3fd390dce, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 7ba9e1c49f78d1d4ba46d0ec7080bdfa, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 9112c3c29a6fa2d4ca721f786f554207, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: ec0bd29faf8aa15458d3821293dde36f, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: cfb42de58cfbb774180e8c559f6a70fb, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: ec0bd29faf8aa15458d3821293dde36f, type: 2}

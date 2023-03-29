@@ -1,0 +1,2 @@
+TrapID	TrapNameKR	TrapDmg	TrapStatus
+0000	곰덫	100	0012

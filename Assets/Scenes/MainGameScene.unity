@@ -10213,6 +10213,7 @@ MonoBehaviour:
   StatusDB: {fileID: 4900000, guid: beeec90a50e54fa4fa1f2ec464ab400e, type: 3}
   StageDB: {fileID: 4900000, guid: cf5c8828c2bb0214d8d5dbe8e9a2f109, type: 3}
   ItemDB: {fileID: 4900000, guid: 6ff5d8821789b6a44beecbcddca00b0d, type: 3}
+  TrapDB: {fileID: 4900000, guid: a5ea80fb1c2920448b9a3f53c52169c3, type: 3}
 --- !u!4 &1131356829
 Transform:
   m_ObjectHideFlags: 0

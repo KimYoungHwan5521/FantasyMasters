@@ -185,6 +185,21 @@ public class Item
     public List<string> itemAbilities;
 }
 
+public class Trap
+{
+    public Trap(string _ID, string _NameKR, string _Dmg, string _status)
+    {
+        trapID = _ID;
+        trapNameKR = _NameKR;
+        trapDmg = _Dmg;
+        trapStatus = _status.Split(',').ToList();
+    }
+    public string trapID;
+    public string trapNameKR;
+    public string trapDmg;
+    public List<string> trapStatus;
+}
+
 public class DataManager : MonoBehaviour
 {
     public static DataManager instance;
@@ -216,6 +231,7 @@ public class DataManager : MonoBehaviour
     public TextAsset StatusDB;
     public TextAsset StageDB;
     public TextAsset ItemDB;
+    public TextAsset TrapDB;
     public static List<Hero> AllHeroList;
     public static List<Enemy> AllEnemyList;
     public static List<Minion> AllMinionList;
@@ -223,6 +239,7 @@ public class DataManager : MonoBehaviour
     public static List<Status> AllStatusList;
     public static List<Stage> AllStageList;
     public static List<Item> AllItemList;
+    public static List<Trap> AllTrapList;
 
     public static int selectedHeroID = 1;
 
@@ -330,6 +347,21 @@ public class DataManager : MonoBehaviour
             else
             {
                 AllItemList.Add(new Item(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5], row[6], row[7]));
+            }
+        }
+
+        AllTrapList = new List<Trap>();
+        line = TrapDB.text.Substring(0, TrapDB.text.Length).Split('\r');
+        for(int i=1;i<line.Length;i++)
+        {
+            string[] row = line[i].Split('\t');
+            if(i == 0)
+            {
+                AllTrapList.Add(new Trap(row[0], row[1], row[2], row[3]));
+            }
+            else
+            {
+                AllTrapList.Add(new Trap(row[0].Substring(1), row[1], row[2], row[3]));
             }
         }
     }

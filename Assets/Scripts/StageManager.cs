@@ -186,6 +186,10 @@ public class StageManager : MonoBehaviour
         {
             StartCoroutine(SummonMinion("0006", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0035").abilityCoolTime), 2));
         }
+        if(hAbilities.Contains("0036"))
+        {
+            StartCoroutine(SummonTrap("0000", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0036").abilityCoolTime)));
+        }
         StartCoroutine(SpawnEnemy(stageInfo));
     }
     
@@ -549,4 +553,16 @@ public class StageManager : MonoBehaviour
         }
     }
 
+    IEnumerator SummonTrap(string _trapID, float summonCoolTime)
+    {
+        var trapToSummon = Resources.Load<GameObject>($"Traps/Trap{_trapID}");
+        while(true)
+        {
+            if(StageTime.text == "0") break;
+            Vector3 summonPositon = Hero.GetComponent<Collider2D>().bounds.center;
+            Instantiate(trapToSummon, summonPositon, Quaternion.identity);
+
+            yield return new WaitForSeconds(summonCoolTime);
+        }
+    }
 }
