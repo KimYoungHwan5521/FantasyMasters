@@ -9,5 +9,5 @@ StatusID	StatusNameKR	StatusExplainKR	BuffStat	BuffValue	BuffTime
 0007	중독	공격력, 방어력 -10, 이동속도 -30%, 매초 체력 -10	atkDmgCV|armorCV|moveSpeedCVM|nowHPCV	-10|-10|-0.3|-10	3
 0008	화염	방어력 -20, 매초 체력 -20, 대상의 모든 치유효과 -50%	armorCV|nowHPCV	-20|-20	3
 0009	거대화	공격력, 방어력, 최대체력, 크기 x2	atkDmgCVM|armorCVM|maxHPCVM|sizeCVM	1|1|1|1	100
-0010	무리공격	공격력+ 아군 하수인 수x5			100
-0011	무리방어	방어력+ 아군 하수인 수			100
+0010	무리공격	공격력 + 아군 하수인 수x5	atkDmgCV	0	100
+0011	무리방어	방어력 + 아군 하수인 수	armorCV	0	100

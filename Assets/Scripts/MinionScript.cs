@@ -100,9 +100,20 @@ public class MinionScript : MonoBehaviour
         StatusBar = Instantiate(Resources.Load<RectTransform>("UIs/StatusBar"), new Vector3(0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
 
         GameObject Hero = GameObject.FindWithTag("Player");
-        if(Hero.GetComponent<HeroScript>().abilities.Contains("0019")) AddStatus("0005");
-        if(Hero.GetComponent<HeroScript>().abilities.Contains("0020")) AddStatus("0006");
-        if(Hero.GetComponent<HeroScript>().abilities.Contains("0030") && minionAtkDmg <= 30) AddStatus("0009");
+        List<string> hAbilities = Hero.GetComponent<HeroScript>().abilities;
+        if(hAbilities.Contains("0019")) AddStatus("0005");
+        if(hAbilities.Contains("0020")) AddStatus("0006");
+        if(hAbilities.Contains("0030") && minionAtkDmg <= 30) AddStatus("0009");
+        if(hAbilities.Contains("0032"))
+        {
+            AddStatus("0010");
+            flockAttack = true;
+        }
+        if(hAbilities.Contains("0033")) 
+        {
+            AddStatus("0011");
+            floakDefense = true;
+        }
 
         target = null;
         InvokeRepeating("UpdateTarget", 0, 0.25f);
@@ -117,6 +128,8 @@ public class MinionScript : MonoBehaviour
     public bool attackable = true;
 
     public bool fired = false;
+    public bool flockAttack = false;
+    public bool floakDefense = false;
     void Update()
     {
         minionAtkSpeed = float.Parse(DataManager.AllMinionList[_minionID].minionAtkSpeed) * atkSpeedCVM;
@@ -126,8 +139,18 @@ public class MinionScript : MonoBehaviour
         animator.SetFloat("MoveSpeed", moveSpeedCVM);
         minionMaxHP = float.Parse(DataManager.AllMinionList[_minionID].minionMaxHP) * maxHPCVM;
         if(minionNowHP > minionMaxHP) minionNowHP = minionMaxHP;
-        minionAtkDmg = (float.Parse(DataManager.AllMinionList[_minionID].minionAtkDmg.Split('x')[0]) + atkDmgCV) * atkDmgCVM;
-        minionArmor = (float.Parse(DataManager.AllMinionList[_minionID].minionArmor) + armorCV) * armorCVM;
+        if(flockAttack) 
+        {
+            float abilityAtkDmgCV = GameObject.FindGameObjectsWithTag("Minion").Length * 5;
+            minionAtkDmg = (float.Parse(DataManager.AllMinionList[_minionID].minionAtkDmg.Split('x')[0]) + atkDmgCV + abilityAtkDmgCV) * atkDmgCVM;
+        }
+        else minionAtkDmg = (float.Parse(DataManager.AllMinionList[_minionID].minionAtkDmg.Split('x')[0]) + atkDmgCV) * atkDmgCVM;
+        if(floakDefense)
+        {
+            float abilityArmorCV = GameObject.FindGameObjectsWithTag("Minion").Length;
+            minionArmor =minionArmor = (float.Parse(DataManager.AllMinionList[_minionID].minionArmor) + armorCV + abilityArmorCV) * armorCVM;
+        }
+        else minionArmor = (float.Parse(DataManager.AllMinionList[_minionID].minionArmor) + armorCV) * armorCVM;
         minionAtkRange = (float.Parse(DataManager.AllMinionList[_minionID].minionAtkRange) + atkRangeCV) * sizeCVM;
         boxSize = new Vector2(minionAtkRange, minionAtkRange);
         minionCriticalDmg = float.Parse(DataManager.AllMinionList[_minionID].minionCriticalDmg) + criticalDmgCV;
