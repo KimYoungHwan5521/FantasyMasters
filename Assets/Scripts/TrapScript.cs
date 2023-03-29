@@ -10,6 +10,9 @@ public class TrapScript : MonoBehaviour
 
     public string _trapID;
     public float trapDmg;
+    public float trapKnockback;
+    public float trapRange;
+    public Vector2 boxSize;
     public List<string> trapStatus;
     // Start is called before the first frame update
     void Start()
@@ -19,22 +22,38 @@ public class TrapScript : MonoBehaviour
 
         Trap trapInfo = DataManager.AllTrapList.Find(x => x.trapID == _trapID);
         trapDmg = float.Parse(trapInfo.trapDmg);
+        trapKnockback = float.Parse(trapInfo.trapKnockback);
+        trapRange = float.Parse(trapInfo.trapRange);
+        boxSize = new Vector2(trapRange, trapRange);
         trapStatus = trapInfo.trapStatus.ToList();
     }
 
-
-    bool activated = false;
+    
+    public bool activated = false;
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Enemy" && !activated)
         {
-            collision.gameObject.GetComponent<EnemyScript>().BeAttacked(trapDmg, 0);
-            for(int i=0; i<trapStatus.Count; i++)
-            {
-                collision.gameObject.GetComponent<EnemyScript>().AddStatus(trapStatus[i]);
-            }
             animator.SetBool("Activate", true);
-            activated = false;
+            Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(GetComponent<Collider2D>().bounds.center, boxSize, 0);
+            foreach(Collider2D collider in collider2Ds)
+            {
+                if(collider.tag == "Enemy")
+                {
+                    collider.GetComponent<EnemyScript>().BeAttacked(trapDmg, trapKnockback);
+                    for(int i=0; i<trapStatus.Count; i++)
+                    {
+                        collider.GetComponent<EnemyScript>().AddStatus(trapStatus[i]);
+                    }
+                }
+            }
+            activated = true;
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(GetComponent<Collider2D>().bounds.center, boxSize);
     }
 }

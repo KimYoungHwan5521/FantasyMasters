@@ -43,7 +43,7 @@ public class Hero
 [System.Serializable]
 public class Enemy
 {
-    public Enemy(string _ID, string _NameKR, string _HP, string _AtkType, string _CollisionDmg, string _AtkDmg, string _AtkSpeed, string _AtkRange, string _Armor, string _MoveSpeed, string _AbilityID)
+    public Enemy(string _ID, string _NameKR, string _HP, string _AtkType, string _CollisionDmg, string _AtkDmg, string _AtkSpeed, string _AtkRange, string _Armor, string _MoveType, string _MoveSpeed, string _AbilityID)
     {
         enemyID = _ID;
         enemyNameKR = _NameKR;
@@ -54,6 +54,7 @@ public class Enemy
         enemyAtkSpeed = _AtkSpeed;
         enemyAtkRange = _AtkRange;
         enemyArmor = _Armor;
+        enemyMoveType = _MoveType;
         enemyMoveSpeed = _MoveSpeed;
         enemyAbilities = _AbilityID.Split(',').ToList();
     }
@@ -66,6 +67,7 @@ public class Enemy
     public string enemyAtkSpeed;
     public string enemyAtkRange;
     public string enemyArmor;
+    public string enemyMoveType;
     public string enemyMoveSpeed;
     public List<string> enemyAbilities;
 }
@@ -74,7 +76,7 @@ public class Enemy
 public class Minion
 {
     public Minion(string _ID, string _NameKR, string _Attributes, string _HP, string _AtkType, string _AtkDmg, string _AtkSpeed, string _AtkRange,
-    string _CriticalDmg, string _CriticalChance, string _Armor, string _MoveSpeed, string _AbilityID)
+    string _CriticalDmg, string _CriticalChance, string _Armor, string _MoveType, string _MoveSpeed, string _AbilityID)
     {
         minionID = _ID;
         minionNameKR = _NameKR;
@@ -87,6 +89,7 @@ public class Minion
         minionCriticalDmg = _CriticalDmg;
         minionCriticalChance = _CriticalChance;
         minionArmor = _Armor;
+        minionMoveType = _MoveType;
         minionMoveSpeed = _MoveSpeed;
         minionAbilities = _AbilityID.Split(',').ToList();
     }
@@ -101,6 +104,7 @@ public class Minion
     public string minionCriticalDmg;
     public string minionCriticalChance;
     public string minionArmor;
+    public string minionMoveType;
     public string minionMoveSpeed;
     public List<string> minionAbilities;
 }
@@ -187,16 +191,20 @@ public class Item
 
 public class Trap
 {
-    public Trap(string _ID, string _NameKR, string _Dmg, string _status)
+    public Trap(string _ID, string _NameKR, string _Dmg, string _Knockback, string _Range, string _status)
     {
         trapID = _ID;
         trapNameKR = _NameKR;
         trapDmg = _Dmg;
+        trapKnockback = _Knockback;
+        trapRange = _Range;
         trapStatus = _status.Split(',').ToList();
     }
     public string trapID;
     public string trapNameKR;
     public string trapDmg;
+    public string trapKnockback;
+    public string trapRange;
     public List<string> trapStatus;
 }
 
@@ -267,11 +275,11 @@ public class DataManager : MonoBehaviour
             string[] row = line[i].Split('\t');
             if(i == 0)
             {
-                AllEnemyList.Add(new Enemy(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10]));
+                AllEnemyList.Add(new Enemy(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11]));
             }
             else
             {
-                AllEnemyList.Add(new Enemy(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10]));
+                AllEnemyList.Add(new Enemy(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11]));
             }
         }
 
@@ -282,11 +290,11 @@ public class DataManager : MonoBehaviour
             string[] row = line[i].Split('\t');
             if(i == 0)
             {
-                AllMinionList.Add(new Minion(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12]));
+                AllMinionList.Add(new Minion(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13]));
             }
             else
             {
-                AllMinionList.Add(new Minion(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12]));
+                AllMinionList.Add(new Minion(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13]));
             }
         }
 
@@ -357,11 +365,11 @@ public class DataManager : MonoBehaviour
             string[] row = line[i].Split('\t');
             if(i == 0)
             {
-                AllTrapList.Add(new Trap(row[0], row[1], row[2], row[3]));
+                AllTrapList.Add(new Trap(row[0], row[1], row[2], row[3], row[4], row[5]));
             }
             else
             {
-                AllTrapList.Add(new Trap(row[0].Substring(1), row[1], row[2], row[3]));
+                AllTrapList.Add(new Trap(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5]));
             }
         }
     }

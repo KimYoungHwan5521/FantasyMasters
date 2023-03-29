@@ -188,7 +188,15 @@ public class StageManager : MonoBehaviour
         }
         if(hAbilities.Contains("0036"))
         {
-            StartCoroutine(SummonTrap("0000", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0036").abilityCoolTime)));
+            StartCoroutine(SummonTrap(Hero, "0000", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0036").abilityCoolTime)));
+        }
+        if(hAbilities.Contains("0037"))
+        {
+            StartCoroutine(SummonTrap(Hero, "0001", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0037").abilityCoolTime)));
+        }
+        if(hAbilities.Contains("0038"))
+        {
+            StartCoroutine(SummonMinion("0007", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0038").abilityCoolTime)));
         }
         StartCoroutine(SpawnEnemy(stageInfo));
     }
@@ -247,6 +255,11 @@ public class StageManager : MonoBehaviour
             foreach(GameObject m in M)
             {
                 m.GetComponent<MinionScript>().minionNowHP = 0;
+            }
+            GameObject[] T = GameObject.FindGameObjectsWithTag("Trap");
+            foreach(GameObject t in T)
+            {
+                t.GetComponent<Animator>().SetBool("Activate", true);
             }
             exception++;
             if(exception > 100) break;
@@ -335,13 +348,20 @@ public class StageManager : MonoBehaviour
             for(int j=0; j<CurProductList[i].attributes.Length; j++)
             {
                 if(j>0) ProductSimpleTexts[1].text += " ";
-                ProductSimpleTexts[1].text += CurProductList[i].attributes[j];
+                if(CurProductList[i].attributes[j] == "암흑") ProductSimpleTexts[1].text += "<color=purple>암흑</color>";
+                else if(CurProductList[i].attributes[j] == "불") ProductSimpleTexts[1].text += "<color=red>불</color>";
+                else if(CurProductList[i].attributes[j] == "물") ProductSimpleTexts[1].text += "<color=blue>물</color>";
+                else if(CurProductList[i].attributes[j] == "숲") ProductSimpleTexts[1].text += "<color=green>숲</color>";
+                else if(CurProductList[i].attributes[j] == "금속") ProductSimpleTexts[1].text += "<color=silver>금속</color>";
+                else if(CurProductList[i].attributes[j] == "대지") ProductSimpleTexts[1].text += "<color=olive>대지</color>";
+                else if(CurProductList[i].attributes[j] == "빛") ProductSimpleTexts[1].text += "<color=yellow>빛</color>";
+                else ProductSimpleTexts[1].text += CurProductList[i].attributes[j];
             }
             ProductSimpleTexts[2].text = CurProductList[i].productType;
             if(CurProductList[i].rareDegree == "0") ProductSimpleTexts[3].text = "일반";
             else if(CurProductList[i].rareDegree == "1") ProductSimpleTexts[3].text = "<color=blue>희귀</color>";
             else if(CurProductList[i].rareDegree == "2") ProductSimpleTexts[3].text = "<color=purple>신화</color>";
-            else ProductSimpleTexts[3].text = "<color=orenge>전설</color>";
+            else ProductSimpleTexts[3].text = "<color=orange>전설</color>";
             ProductSimpleTexts[4].text = CurProductList[i].explain;
         }
         List<string> hAbilities = Hero.GetComponent<HeroScript>().abilities;
@@ -444,7 +464,8 @@ public class StageManager : MonoBehaviour
             Vector3 summonPositon = Hero.GetComponent<Collider2D>().bounds.center;
             for(int i=0; i<n; i++)
             {
-                Instantiate(minionToSummon, summonPositon, Quaternion.identity);
+                GameObject g = Instantiate(minionToSummon, summonPositon, Quaternion.identity);
+                if(_minionID == "0007") StartCoroutine(SummonTrap(g, "0001", 2));
             }
             yield return new WaitForSeconds(summonCoolTime);
         }
@@ -553,14 +574,20 @@ public class StageManager : MonoBehaviour
         }
     }
 
-    IEnumerator SummonTrap(string _trapID, float summonCoolTime)
+    IEnumerator SummonTrap(GameObject summoner, string _trapID, float summonCoolTime)
     {
         var trapToSummon = Resources.Load<GameObject>($"Traps/Trap{_trapID}");
         while(true)
         {
             if(StageTime.text == "0") break;
-            Vector3 summonPositon = Hero.GetComponent<Collider2D>().bounds.center;
-            Instantiate(trapToSummon, summonPositon, Quaternion.identity);
+            if(summoner != null)
+            {
+                Vector3 summonPositon;
+                if(summoner.tag == "Player") summonPositon = new Vector3(summoner.GetComponent<Collider2D>().bounds.center.x + Random.Range(-5f,5f), summoner.GetComponent<Collider2D>().bounds.center.y + Random.Range(-5f,5f), summoner.GetComponent<Collider2D>().bounds.center.z);
+                else summonPositon = new Vector3(summoner.GetComponent<Collider2D>().bounds.center.x, summoner.GetComponent<Collider2D>().bounds.center.y, summoner.GetComponent<Collider2D>().bounds.center.z);
+                Instantiate(trapToSummon, summonPositon, Quaternion.identity);
+            }
+            else break;
 
             yield return new WaitForSeconds(summonCoolTime);
         }

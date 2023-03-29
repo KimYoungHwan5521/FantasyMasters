@@ -8,6 +8,7 @@ TagManager:
   - Minion
   - Projectile
   - Trap
+  - Wall
   layers:
   - Default
   - TransparentFX

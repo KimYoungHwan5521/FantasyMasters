@@ -152,7 +152,7 @@ public class HeroSelectScript : MonoBehaviour
                     }
                     else if(CurHeroList[i].heroAttributes[j] == "대지")
                     {
-                        heroInfoSimple[1].text += "<olive=red>대지</color>";   
+                        heroInfoSimple[1].text += "<olive=olive>대지</color>";   
                     }
                     else if(CurHeroList[i].heroAttributes[j] == "금속")
                     {
@@ -212,7 +212,7 @@ public class HeroSelectScript : MonoBehaviour
             }
             else if(CurHeroList[_heroID].heroAttributes[j] == "대지")
             {
-                HeroDetailValues[1].text += "<olive=red>대지</color>";   
+                HeroDetailValues[1].text += "<olive=olive>대지</color>";   
             }
             else if(CurHeroList[_heroID].heroAttributes[j] == "금속")
             {

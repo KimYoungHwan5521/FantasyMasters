@@ -1,2 +1,3 @@
-TrapID	TrapNameKR	TrapDmg	TrapStatus
-0000	곰덫	100	0012
+TrapID	TrapNameKR	TrapDmg	TrapKnockback	TrapRange	TrapStatus
+0000	곰덫	100	0	0.4	0012
+0001	독버섯	20	0	2	0007

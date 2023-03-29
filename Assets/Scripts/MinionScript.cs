@@ -30,6 +30,7 @@ public class MinionScript : MonoBehaviour
     public float minionArmor;
     public float armorCV = 0;
     public float armorCVM = 1;
+    public int minionMoveType = 1;
     public float minionMoveSpeed;
     public float moveSpeedCVM = 1;
     public float sizeCVM = 1;
@@ -89,6 +90,7 @@ public class MinionScript : MonoBehaviour
         minionCriticalDmg = float.Parse(minionInfo.minionCriticalDmg);
         minionCriticalChance = float.Parse(minionInfo.minionCriticalChance);
         minionArmor = float.Parse(minionInfo.minionArmor);
+        minionMoveType = int.Parse(minionInfo.minionMoveType);
         minionMoveSpeed = float.Parse(minionInfo.minionMoveSpeed);
         minionAbilities = minionInfo.minionAbilities.ToList();
         MinionStatus = new List<StatusV>();
@@ -96,7 +98,7 @@ public class MinionScript : MonoBehaviour
 
         animator = GetComponent<Animator>();
         HPBar = Instantiate(Resources.Load<RectTransform>("UIs/HPBar"), new Vector3(0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
-        HPBar.localScale = new Vector2(GetComponent<BoxCollider2D>().size.x * 10, 1);
+        HPBar.localScale = new Vector2(GetComponent<BoxCollider2D>().size.x * 10 * transform.localScale.x, 1);
         StatusBar = Instantiate(Resources.Load<RectTransform>("UIs/StatusBar"), new Vector3(0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
 
         GameObject Hero = GameObject.FindWithTag("Player");
@@ -214,8 +216,8 @@ public class MinionScript : MonoBehaviour
                     if(movable)
                     {
                         animator.SetBool("isMoving", true);
-                        if(fear) moveDirection = GetComponent<Collider2D>().bounds.center - target.GetComponent<Collider2D>().bounds.center;
-                        else moveDirection = target.GetComponent<Collider2D>().bounds.center - GetComponent<Collider2D>().bounds.center;
+                        if(fear || minionMoveType == 2) moveDirection = GetComponent<Collider2D>().bounds.center - target.GetComponent<Collider2D>().bounds.center;
+                        else if(minionMoveType == 1) moveDirection = target.GetComponent<Collider2D>().bounds.center - GetComponent<Collider2D>().bounds.center;
                         if(target.GetComponent<Collider2D>().bounds.center.x < GetComponent<Collider2D>().bounds.center.x)
                         {
                             if(transform.localScale.x > 0)
@@ -230,7 +232,7 @@ public class MinionScript : MonoBehaviour
                                 transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
                             }
                         }
-                        if(fear) transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+                        if(fear || minionMoveType == 2) transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
                         moveDirection.Normalize();
                         transform.Translate(moveDirection * Time.deltaTime * minionMoveSpeed);
                     }
@@ -252,12 +254,13 @@ public class MinionScript : MonoBehaviour
         for(int i=0; i<tempCols.Length; i++)
         {
             if(tempCols[i].tag == "Enemy") cnt++;
+            if(minionMoveType == 2 && tempCols[i].tag == "Wall") cnt++;
         }
         Collider2D[] cols = new Collider2D[cnt];
         cnt = 0;
         for(int i=0; i<tempCols.Length; i++)
         {
-            if(tempCols[i].tag == "Enemy") 
+            if(tempCols[i].tag == "Enemy" || (minionMoveType == 2 && tempCols[i].tag == "Wall")) 
             {
                 cols[cnt] = tempCols[i];
                 cnt++;

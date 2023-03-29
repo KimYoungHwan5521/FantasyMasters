@@ -24,6 +24,7 @@ public class EnemyScript : MonoBehaviour
     public float atkRangeCV = 0;
     public float enemyArmor;
     public float armorCV = 0;
+    public int enemyMoveType = 1;
     public float enemyMoveSpeed;
     public float moveSpeedCVM = 1;
     public List<string> enemyAbilities;
@@ -83,6 +84,7 @@ public class EnemyScript : MonoBehaviour
         boxSize = new Vector2(enemyAtkRange, enemyAtkRange);
         TrackingBox = new Vector2(2, 2);
         enemyArmor = float.Parse(enemyInfo.enemyArmor);
+        enemyMoveType = int.Parse(enemyInfo.enemyMoveType);
         enemyMoveSpeed = float.Parse(enemyInfo.enemyMoveSpeed);
         enemyAbilities = enemyInfo.enemyAbilities.ToList();
         EnemyStatus = new List<StatusV>();
@@ -171,8 +173,8 @@ public class EnemyScript : MonoBehaviour
                     if(movable)
                     {
                         animator.SetBool("isMoving", true);
-                        if(fear) moveDirection = GetComponent<Collider2D>().bounds.center - target.GetComponent<Collider2D>().bounds.center;
-                        else moveDirection = target.GetComponent<Collider2D>().bounds.center - GetComponent<Collider2D>().bounds.center;
+                        if(fear || enemyMoveType == 2) moveDirection = GetComponent<Collider2D>().bounds.center - target.GetComponent<Collider2D>().bounds.center;
+                        else if(enemyMoveType == 1) moveDirection = target.GetComponent<Collider2D>().bounds.center - GetComponent<Collider2D>().bounds.center;
                         if(target.GetComponent<Collider2D>().bounds.center.x < GetComponent<Collider2D>().bounds.center.x)
                         {
                             if(transform.localScale.x > 0)

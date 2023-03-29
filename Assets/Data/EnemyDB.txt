@@ -1,12 +1,12 @@
-EnemyID	EnemyNameKR	EnemyHP	EnemyAtkType	EnemyCollisionDmg	EnemyAtkDmg	EnemyAtkSpeed	EnemyAtkRange	EnemyArmor	EnemyMoveSpeed	EnemyAbilityID
-0000	리틀 스켈레톤	50	0	10	0	0	0	0	2	
-0001	리틀 배트	50	0	20	0	0	0	1	5	
-0002	스켈레톤 소드맨	100	1	20	20	10	1	2	2	
-0003	스켈레톤 액스맨	160	1	20	55	5	1	5	1.5	
-0004	리틀 스파이더	50	2	10	10	5	3	0	2	0001
-0005	리틀 좀비	200	0	50	0	0	0	0	4	
-0006	고스트	250	0	50	0	0	0	0	3	0007
-0007	박쥐	200	0	60	0	0	0	1	5	
-0008	좀비	300	1	60	60	4	1	20	5	0011
-0009	뇌 두더지	300	1	0	100	4	0.5	30	3	0004,0007
-0010	파리	10	0	0	0	0	0	0	1	
+EnemyID	EnemyNameKR	EnemyHP	EnemyAtkType	EnemyCollisionDmg	EnemyAtkDmg	EnemyAtkSpeed	EnemyAtkRange	EnemyArmor	EnemyMoveType	EnemyMoveSpeed	EnemyAbilityID
+0000	리틀 스켈레톤	80	0	30	0	0	0	0	1	2	
+0001	리틀 배트	80	0	40	0	0	0	1	1	5	
+0002	스켈레톤 소드맨	200	1	40	40	10	1	10	1	2	
+0003	스켈레톤 액스맨	320	1	40	80	5	1	20	1	1.5	
+0004	리틀 스파이더	80	2	20	10	5	3	0	1	2	0001
+0005	리틀 좀비	200	0	70	0	0	0	0	1	4	
+0006	고스트	250	0	80	0	0	0	0	1	3	0007
+0007	박쥐	200	0	80	0	0	0	1	1	5	
+0008	좀비	400	1	60	60	4	1	20	1	5	0011
+0009	뇌 두더지	300	1	0	100	4	0.5	30	1	3	0004,0007
+0010	개구리	20	0	0	0	0	0	0	1	1	
