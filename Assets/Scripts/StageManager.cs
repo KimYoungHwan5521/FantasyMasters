@@ -178,6 +178,14 @@ public class StageManager : MonoBehaviour
         {
             StartCoroutine(SummonMinion("0004", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0029").abilityCoolTime)));
         }
+        if(hAbilities.Contains("0034"))
+        {
+            StartCoroutine(SummonMinion("0005", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0034").abilityCoolTime), 2));
+        }
+        if(hAbilities.Contains("0035"))
+        {
+            StartCoroutine(SummonMinion("0006", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0035").abilityCoolTime), 2));
+        }
         StartCoroutine(SpawnEnemy(stageInfo));
     }
     

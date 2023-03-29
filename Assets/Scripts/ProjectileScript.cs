@@ -199,11 +199,11 @@ public class ProjectileScript : MonoBehaviour
                 {
                     if(summoner.abilities.Contains("0004"))
                     {
-                        GetComponent<Collider>().GetComponent<EnemyScript>().BeAttacked(dmg + GetComponent<Collider>().GetComponent<EnemyScript>().enemyArmor, 0.1f + 0.2f * isCf, isCritical);
+                        collision.gameObject.GetComponent<EnemyScript>().BeAttacked(dmg + GetComponent<Collider>().GetComponent<EnemyScript>().enemyArmor, 0.1f + 0.2f * isCf, isCritical);
                     }
                     else
                     {
-                        GetComponent<Collider>().GetComponent<EnemyScript>().BeAttacked(dmg, 0.1f + 0.2f * isCf, isCritical);
+                        collision.gameObject.GetComponent<EnemyScript>().BeAttacked(dmg, 0.1f + 0.2f * isCf, isCritical);
                     }
                     
                     if(summoner.abilities.Contains("0005"))
