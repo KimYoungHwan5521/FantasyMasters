@@ -314,7 +314,7 @@ public class StageManager : MonoBehaviour
         }
         for(int i=0; i<CurProductList.Count; i++)
         {
-            Image ProductImage = ProductsSimple[i].GetComponentsInChildren<Image>()[1];
+            Image ProductImage = ProductsSimple[i].GetComponentsInChildren<Image>()[2];
             if(CurProductList[i].productType == "아이템") ProductImage.sprite = Resources.Load<Sprite>($"UIs/Icons/Products/Items/Item{CurProductList[i].inheritanceID}");
             else ProductImage.sprite = Resources.Load<Sprite>($"UIs/Icons/Products/Abilities/Ability{CurProductList[i].inheritanceID}");
             Text[] ProductSimpleTexts = ProductsSimple[i].GetComponentsInChildren<Text>();
@@ -329,21 +329,21 @@ public class StageManager : MonoBehaviour
             if(CurProductList[i].rareDegree == "0") ProductSimpleTexts[3].text = "일반";
             else if(CurProductList[i].rareDegree == "1") ProductSimpleTexts[3].text = "<color=blue>희귀</color>";
             else if(CurProductList[i].rareDegree == "2") ProductSimpleTexts[3].text = "<color=purple>신화</color>";
-            else ProductSimpleTexts[3].text = "<color=yellow>전설</color>";
+            else ProductSimpleTexts[3].text = "<color=orenge>전설</color>";
             ProductSimpleTexts[4].text = CurProductList[i].explain;
         }
         List<string> hAbilities = Hero.GetComponent<HeroScript>().abilities;
         for(int i=0; i<hAbilities.Count; i++)
         {
             HaveAbilities[i].SetActive(i < hAbilities.Count);
-            Image HaveAbilityImage = HaveAbilities[i].GetComponentInChildren<Image>();
+            Image HaveAbilityImage = HaveAbilities[i].GetComponentsInChildren<Image>()[1];
             HaveAbilityImage.sprite = Resources.Load<Sprite>($"UIs/Icons/Products/Abilities/Ability{hAbilities[i]}");
         }
         List<Item> hItems = Hero.GetComponent<HeroScript>().HeroItems;
         for(int i=0; i<hItems.Count; i++)
         {
             HaveItems[i].SetActive(i<hItems.Count);
-            Image HaveItemImage = HaveItems[i].GetComponentInChildren<Image>();
+            Image HaveItemImage = HaveItems[i].GetComponentsInChildren<Image>()[1];
             HaveItemImage.sprite = Resources.Load<Sprite>($"UIs/Icons/Products/Items/Item{hItems[i].itemID}");
         }
         Shop.SetActive(true);
