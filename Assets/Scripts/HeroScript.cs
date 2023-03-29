@@ -265,13 +265,13 @@ public class HeroScript : MonoBehaviour
         int cnt = 0;
         for(int i=0; i<tempCols.Length; i++)
         {
-            if(tempCols[i].tag == "Enemy") cnt++;
+            if(tempCols[i].tag == "Enemy" && tempCols[i].gameObject.GetComponent<EnemyScript>().enemyNowHP > 0) cnt++;
         }
         Collider2D[] cols = new Collider2D[cnt];
         cnt = 0;
         for(int i=0; i<tempCols.Length; i++)
         {
-            if(tempCols[i].tag == "Enemy") 
+            if(tempCols[i].tag == "Enemy" && tempCols[i].gameObject.GetComponent<EnemyScript>().enemyNowHP > 0) 
             {
                 cols[cnt] = tempCols[i];
                 cnt++;

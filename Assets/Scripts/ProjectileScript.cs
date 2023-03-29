@@ -98,14 +98,22 @@ public class ProjectileScript : MonoBehaviour
             {
                 if(target)
                 {
-                    float AngleRad = Mathf.Atan2(target.GetComponent<Transform>().position.y - transform.position.y, target.GetComponent<Transform>().position.x - transform.position.x);
-                    float AngleDeg = (180 / Mathf.PI) * AngleRad;
-                    transform.rotation = Quaternion.Euler(0, 0, AngleDeg);
+                    float thp = 0;
+                    if(target.tag == "Minion") thp = target.GetComponent<MinionScript>().minionNowHP;
+                    else if(target.tag == "Enemy") thp = target.GetComponent<EnemyScript>().enemyNowHP;
+                    else if(target.tag == "Player") thp = target.GetComponent<HeroScript>().nowHP;
+                    if(thp > 0)
+                    {
+                        float AngleRad = Mathf.Atan2(target.GetComponent<Transform>().position.y - transform.position.y, target.GetComponent<Transform>().position.x - transform.position.x);
+                        float AngleDeg = (180 / Mathf.PI) * AngleRad;
+                        transform.rotation = Quaternion.Euler(0, 0, AngleDeg);
 
-                    moveDirection = target.transform.position - transform.position;
-                    moveDirection.Normalize();
-                    transform.parent.transform.Translate(moveDirection * Time.deltaTime * projectileSpeed);
-                    transform.position = transform.parent.transform.position;
+                        moveDirection = target.transform.position - transform.position;
+                        moveDirection.Normalize();
+                        transform.parent.transform.Translate(moveDirection * Time.deltaTime * projectileSpeed);
+                        transform.position = transform.parent.transform.position;
+                    }
+                    else Destroy(transform.parent.gameObject);
                 }
                 else
                 {
@@ -178,8 +186,11 @@ public class ProjectileScript : MonoBehaviour
                     {
                         collision.gameObject.GetComponent<EnemyScript>().BeAttacked(abilityDmg, 0.1f, isCritical);
                     }
-                                        
-                    Destroy(transform.parent.gameObject);
+                    if(summoner.abilities.Contains("0031") && collision.gameObject.GetComponent<EnemyScript>().enemyNowHP <= 0 && Hero.GetComponent<HeroScript>().target != null)
+                    {
+                        SetProjectile(Hero, Hero.GetComponent<HeroScript>().target, isCritical, "Basic");
+                    }
+                    else Destroy(transform.parent.gameObject);
                 }
             }
             else if(summoner.tag == "Minion")
