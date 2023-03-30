@@ -354,11 +354,11 @@ public class HeroScript : MonoBehaviour
                     {
                         collider.gameObject.GetComponent<EnemyScript>().AddStatus("0003");
                     }
-                    if(abilities.Contains("0025") && !collider.gameObject.GetComponent<EnemyScript>().enemyAbilities.Contains("0027"))
+                    if(abilities.Contains("0025"))
                     {
                         collider.gameObject.GetComponent<EnemyScript>().AddStatus("0007");
                     }
-                    if(abilities.Contains("0026") && !collider.gameObject.GetComponent<EnemyScript>().enemyAbilities.Contains("0028"))
+                    if(abilities.Contains("0026"))
                     {
                         collider.gameObject.GetComponent<EnemyScript>().AddStatus("0008");
                     }
@@ -452,7 +452,7 @@ public class HeroScript : MonoBehaviour
         {
             HeroStatus[isAlreadyGotIt].buffTime = float.Parse(_status.buffTime);
         }
-        else if(!(_status.statusID == "0004" && abilities.Contains("0017")))
+        else if(!(_status.statusID == "0004" && abilities.Contains("0017")) || !(_status.statusID == "0007" && abilities.Contains("0027") || !(_status.statusID == "0008" && abilities.Contains("0028"))))
         {
             StatusV tempStatus = new StatusV(); 
             tempStatus.statusID = _status.statusID;

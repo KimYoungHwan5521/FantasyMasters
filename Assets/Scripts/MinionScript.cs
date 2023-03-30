@@ -320,11 +320,11 @@ public class MinionScript : MonoBehaviour
                 {
                     collider.gameObject.GetComponent<EnemyScript>().AddStatus("0003");
                 }
-                if(minionAbilities.Contains("0025") && !collider.gameObject.GetComponent<EnemyScript>().enemyAbilities.Contains("0027"))
+                if(minionAbilities.Contains("0025"))
                 {
                     collider.gameObject.GetComponent<EnemyScript>().AddStatus("0007");
                 }
-                if(minionAbilities.Contains("0026") && !collider.gameObject.GetComponent<EnemyScript>().enemyAbilities.Contains("0028"))
+                if(minionAbilities.Contains("0026"))
                 {
                     collider.gameObject.GetComponent<EnemyScript>().AddStatus("0008");
                 }
@@ -415,7 +415,7 @@ public class MinionScript : MonoBehaviour
         {
             MinionStatus[isAlreadyGotIt].buffTime = float.Parse(_status.buffTime);
         }
-        else if(!(_status.statusID == "0004" && minionAbilities.Contains("0017")))
+        else if(!(_status.statusID == "0004" && minionAbilities.Contains("0017")) || !(_status.statusID == "0007" && minionAbilities.Contains("0027") || !(_status.statusID == "0008" && minionAbilities.Contains("0028"))))
         {
             StatusV tempStatus = new StatusV(); 
             tempStatus.statusID = _status.statusID;
