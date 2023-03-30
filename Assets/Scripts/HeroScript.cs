@@ -18,6 +18,7 @@ public class HeroScript : MonoBehaviour
     public string[] attributes;
     public float maxHP;
     public float maxHPCV = 0;
+    public float tempMaxHPCV = 0;
     public float nowHP;
     public float HPRegeneration;
     public float HPRegenerationCV = 0;
@@ -127,6 +128,8 @@ public class HeroScript : MonoBehaviour
     public bool fired = false;
     void Update()
     {
+        if(float.Parse(DataManager.AllHeroList[_heroID].heroMaxHP) + maxHPCV + tempMaxHPCV > 1) maxHP = float.Parse(DataManager.AllHeroList[_heroID].heroMaxHP) + maxHPCV + tempMaxHPCV;
+        else maxHP = 1;
         TextMaxHP.text = Mathf.Ceil(maxHP).ToString();
         TextNowHP.text = Mathf.Ceil(nowHP).ToString();
         HPbar.fillAmount = nowHP / maxHP;
@@ -312,7 +315,8 @@ public class HeroScript : MonoBehaviour
                 if(collider.GetComponent<EnemyScript>().enemyNowHP <= collider.GetComponent<EnemyScript>().enemyMaxHP * 0.3 && predateCurTime <= 0)
                 {
                     Instantiate(Resources.Load<GameObject>("Effects/Predate"), collider.GetComponent<Collider2D>().bounds.center, Quaternion.identity);
-                    float rec = 50;
+                    float rec = collider.GetComponent<EnemyScript>().enemyMaxHP / 10;
+                    tempMaxHPCV += rec;
                     if(fired) rec /= 2;
                     nowHP += rec;
                     RectTransform text = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);
@@ -633,8 +637,6 @@ public class HeroScript : MonoBehaviour
             else if(_item.itemBuffStat[i] == "maxHPCV")
             {
                 maxHPCV += float.Parse(_item.itemBuffValue[i]);
-                maxHP = float.Parse(DataManager.AllHeroList[_heroID].heroMaxHP) + maxHPCV;
-                if(maxHP < 1) maxHP = 1;
             }
             else if(_item.itemBuffStat[i] == "HPRegenerationCV")
             {

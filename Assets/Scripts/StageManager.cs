@@ -124,6 +124,7 @@ public class StageManager : MonoBehaviour
     IEnumerator StageStart()
     {
         stageInfo = CurStageList.Find(x => x.stageNumber == stageNumber.ToString()).stageInfo;
+        Hero.GetComponent<HeroScript>().tempMaxHPCV = 0;
         Hero.GetComponent<HeroScript>().nowHP = Hero.GetComponent<HeroScript>().maxHP;
         Hero.transform.position = new Vector2(0, 0);
         for(int i=3; i>-1; i--)
