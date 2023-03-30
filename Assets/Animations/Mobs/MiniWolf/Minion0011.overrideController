@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Minion0011
+  m_Controller: {fileID: 9100000, guid: c9e0e2d7b4eb5034a8d6c887e3e812a4, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 1edb9ce374841e04e8391178986856ed, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: a3773c8e4fd8fd64284e4ecd5f41274c, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: bc0b6aa5fec1778479d0e0d3fd390dce, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: a3773c8e4fd8fd64284e4ecd5f41274c, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 82c1edc04c42843488fc7a8ea9f7c859, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: bc1263fe501895d4bbf0d487e464f4a4, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 9112c3c29a6fa2d4ca721f786f554207, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 14a13a826292e5d48ab3bc321835a2ff, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: cfb42de58cfbb774180e8c559f6a70fb, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: ff5645f2d50c7594fb11f3e7e1b34f69, type: 2}
