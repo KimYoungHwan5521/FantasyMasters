@@ -637,6 +637,9 @@ public class HeroScript : MonoBehaviour
             else if(_item.itemBuffStat[i] == "maxHPCV")
             {
                 maxHPCV += float.Parse(_item.itemBuffValue[i]);
+                if(float.Parse(DataManager.AllHeroList[_heroID].heroMaxHP) + maxHPCV + tempMaxHPCV > 1) maxHP = float.Parse(DataManager.AllHeroList[_heroID].heroMaxHP) + maxHPCV + tempMaxHPCV;
+                else maxHP = 1;
+                nowHP = maxHP;
             }
             else if(_item.itemBuffStat[i] == "HPRegenerationCV")
             {
@@ -659,9 +662,12 @@ public class HeroScript : MonoBehaviour
                 print($"wrong itemBuffStat name : '{_item.itemBuffStat[i]}'");
             }
         }
-        for(int i=0; i<_item.itemAbilities.Count; i++)
+        if(_item.itemAbilities[0] != "")
         {
-            abilities.Add(_item.itemAbilities[i]);
+            for(int i=0; i<_item.itemAbilities.Count; i++)
+            {
+                abilities.Add(_item.itemAbilities[i]);
+            }
         }
         HeroItems.Add(_item);
     }

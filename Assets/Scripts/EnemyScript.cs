@@ -91,7 +91,7 @@ public class EnemyScript : MonoBehaviour
 
         animator = GetComponent<Animator>();
         HPBar = Instantiate(Resources.Load<RectTransform>("UIs/HPBar"), new Vector3(0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
-        HPBar.localScale = new Vector2(GetComponent<BoxCollider2D>().size.x * 10, 1);
+        HPBar.localScale = new Vector2(GetComponent<BoxCollider2D>().size.x * 5 * transform.localScale.x, 1);
         StatusBar = Instantiate(Resources.Load<RectTransform>("UIs/StatusBar"), new Vector3(0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
 
         // 타겟 추적

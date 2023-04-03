@@ -272,6 +272,12 @@ public class StageManager : MonoBehaviour
             exception++;
             if(exception > 100) break;
         }
+        for(int i=0; i<Hero.GetComponent<HeroScript>().HeroStatus.Count; i++)
+        {
+            Hero.GetComponent<HeroScript>().RemoveStatus(Hero.GetComponent<HeroScript>().HeroStatus[i].statusID);
+            Hero.GetComponent<HeroScript>().HeroStatus.RemoveAt(i);
+            Destroy(Hero.GetComponent<HeroScript>().StatusSprites.transform.GetChild(i).gameObject);
+        }
         stageNumber++;
         if(CurStageList.Find(x => x.stageNumber == stageNumber.ToString()) != null) yield return StartCoroutine(ReadyToNextStage());
         else yield return StartCoroutine(ClearMap());
@@ -397,7 +403,7 @@ public class StageManager : MonoBehaviour
         ExplainText.text = "";
         ExplainText.text += $"<b>{DataManager.AllAbilityList.Find(x => x.abilityID == Hero.GetComponent<HeroScript>().abilities[ID]).abilityNameKR}</b>\n";
         ExplainText.text += DataManager.AllAbilityList.Find(x => x.abilityID == Hero.GetComponent<HeroScript>().abilities[ID]).abilityExplainKR;
-        Explain.GetComponent<RectTransform>().anchoredPosition = new Vector2(HaveAbilities[ID].GetComponent<RectTransform>().anchoredPosition.x + HaveAbilities[ID].GetComponent<RectTransform>().rect.width, HaveAbilities[ID].GetComponent<RectTransform>().anchoredPosition.y - Explain.GetComponent<RectTransform>().rect.height);
+        Explain.GetComponent<RectTransform>().anchoredPosition = new Vector2(HaveAbilities[ID].GetComponent<RectTransform>().anchoredPosition.x + HaveAbilities[ID].GetComponent<RectTransform>().rect.width, HaveAbilities[ID].GetComponent<RectTransform>().transform.position.y + Explain.GetComponent<RectTransform>().rect.height);
         Explain.SetActive(true);
     }
 
@@ -406,8 +412,8 @@ public class StageManager : MonoBehaviour
         Text ExplainText = Explain.GetComponentInChildren<Text>();
         ExplainText.text = "";
         ExplainText.text += $"<b>{DataManager.AllItemList.Find(x => x.itemID == Hero.GetComponent<HeroScript>().HeroItems[ID].itemID).itemNameKR}</b>\n";
-        ExplainText.text = DataManager.AllItemList.Find(x => x.itemID == Hero.GetComponent<HeroScript>().HeroItems[ID].itemID).itemExplainKR;
-        Explain.GetComponent<RectTransform>().anchoredPosition = new Vector2(HaveItems[ID].GetComponent<RectTransform>().anchoredPosition.x + HaveItems[ID].GetComponent<RectTransform>().rect.width, HaveItems[ID].GetComponent<RectTransform>().anchoredPosition.y - Explain.GetComponent<RectTransform>().rect.height);
+        ExplainText.text += DataManager.AllItemList.Find(x => x.itemID == Hero.GetComponent<HeroScript>().HeroItems[ID].itemID).itemExplainKR;
+        Explain.GetComponent<RectTransform>().anchoredPosition = new Vector2(HaveItems[ID].GetComponent<RectTransform>().anchoredPosition.x + HaveItems[ID].GetComponent<RectTransform>().rect.width, HaveItems[ID].GetComponent<RectTransform>().transform.position.y + Explain.GetComponent<RectTransform>().rect.height);
         Explain.SetActive(true);
     }
 
