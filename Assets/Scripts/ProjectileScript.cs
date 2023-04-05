@@ -15,6 +15,7 @@ public class ProjectileScript : MonoBehaviour
     public bool launchReady = false;
     public float range;
     public float abilityDmg;
+    public bool ignoreArmor;
     GameObject Hero;
 
     void Start()
@@ -31,7 +32,7 @@ public class ProjectileScript : MonoBehaviour
         public List<string> abilities;
     }
 
-    public void SetProjectile(GameObject _summoner, GameObject _target, bool _isCritical = false, string _note = "Basic", float _abilityDmg = -1)
+    public void SetProjectile(GameObject _summoner, GameObject _target, bool _isCritical = false, string _note = "Basic", float _abilityDmg = -1, bool _ignoreArmor = false)
     {
         summoner = new SummonerInfo();
         summoner.tag = _summoner.tag;
@@ -66,6 +67,7 @@ public class ProjectileScript : MonoBehaviour
         else if(note == "LifeDrain") range = 100;
         else print("wrong projectile note");
         abilityDmg = _abilityDmg;
+        ignoreArmor = _ignoreArmor;
         StartCoroutine(Launch());
     }
 
@@ -184,9 +186,10 @@ public class ProjectileScript : MonoBehaviour
                     }
                     else
                     {
-                        collision.gameObject.GetComponent<EnemyScript>().BeAttacked(abilityDmg, 0.1f, isCritical);
+                        if(ignoreArmor) collision.gameObject.GetComponent<EnemyScript>().BeAttacked(abilityDmg + collision.gameObject.GetComponent<EnemyScript>().enemyArmor, 0.1f, isCritical);
+                        else collision.gameObject.GetComponent<EnemyScript>().BeAttacked(abilityDmg, 0.1f, isCritical);
                     }
-                    if(summoner.abilities.Contains("0031") && collision.gameObject.GetComponent<EnemyScript>().enemyNowHP <= 0 && Hero.GetComponent<HeroScript>().target != null)
+                    if(summoner.abilities.Contains("0031") && collision.gameObject.GetComponent<EnemyScript>().enemyNowHP <= 0 && Hero.GetComponent<HeroScript>().target != null && note == "Basic")
                     {
                         SetProjectile(Hero, Hero.GetComponent<HeroScript>().target, isCritical, "Basic");
                     }

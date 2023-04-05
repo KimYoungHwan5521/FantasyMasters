@@ -33,6 +33,8 @@ public class StageManager : MonoBehaviour
         _notice = FindObjectOfType<NoticeUI>();
     }
 
+    public static int stageMinionKillEnemies = 0;
+
     void Start()
     {
         _heroID = DataManager.selectedHeroID;
@@ -205,6 +207,10 @@ public class StageManager : MonoBehaviour
             StartCoroutine(SummonMinion("0009", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0039").abilityCoolTime)));
             StartCoroutine(SummonMinion("0010", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0039").abilityCoolTime)));
             StartCoroutine(SummonMinion("0011", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0039").abilityCoolTime)));
+        }
+        if(hAbilities.Contains("0043"))
+        {
+            StartCoroutine(SummonProjectile("LeafBlade",float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0043").abilityCoolTime), 20, true));
         }
         StartCoroutine(SpawnEnemy(stageInfo));
     }
@@ -544,7 +550,7 @@ public class StageManager : MonoBehaviour
         }
     }
 
-    IEnumerator SummonProjectile(string _projectileName, float summonCoolTime, float _projectileDmg)
+    IEnumerator SummonProjectile(string _projectileName, float summonCoolTime, float _projectileDmg, bool _ignoreArmor = false)
     {
         var projectileSummon = Resources.Load<GameObject>($"Projectiles/Projectile{_projectileName}");
         while(true)
@@ -553,12 +559,12 @@ public class StageManager : MonoBehaviour
             GameObject tg = Hero.GetComponent<HeroScript>().target;
             Vector3 summonPositon = Hero.GetComponent<Collider2D>().bounds.center;
             GameObject pjt = Instantiate(projectileSummon, summonPositon, Quaternion.identity);
-            pjt.GetComponentInChildren<ProjectileScript>().SetProjectile(Hero, tg, false, "Straight", _projectileDmg);
+            pjt.GetComponentInChildren<ProjectileScript>().SetProjectile(Hero, tg, false, "Straight", _projectileDmg, _ignoreArmor);
             if(Hero.GetComponent<HeroScript>().abilities.Contains("0024"))
             {
                 GameObject tg2 = Hero.GetComponent<HeroScript>().target2;
                 GameObject pjt2 = Instantiate(projectileSummon, summonPositon, Quaternion.identity);
-                pjt2.GetComponentInChildren<ProjectileScript>().SetProjectile(Hero, tg2, false, "Straight", _projectileDmg);
+                pjt2.GetComponentInChildren<ProjectileScript>().SetProjectile(Hero, tg2, false, "Straight", _projectileDmg, _ignoreArmor);
             }
             yield return new WaitForSeconds(summonCoolTime);
         }

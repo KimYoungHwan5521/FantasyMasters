@@ -13,6 +13,7 @@ public class MinionScript : MonoBehaviour
     public string minionNameKR;
     public string[] minionAttributes;
     public float minionMaxHP;
+    public float maxHPCV = 0;
     public float maxHPCVM = 1;
     public float minionNowHP;
     public int minionAtkType;
@@ -115,6 +116,16 @@ public class MinionScript : MonoBehaviour
         {
             AddStatus("0011");
             floakDefense = true;
+        }
+        if(hAbilities.Contains("0040"))
+        {
+            for(int i=0; i<StageManager.stageMinionKillEnemies; i++)
+            {
+                int r = UnityEngine.Random.Range(0, 3);
+                if(r == 0) atkDmgCV++;
+                else if(r == 1) armorCV++;
+                else maxHPCV += 10;
+            }
         }
 
         target = null;
@@ -311,6 +322,7 @@ public class MinionScript : MonoBehaviour
                         collider.gameObject.GetComponent<EnemyScript>().BeAttacked(minionAtkDmg, 0.3f, isCritical);
                     }
                 }
+                if(collider.gameObject.GetComponent<EnemyScript>().enemyNowHP <= 0) StageManager.stageMinionKillEnemies++;
                 
                 if(minionAbilities.Contains("0005"))
                 {
