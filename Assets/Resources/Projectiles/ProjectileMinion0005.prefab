@@ -135,6 +135,7 @@ MonoBehaviour:
   launchReady: 0
   range: 0
   abilityDmg: 0
+  ignoreArmor: 0
 --- !u!50 &2664195482457452888
 Rigidbody2D:
   serializedVersion: 4
@@ -154,7 +155,7 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!61 &6869340063576126926
 BoxCollider2D:

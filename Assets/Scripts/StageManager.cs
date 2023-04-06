@@ -208,6 +208,10 @@ public class StageManager : MonoBehaviour
             StartCoroutine(SummonMinion("0010", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0039").abilityCoolTime)));
             StartCoroutine(SummonMinion("0011", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0039").abilityCoolTime)));
         }
+        if(hAbilities.Contains("0041"))
+        {
+            StartCoroutine(SummonOrbiting("LeafIncantation", 5, 2, 20, true));
+        }
         if(hAbilities.Contains("0043"))
         {
             StartCoroutine(SummonProjectile("LeafBlade",float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0043").abilityCoolTime), 20, true));
@@ -274,6 +278,11 @@ public class StageManager : MonoBehaviour
             foreach(GameObject t in T)
             {
                 t.GetComponent<Animator>().SetBool("Activate", true);
+            }
+            GameObject[] O = GameObject.FindGameObjectsWithTag("Orbiting");
+            foreach(GameObject o in O)
+            {
+                Destroy(o.transform.parent.gameObject);
             }
             exception++;
             if(exception > 100) break;
@@ -611,5 +620,18 @@ public class StageManager : MonoBehaviour
 
             yield return new WaitForSeconds(summonCoolTime);
         }
+    }
+
+    IEnumerator SummonOrbiting(string _orbitingName, int _orbitingNumber, float _orbitalDistance, float _orbitingDmg, bool _ignoreArmor = false)
+    {
+        var orbitalSummon = Resources.Load<GameObject>($"Orbitings/Orbiting{_orbitingName}");
+        for(int i=0; i<_orbitingNumber; i++)
+        {
+            Vector3 summonPositon = Hero.GetComponent<Collider2D>().bounds.center + new Vector3(_orbitalDistance * Mathf.Sin(Mathf.Deg2Rad * (i * (360 / _orbitingNumber))), _orbitalDistance * Mathf.Cos(Mathf.Deg2Rad * (i * (360 / _orbitingNumber))), 0);
+            GameObject o = Instantiate(orbitalSummon, summonPositon, Quaternion.identity);
+            o.GetComponentInChildren<OrbitingScript>().SetOrbiting(Hero, _orbitalDistance, i * (360 / _orbitingNumber), _orbitingDmg, _ignoreArmor);
+        }
+        yield return null;
+
     }
 }

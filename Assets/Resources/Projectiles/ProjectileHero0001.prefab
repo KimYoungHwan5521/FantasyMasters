@@ -132,6 +132,9 @@ MonoBehaviour:
   note: Basic
   projectileSpeed: 10
   launchReady: 0
+  range: 0
+  abilityDmg: 0
+  ignoreArmor: 0
 --- !u!50 &9089987463747297298
 Rigidbody2D:
   serializedVersion: 4
@@ -151,7 +154,7 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!61 &399638007565165700
 BoxCollider2D:

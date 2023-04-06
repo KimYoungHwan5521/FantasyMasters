@@ -60,6 +60,7 @@ public class ProjectileScript : MonoBehaviour
         else print("Unknown projectile sumonner");
         spawnPoint = _summoner.transform.position;
         target = _target;
+        if(target) targetInitialPosition = _target.GetComponent<Collider2D>().bounds.center;
         isCritical = _isCritical;
         note = _note;
         if(note == "Basic") range = summoner.atkRange;
@@ -110,7 +111,7 @@ public class ProjectileScript : MonoBehaviour
                         float AngleDeg = (180 / Mathf.PI) * AngleRad;
                         transform.rotation = Quaternion.Euler(0, 0, AngleDeg);
 
-                        moveDirection = target.transform.position - transform.position;
+                        moveDirection = target.GetComponent<Collider2D>().bounds.center - transform.GetComponentInChildren<Collider2D>().bounds.center;
                         moveDirection.Normalize();
                         transform.parent.transform.Translate(moveDirection * Time.deltaTime * projectileSpeed);
                         transform.position = transform.parent.transform.position;
