@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 3504555143189900034}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -10.396759, y: -3.3678765, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -184,6 +184,7 @@ MonoBehaviour:
   minionNameKR: 
   minionAttributes: []
   minionMaxHP: 0
+  maxHPCV: 0
   maxHPCVM: 1
   minionNowHP: 0
   minionAtkType: 0

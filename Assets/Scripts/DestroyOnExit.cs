@@ -18,13 +18,22 @@ public class DestroyOnExit : StateMachineBehaviour
                 {
                     Instantiate(Resources.Load<GameObject>($"Effects/Explosion00"), animator.GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
                     Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(animator.GetComponent<Collider2D>().bounds.center, new Vector2(2, 2), 0);
+                    bool attacked = false;
                     foreach(Collider2D collider in collider2Ds)
                     {
-                        if(collider.tag == "Enemy")
+                        if(collider.tag == "Enemy" && !attacked)
                         {
                             collider.gameObject.GetComponent<EnemyScript>().BeAttacked(animator.GetComponent<MinionScript>().minionMaxHP * 0.3f, 0.3f, false);
                         }
                     }
+                    attacked = true;
+                    
+                }
+                if(GameObject.FindWithTag("Player").GetComponent<HeroScript>().abilities.Contains("0042") && animator.GetComponent<MinionScript>()._minionID != 12)
+                {
+                    Instantiate(Resources.Load<GameObject>($"Minions/Minion0012"), animator.GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
+                    Instantiate(Resources.Load<GameObject>($"Minions/Minion0012"), animator.GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
+                    Instantiate(Resources.Load<GameObject>($"Minions/Minion0012"), animator.GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
                 }
                 if(animator.GetComponent<MinionScript>().attackedByZombie)
                 {
