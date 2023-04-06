@@ -295,6 +295,7 @@ public class MinionScript : MonoBehaviour
 
     private void MeleeAttack()
     {
+        if(minionAbilities.Contains("0044")) BeHealed(20);
         Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(transform.GetComponent<Collider2D>().bounds.center, boxSize, 0);
         foreach(Collider2D collider in collider2Ds)
         {
@@ -355,6 +356,7 @@ public class MinionScript : MonoBehaviour
         {
             GameObject p = Instantiate(Resources.Load<GameObject>($"Projectiles/ProjectileMinion{stringID}"), GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
             p.GetComponentInChildren<ProjectileScript>().SetProjectile(gameObject, target, isCritical);
+            if(minionAbilities.Contains("0044")) BeHealed(20);
             projectileCount--;
         }
     }
@@ -417,6 +419,19 @@ public class MinionScript : MonoBehaviour
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         gameObject.layer = 9;
         spriteRenderer.color = new Color(1, 1, 1, 1);
+    }
+
+    public void BeHealed(float value)
+    {
+        if(fired) value /= 2;
+        if(value > 0 && minionNowHP < minionMaxHP) 
+        {
+            minionNowHP += value;
+            if(minionNowHP > minionMaxHP) minionNowHP = minionMaxHP;
+            RectTransform text = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);
+            text.GetComponent<FloatingText>().SetText($"+{Mathf.Round(value)}", "#00FF00");
+            text.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y, 0));
+        }
     }
     
     public void AddStatus(string _statusID)
@@ -594,7 +609,7 @@ public class MinionScript : MonoBehaviour
         int t = (int)time;
         for(int i=0; i<t; i++)
         {
-            minionNowHP -= dmg;
+            minionNowHP += dmg;
             RectTransform DmgText = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);
             DmgText.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y, 0));
             DmgText.gameObject.GetComponent<FloatingText>().SetText($"{dmg}", "#FF0000");

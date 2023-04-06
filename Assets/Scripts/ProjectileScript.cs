@@ -157,14 +157,7 @@ public class ProjectileScript : MonoBehaviour
 
                         if(summoner.abilities.Contains("0016")) 
                         {
-                            Hero.GetComponent<HeroScript>().nowHP += (dmg - collision.gameObject.GetComponent<EnemyScript>().enemyArmor) / 10;
-                            if((dmg - collision.gameObject.GetComponent<EnemyScript>().enemyArmor) / 10 >= 1)
-                            {
-                                RectTransform text = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), Hero.GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);
-                                text.GetComponent<FloatingText>().SetText($"+{Mathf.Round((dmg - collision.gameObject.GetComponent<EnemyScript>().enemyArmor) / 10)}", "#00FF00");
-                                text.position = Camera.main.WorldToScreenPoint(new Vector3(Hero.GetComponent<Collider2D>().bounds.center.x, Hero.GetComponent<Collider2D>().bounds.center.y, 0));
-                            }
-
+                            Hero.GetComponent<HeroScript>().BeHealed((dmg - collision.gameObject.GetComponent<EnemyScript>().enemyArmor) / 10);
                         }
                         if(summoner.abilities.Contains("0005"))
                         {
@@ -240,10 +233,7 @@ public class ProjectileScript : MonoBehaviour
                 {
                     if(note == "LifeDrain")
                     {
-                        collision.gameObject.GetComponent<HeroScript>().nowHP += 30;
-                        RectTransform LDtext = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);
-                        LDtext.GetComponent<FloatingText>().SetText("+30", "#00FF00");
-                        LDtext.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y, 0));
+                        collision.gameObject.GetComponent<HeroScript>().BeHealed(30);
                     }
                     else
                     {

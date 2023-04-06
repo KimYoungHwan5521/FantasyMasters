@@ -240,6 +240,7 @@ public class EnemyScript : MonoBehaviour
 
     private void MeleeAttack()
     {
+        if(enemyAbilities.Contains("0044")) BeHealed(20);
         Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(transform.GetComponent<Collider2D>().bounds.center, boxSize, 0);
         foreach(Collider2D collider in collider2Ds)
         {
@@ -313,6 +314,7 @@ public class EnemyScript : MonoBehaviour
         {
             GameObject p = Instantiate(Resources.Load<GameObject>($"Projectiles/ProjectileEnemy{stringID}"), GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
             p.GetComponentInChildren<ProjectileScript>().SetProjectile(gameObject, target);
+            if(enemyAbilities.Contains("0044")) BeHealed(20);
             projectileCount--;
         }
     }
@@ -342,6 +344,19 @@ public class EnemyScript : MonoBehaviour
     {
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.color = new Color(1, 1, 1, 1);
+    }
+
+    public void BeHealed(float value)
+    {
+        if(fired) value /= 2;
+        if(value > 0 && enemyNowHP < enemyMaxHP) 
+        {
+            enemyNowHP += value;
+            if(enemyNowHP > enemyMaxHP) enemyNowHP = enemyMaxHP;
+            RectTransform text = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);
+            text.GetComponent<FloatingText>().SetText($"+{Mathf.Round(value)}", "#00FF00");
+            text.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y, 0));
+        }
     }
 
     Vector2 center;

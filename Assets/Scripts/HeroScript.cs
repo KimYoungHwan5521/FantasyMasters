@@ -300,13 +300,12 @@ public class HeroScript : MonoBehaviour
     private void HPRegenerationMethod()
     {
         float totalre = HPRegeneration + HPRegenerationCV;
-        if(fired) totalre /= 2;
-        if(totalre > 0) nowHP += totalre;
-        if(nowHP > maxHP) nowHP = maxHP;
+        BeHealed(totalre);
     }
 
     private void MeleeAttack()
     {
+        if(abilities.Contains("0044")) BeHealed(20);
         Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(GetComponent<Collider2D>().bounds.center, boxSize, 0);
         foreach(Collider2D collider in collider2Ds)
         {
@@ -317,11 +316,7 @@ public class HeroScript : MonoBehaviour
                     Instantiate(Resources.Load<GameObject>("Effects/Predate"), collider.GetComponent<Collider2D>().bounds.center, Quaternion.identity);
                     float rec = collider.GetComponent<EnemyScript>().enemyMaxHP / 10;
                     tempMaxHPCV += rec;
-                    if(fired) rec /= 2;
-                    nowHP += rec;
-                    RectTransform text = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);
-                    text.GetComponent<FloatingText>().SetText($"+{rec}", "#00FF00");
-                    text.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y, 0));
+                    BeHealed(rec);
                     collider.GetComponent<EnemyScript>().enemyNowHP = 0;
                     predateCurTime = predateCoolTime;
                 }
@@ -340,15 +335,7 @@ public class HeroScript : MonoBehaviour
                     if(abilities.Contains("0016")) 
                     {
                         float rec = (dmg - eA) / 10;
-                        if(fired) rec /= 2;
-                        nowHP += rec;
-                        if(rec >= 1)
-                        {
-                            RectTransform text = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);
-                            text.GetComponent<FloatingText>().SetText($"+{Mathf.Round(rec)}", "#00FF00");
-                            text.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y, 0));
-                        }
-
+                        BeHealed(rec);
                     }
                     if(abilities.Contains("0005"))
                     {
@@ -389,6 +376,7 @@ public class HeroScript : MonoBehaviour
                 GameObject p2 = Instantiate(Resources.Load<GameObject>($"Projectiles/ProjectileHero{stringID}"), GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
                 p2.GetComponentInChildren<ProjectileScript>().SetProjectile(gameObject, target2, isCritical);
             }
+            if(abilities.Contains("0044")) BeHealed(20);
             projectileCount--;
         }
     }
@@ -446,6 +434,19 @@ public class HeroScript : MonoBehaviour
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         gameObject.layer = 11;
         spriteRenderer.color = new Color(1, 1, 1, 1);
+    }
+
+    public void BeHealed(float value)
+    {
+        if(fired) value /= 2;
+        if(value > 0 && nowHP < maxHP) 
+        {
+            nowHP += value;
+            if(nowHP > maxHP) nowHP = maxHP;
+            RectTransform text = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);
+            text.GetComponent<FloatingText>().SetText($"+{Mathf.Round(value)}", "#00FF00");
+            text.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y, 0));
+        }
     }
 
     public void AddStatus(string _statusID)
@@ -600,7 +601,7 @@ public class HeroScript : MonoBehaviour
         int t = (int)time;
         for(int i=0; i<t; i++)
         {
-            nowHP -= dmg;
+            nowHP += dmg;
             RectTransform DmgText = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);
             DmgText.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y, 0));
             DmgText.gameObject.GetComponent<FloatingText>().SetText($"{dmg}", "#FF0000");
