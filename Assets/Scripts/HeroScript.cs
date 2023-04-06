@@ -36,6 +36,7 @@ public class HeroScript : MonoBehaviour
     public float criticalChanceCV = 0;
     public float armor;
     public float armorCV = 0;
+    public float armor0046 = 0;
     public float moveSpeed;
     public float moveSpeedCVM = 1;
     public List<string> abilities;
@@ -141,7 +142,7 @@ public class HeroScript : MonoBehaviour
         moveSpeed = float.Parse(DataManager.AllHeroList[_heroID].heroMoveSpeed) * moveSpeedCVM;
         animator.SetFloat("MoveSpeed", moveSpeedCVM);
         atkDmg = (float.Parse(DataManager.AllHeroList[_heroID].heroAtkDmg.Split('x')[0]) + atkDmgCV) * atkDmgCVM;
-        armor = float.Parse(DataManager.AllHeroList[_heroID].heroArmor) + armorCV;
+        armor = float.Parse(DataManager.AllHeroList[_heroID].heroArmor) + armorCV + armor0046;
         atkRange = float.Parse(DataManager.AllHeroList[_heroID].heroAtkRange) + atkRangeCV;
         boxSize = new Vector2(atkRange, atkRange);
         criticalDmg = float.Parse(DataManager.AllHeroList[_heroID].heroCriticalDmg) + criticalDmgCV;
@@ -232,6 +233,8 @@ public class HeroScript : MonoBehaviour
             transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
         }
         animator.SetBool("isMoving", moveDirection.magnitude > 0);
+        if(abilities.Contains("0046") && moveDirection.magnitude == 0) armor0046 = 30;
+        else armor0046 = 0;
         
         // 공격
         if(curTime <= 0 && attackable)

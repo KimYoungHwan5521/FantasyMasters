@@ -216,6 +216,10 @@ public class StageManager : MonoBehaviour
         {
             StartCoroutine(SummonProjectile("LeafBlade",float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0043").abilityCoolTime), 20, true));
         }
+        if(hAbilities.Contains("0045"))
+        {
+            StartCoroutine(Heal(float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0045").abilityCoolTime)));
+        }
         StartCoroutine(SpawnEnemy(stageInfo));
     }
     
@@ -632,6 +636,16 @@ public class StageManager : MonoBehaviour
             o.GetComponentInChildren<OrbitingScript>().SetOrbiting(Hero, _orbitalDistance, i * (360 / _orbitingNumber), _orbitingDmg, _ignoreArmor);
         }
         yield return null;
+    }
 
+    IEnumerator Heal(float _coolTime)
+    {
+        while(true)
+        {
+            if(StageTime.text == "0") break;
+            Hero.GetComponent<HeroScript>().BeHealed(Hero.GetComponent<HeroScript>().armor * 2);
+            print(Hero.GetComponent<HeroScript>().armor * 2);
+            yield return new WaitForSeconds(_coolTime);
+        }
     }
 }
