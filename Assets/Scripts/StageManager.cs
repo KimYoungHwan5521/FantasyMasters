@@ -163,7 +163,7 @@ public class StageManager : MonoBehaviour
         }
         if(hAbilities.Contains("0018"))
         {
-            StartCoroutine(SummonProjectile("SkullThrowing",float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0018").abilityCoolTime), 100));
+            StartCoroutine(SummonProjectile("SkullThrowing",float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0018").abilityCoolTime), 500));
         }
         if(hAbilities.Contains("0021"))
         {
@@ -219,6 +219,10 @@ public class StageManager : MonoBehaviour
         if(hAbilities.Contains("0045"))
         {
             StartCoroutine(Heal(float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0045").abilityCoolTime)));
+        }
+        if(hAbilities.Contains("0047"))
+        {
+            StartCoroutine(SummonMinion("0013", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0047").abilityCoolTime), 3));
         }
         StartCoroutine(SpawnEnemy(stageInfo));
     }
@@ -644,7 +648,6 @@ public class StageManager : MonoBehaviour
         {
             if(StageTime.text == "0") break;
             Hero.GetComponent<HeroScript>().BeHealed(Hero.GetComponent<HeroScript>().armor * 2);
-            print(Hero.GetComponent<HeroScript>().armor * 2);
             yield return new WaitForSeconds(_coolTime);
         }
     }

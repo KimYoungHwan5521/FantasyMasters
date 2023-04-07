@@ -56,6 +56,7 @@ public class MinionScript : MonoBehaviour
         public float buffTime;
     }
 
+    public GameObject Hero;
     void Start()
     {
         int cntDgit = 0;
@@ -102,7 +103,7 @@ public class MinionScript : MonoBehaviour
         HPBar.localScale = new Vector2(GetComponent<BoxCollider2D>().size.x * 5 * transform.localScale.x, 1);
         StatusBar = Instantiate(Resources.Load<RectTransform>("UIs/StatusBar"), new Vector3(0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
 
-        GameObject Hero = GameObject.FindWithTag("Player");
+        Hero = GameObject.FindWithTag("Player");
         List<string> hAbilities = Hero.GetComponent<HeroScript>().abilities;
         if(hAbilities.Contains("0019")) AddStatus("0005");
         if(hAbilities.Contains("0020")) AddStatus("0006");
@@ -129,12 +130,17 @@ public class MinionScript : MonoBehaviour
         }
 
         target = null;
+        if(minionMoveType == 4) InvokeRepeating("UpdateTargetAlli", 0, 0.25f);
         InvokeRepeating("UpdateTarget", 0, 0.25f);
-
+        if(minionAbilities.Contains("0051"))
+        {
+            StartCoroutine(Heal());
+        }
     }
 
     Vector2 moveDirection;
     GameObject target;
+    GameObject targetAlli;
     bool isCritical = false;
     public bool attackedByZombie = false;
     public bool movable = true;
@@ -205,7 +211,7 @@ public class MinionScript : MonoBehaviour
             {
                 if(Vector2.Distance(transform.GetComponent<Collider2D>().bounds.center, target.GetComponent<Collider2D>().bounds.center) * Mathf.Abs(transform.localScale.x) < minionAtkRange)
                 {
-                    if(curTime <= 0 && attackable)
+                    if(curTime <= 0 && attackable && minionMoveType != 4)
                     {
                         if(UnityEngine.Random.Range(0, 100) < minionCriticalChance) isCritical = true;
                         else isCritical = false;
@@ -229,6 +235,17 @@ public class MinionScript : MonoBehaviour
                         animator.SetBool("isMoving", true);
                         if(fear || minionMoveType == 2) moveDirection = GetComponent<Collider2D>().bounds.center - target.GetComponent<Collider2D>().bounds.center;
                         else if(minionMoveType == 1) moveDirection = target.GetComponent<Collider2D>().bounds.center - GetComponent<Collider2D>().bounds.center;
+                        else if(minionMoveType == 4)
+                        {
+                            if(Vector2.Distance(GetComponent<Collider2D>().bounds.center, targetAlli.GetComponent<Collider2D>().bounds.center) > minionAtkRange)
+                            {
+                                moveDirection = targetAlli.GetComponent<Collider2D>().bounds.center - GetComponent<Collider2D>().bounds.center;
+                            }
+                            else
+                            {
+                                moveDirection = (GetComponent<Collider2D>().bounds.center - target.GetComponent<Collider2D>().bounds.center) + (targetAlli.GetComponent<Collider2D>().bounds.center - GetComponent<Collider2D>().bounds.center);
+                            }
+                        }
                         if(target.GetComponent<Collider2D>().bounds.center.x < GetComponent<Collider2D>().bounds.center.x)
                         {
                             if(transform.localScale.x > 0)
@@ -252,7 +269,14 @@ public class MinionScript : MonoBehaviour
             }
             else
             {
-                animator.SetBool("isMoving", false);
+                if(minionMoveType == 4 && targetAlli != null && Vector2.Distance(GetComponent<Collider2D>().bounds.center, targetAlli.GetComponent<Collider2D>().bounds.center) > minionAtkRange)
+                {
+                    animator.SetBool("isMoving", true);
+                    moveDirection = targetAlli.GetComponent<Collider2D>().bounds.center - GetComponent<Collider2D>().bounds.center;
+                    moveDirection.Normalize();
+                    transform.Translate(moveDirection * Time.deltaTime * minionMoveSpeed);
+                }
+                else animator.SetBool("isMoving", false);
             }
         }
     }
@@ -291,6 +315,41 @@ public class MinionScript : MonoBehaviour
             }
             target = cols[minDisIdx].gameObject;
         }
+    }
+
+    private void UpdateTargetAlli()
+    {
+        Collider2D[] tempCols = Physics2D.OverlapBoxAll(GetComponent<Collider2D>().bounds.center, TrackingBox, 0);
+        int cnt = 0;
+        for(int i=0; i<tempCols.Length; i++)
+        {
+            if((tempCols[i].tag == "Minion" && tempCols[i].gameObject.GetComponent<MinionScript>().minionNowHP < tempCols[i].gameObject.GetComponent<MinionScript>().minionMaxHP) || tempCols[i].tag == "Player") cnt++;
+        }
+        Collider2D[] cols = new Collider2D[cnt];
+        cnt = 0;
+        for(int i=0; i<tempCols.Length; i++)
+        {
+            if((tempCols[i].tag == "Minion" && tempCols[i].gameObject.GetComponent<MinionScript>().minionNowHP < tempCols[i].gameObject.GetComponent<MinionScript>().minionMaxHP) || tempCols[i].tag == "Player") 
+            {
+                cols[cnt] = tempCols[i];
+                cnt++;
+            }
+        }
+        if(cols.Length > 0)
+        {
+            float minDistance = Vector2.Distance(GetComponent<Collider2D>().bounds.center, cols[0].GetComponent<Collider2D>().bounds.center);
+            int minDisIdx = 0;
+            for(int i=0; i < cols.Length; i++)
+            {
+                if(Vector2.Distance(GetComponent<Collider2D>().bounds.center, cols[i].GetComponent<Collider2D>().bounds.center) < minDistance)
+                {
+                    minDistance = Vector2.Distance(GetComponent<Collider2D>().bounds.center, cols[i].GetComponent<Collider2D>().bounds.center);
+                    minDisIdx = i;
+                }
+            }
+            targetAlli = cols[minDisIdx].gameObject;
+        }
+        else targetAlli = Hero;
     }
 
     private void MeleeAttack()
@@ -613,6 +672,20 @@ public class MinionScript : MonoBehaviour
             RectTransform DmgText = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);
             DmgText.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y, 0));
             DmgText.gameObject.GetComponent<FloatingText>().SetText($"{dmg}", "#FF0000");
+            yield return new WaitForSeconds(1);
+        }
+    }
+
+    IEnumerator Heal()
+    {
+        while(true)
+        {
+            if(targetAlli != null)
+            {
+                animator.SetTrigger("Attack");
+                if(targetAlli.tag == "Player") targetAlli.GetComponent<HeroScript>().BeHealed(10);
+                else targetAlli.GetComponent<MinionScript>().BeHealed(10);
+            }
             yield return new WaitForSeconds(1);
         }
     }

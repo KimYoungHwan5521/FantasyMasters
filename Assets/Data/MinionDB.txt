@@ -12,3 +12,4 @@ MinionID	MinionNameKR	MinionAttributes	MinionHP	MinionAtkType	MinionAtkDmg	Minio
 0010	여우	숲	150	1	30	15	1.2	1.5	30	0	1	4	
 0011	늑대	숲	160	1	40	15	1.2	1.5	30	0	1	4	
 0012	기생충	암흑	30	1	10	2.5	0.15	1.1	10	0	1	1	
+0013	숲의 정령	숲	100	0	0	0	3	1	0	0	4	3.5	0051
