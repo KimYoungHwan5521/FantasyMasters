@@ -39,6 +39,7 @@ public class MinionScript : MonoBehaviour
     public List<StatusV> MinionStatus;
 
     Animator animator;
+    public float animatorCV = 1;
     public RectTransform HPBar;
     public RectTransform StatusBar;
 
@@ -120,13 +121,23 @@ public class MinionScript : MonoBehaviour
         }
         if(hAbilities.Contains("0040"))
         {
-            for(int i=0; i<StageManager.stageMinionKillEnemies; i++)
+            for(int i=0; i<StageManager.mapMinionKillEnemies; i++)
             {
                 int r = UnityEngine.Random.Range(0, 3);
                 if(r == 0) atkDmgCV++;
                 else if(r == 1) armorCV++;
                 else maxHPCV += 10;
             }
+        }
+        if(_minionID == 14)
+        {
+            float val = StageManager.stageMinionDeath + StageManager.stageEnemyDeath;
+            atkDmgCV += val;
+            armorCV += val * 0.5f;
+            maxHPCV += val * 10;
+            minionNowHP += maxHPCV;
+            transform.localScale = new Vector2(transform.localScale.x * (1 + 0.05f * val), transform.localScale.y * (1 + 0.05f * val));
+            animatorCV = -1;
         }
 
         target = null;
@@ -261,6 +272,7 @@ public class MinionScript : MonoBehaviour
                             }
                         }
                         if(fear || minionMoveType == 2) transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+                        transform.localScale = new Vector2(transform.localScale.x * animatorCV, transform.localScale.y);
                         moveDirection.Normalize();
                         transform.Translate(moveDirection * Time.deltaTime * minionMoveSpeed);
                     }
@@ -382,7 +394,7 @@ public class MinionScript : MonoBehaviour
                         collider.gameObject.GetComponent<EnemyScript>().BeAttacked(minionAtkDmg, 0.3f, isCritical);
                     }
                 }
-                if(collider.gameObject.GetComponent<EnemyScript>().enemyNowHP <= 0) StageManager.stageMinionKillEnemies++;
+                if(collider.gameObject.GetComponent<EnemyScript>().enemyNowHP <= 0) StageManager.mapMinionKillEnemies++;
                 
                 if(minionAbilities.Contains("0005"))
                 {

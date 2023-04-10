@@ -1,3 +1,4 @@
 TrapID	TrapNameKR	TrapDmg	TrapKnockback	TrapRange	TrapStatus
 0000	곰덫	100	0	0.4	0012
 0001	독버섯	20	0	2	0007
+0002	거미줄	0	0	1	0001

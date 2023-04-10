@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class TrapScript : MonoBehaviour
+public class TrapContinuousScript : MonoBehaviour
 {
     Animator animator;
     DataManager DataManager;
@@ -26,35 +26,28 @@ public class TrapScript : MonoBehaviour
         trapRange = float.Parse(trapInfo.trapRange);
         boxSize = new Vector2(trapRange, trapRange);
         trapStatus = trapInfo.trapStatus.ToList();
+        
     }
 
-    
-    public bool activated = false;
-    void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Enemy" && !activated)
+        if(collision.gameObject.tag == "Enemy")
         {
-            animator.SetBool("Activate", true);
-            Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(GetComponent<Collider2D>().bounds.center, boxSize, 0);
-            foreach(Collider2D collider in collider2Ds)
+            if(_trapID == "0002")
             {
-                if(collider.tag == "Enemy")
-                {
-                    collider.GetComponent<EnemyScript>().BeAttacked(trapDmg, trapKnockback);
-                    for(int i=0; i<trapStatus.Count; i++)
-                    {
-                        collider.GetComponent<EnemyScript>().AddStatus(trapStatus[i]);
-                    }
-                }
+                collision.gameObject.GetComponent<EnemyScript>().moveSpeedCVM *= 0.5f;
             }
-            activated = true;
         }
     }
 
-
-    private void OnDrawGizmos()
+    private void OnTriggerExit2D(Collider2D collision)
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(GetComponent<Collider2D>().bounds.center, boxSize);
+        if(collision.gameObject.tag == "Enemy")
+        {
+            if(_trapID == "0002")
+            {
+                collision.gameObject.GetComponent<EnemyScript>().moveSpeedCVM *= 2f;
+            }
+        }
     }
 }

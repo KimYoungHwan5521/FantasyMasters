@@ -10,11 +10,12 @@ public class DestroyOnExit : StateMachineBehaviour
         GameObject StageTimer = GameObject.Find("StageTimer");
         if(StageTimer != null)
         {
+            HeroScript Hero = GameObject.FindWithTag("Player").GetComponent<HeroScript>();
             if(animator.gameObject.tag == "Minion")
             {
                 animator.gameObject.layer = 10;
 
-                if(GameObject.FindWithTag("Player").GetComponent<HeroScript>().abilities.Contains("0009"))
+                if(Hero.abilities.Contains("0009"))
                 {
                     Instantiate(Resources.Load<GameObject>($"Effects/Explosion00"), animator.GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
                     Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(animator.GetComponent<Collider2D>().bounds.center, new Vector2(2, 2), 0);
@@ -29,11 +30,19 @@ public class DestroyOnExit : StateMachineBehaviour
                     attacked = true;
                     
                 }
-                if(GameObject.FindWithTag("Player").GetComponent<HeroScript>().abilities.Contains("0042") && animator.GetComponent<MinionScript>()._minionID != 12)
+                if(Hero.abilities.Contains("0042") && animator.GetComponent<MinionScript>()._minionID != 12)
                 {
                     Instantiate(Resources.Load<GameObject>($"Minions/Minion0012"), animator.GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
                     Instantiate(Resources.Load<GameObject>($"Minions/Minion0012"), animator.GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
                     Instantiate(Resources.Load<GameObject>($"Minions/Minion0012"), animator.GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
+                }
+                if(Hero.abilities.Contains("0049"))
+                {
+                    int r = Random.Range(0,4);
+                    if(r == 0) Hero.atkDmgCV += 1;
+                    else if(r == 1) Hero.armorCV += 0.1f;
+                    else if(r == 2) {Hero.maxHPCV += 10; Hero.BeHealed(10);}
+                    else if(r == 4) Hero.atkSpeedCVM += 0.01f;
                 }
                 if(animator.GetComponent<MinionScript>().attackedByZombie)
                 {
@@ -45,7 +54,7 @@ public class DestroyOnExit : StateMachineBehaviour
             {
                 animator.gameObject.layer = 8;
 
-                if(GameObject.FindWithTag("Player").GetComponent<HeroScript>().abilities.Contains("0010"))
+                if(Hero.abilities.Contains("0010"))
                 {
                     Instantiate(Resources.Load<GameObject>($"Minions/Minion0003"), animator.GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
                     Instantiate(Resources.Load<GameObject>($"Minions/Minion0003"), animator.GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
@@ -70,11 +79,15 @@ public class DestroyOnExit : StateMachineBehaviour
     {
         if(animator.GetComponent<EnemyScript>() != null)
         {
+            StageManager.mapEnemyDeath++;
+            StageManager.stageEnemyDeath++;
             GameObject.Destroy(animator.GetComponent<EnemyScript>().HPBar.gameObject);
             GameObject.Destroy(animator.GetComponent<EnemyScript>().StatusBar.gameObject);
         }
         else if(animator.GetComponent<MinionScript>() != null)
         {
+            StageManager.mapMinionDeath++;
+            StageManager.stageMinionDeath++;
             GameObject.Destroy(animator.GetComponent<MinionScript>().HPBar.gameObject);
             GameObject.Destroy(animator.GetComponent<MinionScript>().StatusBar.gameObject);
         }
