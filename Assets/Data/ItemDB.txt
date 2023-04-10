@@ -11,13 +11,13 @@ ItemID	ItemNameKR	ItemAttributes	ItemRareDegree	ItemExplainKR	ItemBuffStat	ItemB
 0009	늑골	암흑	1	방어력 +40, 최대체력 -20	armorCV|maxHPCV	40|-20	
 0010	좀비의 육체	암흑	1	체력재생 +6, 최대체력 -20	HPRegenerationCV|maxHPCV	5|-20	
 0011	양 머리뼈	암흑	1	공격력 +20, 방어력 +20, 최대체력 -10, 공포 면역	atkDmgCV|armorCV|maxHPCV	20|20|-10	0017
-0012	뼈화살	암흑 숲	0	치명타 확률 +15%, 치명타 데미지 +50%, 최대체력 -10	criticalChanceCV|criticalDmgCV|maxHPCV	15|0.5|-10	
+0012	뼈화살	암흑 숲	1	치명타 확률 +15%, 치명타 데미지 +50%, 최대체력 -10	criticalChanceCV|criticalDmgCV|maxHPCV	15|0.5|-10	
 0013	좀비 턱	암흑	1	최대체력 -20, 좀비 물림	maxHPCV	-20	0011
 0014	생선 가시	암흑 물	0	치명타 확률 +30%, 최대체력 -10	criticalChanceCV|maxHPCV	30|-10	
 0015	검은 고양이	암흑	3	치명타 확률 -100%, 공격력 +50%	criticalChanceCV|atkDmgCVM	-100|0.5	
 0016	독화살	숲	2	치명타 확률 +15%, 중독공격	criticalChanceCV	15	0025
 0017	불화살	불 숲	2	치명타 확률 +15%, 화염공격	criticalChanceCV	15	0026
-0018	등산화	숲	0	이동속도 +15%, 중독면역	moveSpeedCVM	0.15	0027
+0018	정글 장화	숲	0	이동속도 +15%, 중독면역	moveSpeedCVM	0.15	0027
 0019	네잎클로버	숲 빛	0	치명타 확률 +30%	criticalChanceCV	30	
 0020	날개달린 신발	숲 빛	1	이동속도 +30%	moveSpeedCVM	0.3	
 0021	선인장	숲 대지	1	공격력 +10, 치명타 데미지 +50%	atkDmgCV|criticalDmgCV	10|0.5	
@@ -27,5 +27,11 @@ ItemID	ItemNameKR	ItemAttributes	ItemRareDegree	ItemExplainKR	ItemBuffStat	ItemB
 0025	호피	숲	0	최대체력 +60	maxHPCV	60	
 0026	벌목용 도끼	숲	0	공격력 +10	atkDmgCV	10	
 0027	가시덤불	숲	1	공격력 +10, 치명타 확률 +15%	atkDmgCV|criticalChanceCV	10|15	
-0028	저주받은 칼	암흑 불	1	공격력 +60, 방어력 -10	atkDmgCV|armorCV	60|-10	
+0028	저주받은 칼	암흑 불	1	공격력 +60, 방어력 -10, 치명타 확률 -30%	atkDmgCV|armorCV|criticalChanceCV	60|-10|-30	
 0029	큰나무방패	숲	1	방어력 +20	armorCV	20	
+0030	슈암드리르	암흑	1	공격력 +20, 공격속도 +30%, 최대체력 -20	atkDmg|atkSpeedCVM|maxHPCV	20|0.3|-20	
+0031	가시덤불칼	숲	2	공격력 +20, 치명타확률 +30%	atkDmgCV|criticalChanceCV	20|30	
+0032	엘무위치	숲	1	공격력 +10, 공격속도 +30%	atkDmgCV|atkSpeedCVM	10|0.3	
+0033	백조의 노래	숲	1	공격력 +10, 재생공격	atkDmgCV	10	0044
+0034	람쉬르다	숲	1	공격속도 +30%, 치명타 데미지 +50%	atkSpeedCVM|criticalDmgCV	0.3|50	
+0035	팬텀라이트	암흑	1	공격력 +20, 치명타확률 +15%, 최대체력 -10	atkDmgCV|criticalChanceCV|maxHPCV	20|15|-10	
