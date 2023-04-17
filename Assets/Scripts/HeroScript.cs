@@ -48,7 +48,6 @@ public class HeroScript : MonoBehaviour
 
     private float curTime;
     public float atkCoolTime;
-    public Vector2 boxSize;
     private float predateCurTime;
     public float predateCoolTime;
 
@@ -100,7 +99,6 @@ public class HeroScript : MonoBehaviour
         atkSpeed = float.Parse(heroInfo.heroAtkSpeed);
         atkCoolTime = 10 / atkSpeed;
         atkRange = float.Parse(heroInfo.heroAtkRange);
-        boxSize = new Vector2(atkRange, atkRange);
         criticalDmg = float.Parse(heroInfo.heroCriticalDmg);
         criticalChance = float.Parse(heroInfo.heroCriticalChance);
         armor = float.Parse(heroInfo.heroArmor);
@@ -149,7 +147,6 @@ public class HeroScript : MonoBehaviour
         atkDmg = (float.Parse(DataManager.AllHeroList[_heroID].heroAtkDmg.Split('x')[0]) + atkDmgCV) * atkDmgCVM;
         armor = float.Parse(DataManager.AllHeroList[_heroID].heroArmor) + armorCV + armor0046;
         atkRange = float.Parse(DataManager.AllHeroList[_heroID].heroAtkRange) + atkRangeCV;
-        boxSize = new Vector2(atkRange, atkRange);
         criticalDmg = float.Parse(DataManager.AllHeroList[_heroID].heroCriticalDmg) + criticalDmgCV;
         criticalChance = float.Parse(DataManager.AllHeroList[_heroID].heroCriticalChance) + criticalChanceCV;
         predateCoolTime = float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0015").abilityCoolTime);

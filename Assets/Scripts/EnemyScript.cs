@@ -31,6 +31,7 @@ public class EnemyScript : MonoBehaviour
     public List<StatusV> EnemyStatus;
 
     Animator animator;
+    public float animatorCV = 1;
     public RectTransform HPBar;
     public RectTransform StatusBar;
 
@@ -81,7 +82,6 @@ public class EnemyScript : MonoBehaviour
         enemyAtkSpeed = float.Parse(enemyInfo.enemyAtkSpeed);
         atkCoolTime = 10 / enemyAtkSpeed;
         enemyAtkRange = float.Parse(enemyInfo.enemyAtkRange);
-        boxSize = new Vector2(enemyAtkRange, enemyAtkRange);
         TrackingBox = new Vector2(2, 2);
         enemyArmor = float.Parse(enemyInfo.enemyArmor);
         enemyMoveType = int.Parse(enemyInfo.enemyMoveType);
@@ -119,7 +119,6 @@ public class EnemyScript : MonoBehaviour
         enemyAtkDmg = (float.Parse(DataManager.AllEnemyList[_enemyID].enemyAtkDmg.Split('x')[0]) + atkDmgCV) * atkDmgCVM;
         enemyArmor = float.Parse(DataManager.AllEnemyList[_enemyID].enemyArmor) + armorCV;
         enemyAtkRange = float.Parse(DataManager.AllEnemyList[_enemyID].enemyAtkRange) + atkRangeCV;
-        boxSize = new Vector2(enemyAtkRange, enemyAtkRange);
         
         bool fear = false;
         fired = false;
@@ -165,6 +164,33 @@ public class EnemyScript : MonoBehaviour
                     }
                     else
                     {
+                        if(enemyMoveType == 3 && movable)
+                        {
+                            animator.SetBool("isMoving", true);
+                            moveDirection = GetComponent<Collider2D>().bounds.center - target.GetComponent<Collider2D>().bounds.center;
+                            if(target.GetComponent<Collider2D>().bounds.center.x < GetComponent<Collider2D>().bounds.center.x)
+                            {
+                                if(transform.localScale.x > 0)
+                                {
+                                    transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+                                }
+                            }
+                            else
+                            {
+                                if(transform.localScale.x < 0)
+                                {
+                                    transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+                                }
+                            }
+                            transform.localScale = new Vector2(-transform.localScale.x * animatorCV, transform.localScale.y);
+                            moveDirection.Normalize();
+                            transform.Translate(moveDirection * Time.deltaTime * enemyMoveSpeed);
+
+                        }
+                        else
+                        {
+                            animator.SetBool("isMoving", false);
+                        }
                         curTime -= Time.deltaTime;
                     }
                 }
@@ -174,7 +200,7 @@ public class EnemyScript : MonoBehaviour
                     {
                         animator.SetBool("isMoving", true);
                         if(fear || enemyMoveType == 2) moveDirection = GetComponent<Collider2D>().bounds.center - target.GetComponent<Collider2D>().bounds.center;
-                        else if(enemyMoveType == 1) moveDirection = target.GetComponent<Collider2D>().bounds.center - GetComponent<Collider2D>().bounds.center;
+                        else if(enemyMoveType == 1 || enemyMoveType == 3) moveDirection = target.GetComponent<Collider2D>().bounds.center - GetComponent<Collider2D>().bounds.center;
                         if(target.GetComponent<Collider2D>().bounds.center.x < GetComponent<Collider2D>().bounds.center.x)
                         {
                             if(transform.localScale.x > 0)
@@ -190,6 +216,7 @@ public class EnemyScript : MonoBehaviour
                             }
                         }
                         if(fear) transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+                        transform.localScale = new Vector2(transform.localScale.x * animatorCV, transform.localScale.y);
                         moveDirection.Normalize();
                         transform.Translate(moveDirection * Time.deltaTime * enemyMoveSpeed);
                     }
@@ -359,7 +386,6 @@ public class EnemyScript : MonoBehaviour
         }
     }
 
-    public Vector2 boxSize;
     public Vector2 TrackingBox;
     private void OnDrawGizmos()
     {

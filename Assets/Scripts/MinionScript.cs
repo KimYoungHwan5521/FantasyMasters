@@ -85,11 +85,10 @@ public class MinionScript : MonoBehaviour
         minionMaxHP = float.Parse(minionInfo.minionMaxHP);
         minionNowHP = minionMaxHP;
         minionAtkType = int.Parse(minionInfo.minionAtkType);
-        minionAtkDmg = float.Parse(minionInfo.minionAtkDmg);
+        minionAtkDmg = float.Parse(minionInfo.minionAtkDmg.Split('x')[0]);
         minionAtkSpeed = float.Parse(minionInfo.minionAtkSpeed);
         atkCoolTime = 10 / minionAtkSpeed;
         minionAtkRange = float.Parse(minionInfo.minionAtkRange);
-        boxSize = new Vector2(minionAtkRange, minionAtkRange);
         minionCriticalDmg = float.Parse(minionInfo.minionCriticalDmg);
         minionCriticalChance = float.Parse(minionInfo.minionCriticalChance);
         minionArmor = float.Parse(minionInfo.minionArmor);
@@ -182,7 +181,6 @@ public class MinionScript : MonoBehaviour
         }
         else minionArmor = (float.Parse(DataManager.AllMinionList[_minionID].minionArmor) + armorCV) * armorCVM;
         minionAtkRange = (float.Parse(DataManager.AllMinionList[_minionID].minionAtkRange) + atkRangeCV) * sizeCVM;
-        boxSize = new Vector2(minionAtkRange, minionAtkRange);
         minionCriticalDmg = float.Parse(DataManager.AllMinionList[_minionID].minionCriticalDmg) + criticalDmgCV;
         minionCriticalChance = float.Parse(DataManager.AllMinionList[_minionID].minionCriticalChance) + criticalChanceCV;
         
@@ -234,7 +232,32 @@ public class MinionScript : MonoBehaviour
                     }
                     else
                     {
-                        animator.SetBool("isMoving", false);
+                        if(minionMoveType == 3 && movable)
+                        {
+                            animator.SetBool("isMoving", true);
+                            moveDirection = GetComponent<Collider2D>().bounds.center - target.GetComponent<Collider2D>().bounds.center;
+                            if(target.GetComponent<Collider2D>().bounds.center.x < GetComponent<Collider2D>().bounds.center.x)
+                            {
+                                if(transform.localScale.x > 0)
+                                {
+                                    transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+                                }
+                            }
+                            else
+                            {
+                                if(transform.localScale.x < 0)
+                                {
+                                    transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+                                }
+                            }
+                            transform.localScale = new Vector2(-transform.localScale.x * animatorCV, transform.localScale.y);
+                            moveDirection.Normalize();
+                            transform.Translate(moveDirection * Time.deltaTime * minionMoveSpeed);
+                        }
+                        else
+                        {
+                            animator.SetBool("isMoving", false);
+                        }
                         curTime -= Time.deltaTime;
                     }
                     
@@ -245,7 +268,7 @@ public class MinionScript : MonoBehaviour
                     {
                         animator.SetBool("isMoving", true);
                         if(fear || minionMoveType == 2) moveDirection = GetComponent<Collider2D>().bounds.center - target.GetComponent<Collider2D>().bounds.center;
-                        else if(minionMoveType == 1) moveDirection = target.GetComponent<Collider2D>().bounds.center - GetComponent<Collider2D>().bounds.center;
+                        else if(minionMoveType == 1 || minionMoveType == 3) moveDirection = target.GetComponent<Collider2D>().bounds.center - GetComponent<Collider2D>().bounds.center;
                         else if(minionMoveType == 4)
                         {
                             if(Vector2.Distance(GetComponent<Collider2D>().bounds.center, targetAlli.GetComponent<Collider2D>().bounds.center) > minionAtkRange)
@@ -449,7 +472,6 @@ public class MinionScript : MonoBehaviour
 
     }
 
-    public Vector2 boxSize;
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
