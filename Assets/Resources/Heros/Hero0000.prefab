@@ -73,7 +73,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1662870407
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: -1492088842765610512, guid: 9e0768d7dced00f4c80c36544c67400a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -169,21 +169,42 @@ MonoBehaviour:
   heroNameKR: 
   attributes: []
   maxHP: 0
+  maxHPCV: 0
+  tempMaxHPCV: 0
   nowHP: 0
   HPRegeneration: 0
+  HPRegenerationCV: 0
   atkType: 0
   atkDmg: 0
+  atkDmgCV: 0
+  atkDmgCVM: 1
   atkSpeed: 1
   atkSpeedCVM: 1
   atkRange: 0
+  atkRangeCV: 0
   criticalDmg: 0
+  criticalDmgCV: 0
   criticalChance: 0
+  criticalChanceCV: 0
   armor: 0
+  armorCV: 0
+  armor0046: 0
   moveSpeed: 0
+  moveSpeedCVM: 1
   abilities: []
+  HeroItems: []
+  StatusSprites: {fileID: 0}
+  atkSound: Blow
   atkCoolTime: 0.3
   boxSize: {x: 0, y: 0}
+  predateCoolTime: 0
   HPbar: {fileID: 0}
   TextMaxHP: {fileID: 0}
   TextNowHP: {fileID: 0}
   target: {fileID: 0}
+  target2: {fileID: 0}
+  isCritical: 0
+  controllable: 1
+  attackable: 1
+  resurrection: 0
+  fired: 0

@@ -132,8 +132,8 @@ public class StageManager : MonoBehaviour
         stageInfo = CurStageList.Find(x => x.stageNumber == stageNumber.ToString()).stageInfo;
         stageEnemyDeath = 0;
         stageMinionDeath = 0;
+        Hero.GetComponent<HeroScript>().nowHP = Hero.GetComponent<HeroScript>().maxHP - Hero.GetComponent<HeroScript>().tempMaxHPCV;
         Hero.GetComponent<HeroScript>().tempMaxHPCV = 0;
-        Hero.GetComponent<HeroScript>().nowHP = Hero.GetComponent<HeroScript>().maxHP;
         Hero.transform.position = new Vector2(0, 0);
         for(int i=3; i>-1; i--)
         {
@@ -224,7 +224,7 @@ public class StageManager : MonoBehaviour
         }
         if(hAbilities.Contains("0045"))
         {
-            StartCoroutine(Heal(float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0045").abilityCoolTime)));
+            StartCoroutine(Heal(float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0045").abilityCoolTime), Hero.GetComponent<HeroScript>().armor * 10));
         }
         if(hAbilities.Contains("0047"))
         {
@@ -342,10 +342,16 @@ public class StageManager : MonoBehaviour
             else if(random < 973) rd = 2;
             else rd = 3;
             List<Product> tempPdl = new List<Product>();
-            if(ip<4)
+            if(ip == 0)
             {
-                if(hAttributes.Length > 1 && ip > 1)
+                // 상점 첫 번째 칸은 영웅 속성 카드 등장 보장(순속성은 두 번째 칸까지)
+                tempPdl = AllProductList.FindAll(x => x.attributes.ToList().Contains(hAttributes[0]));
+            }
+            else if(ip == 1)
+            {
+                if(hAttributes.Length > 1)
                 {
+                    // 듀얼 속성일 경우 두 번째 칸은 영웅의 두 번째 속성 카드 등장 보장
                     tempPdl = AllProductList.FindAll(x => x.attributes.ToList().Contains(hAttributes[1]));
                 }
                 else
@@ -353,11 +359,29 @@ public class StageManager : MonoBehaviour
                     tempPdl = AllProductList.FindAll(x => x.attributes.ToList().Contains(hAttributes[0]));
                 }
             }
-            else
+            else if(ip == 2)
             {
+                // 세 번째 칸은 자신 속성 또는 무속성 카드 등장 가능(듀얼 속성의 경우 자신의 속성 둘중 무작위로 등장)
                 if(hAttributes.Length > 1)
                 {
-                    tempPdl = AllProductList.FindAll(x => !(x.attributes.ToList().Contains(hAttributes[0])) && !(x.attributes.ToList().Contains(hAttributes[1])));
+                    tempPdl = AllProductList.FindAll(x => x.attributes.ToList().Contains(hAttributes[0]) || x.attributes.ToList().Contains(hAttributes[1]) || x.attributes.ToList().Contains("무속성"));
+                }
+                else
+                {
+                    tempPdl = AllProductList.FindAll(x => x.attributes.ToList().Contains(hAttributes[0]) || x.attributes.ToList().Contains("무속성"));
+                }
+            }
+            else if(ip == 3)
+            {
+                // 네 번째 칸은 모든 속성 등장 가능
+                tempPdl = AllProductList.ToList();
+            }
+            else
+            {
+                // 다섯 번째 칸은 자신의 속성 제외한 카드만 등장(무속성 포함)
+                if(hAttributes.Length > 1)
+                {
+                    tempPdl = AllProductList.FindAll(x => !(x.attributes.ToList().Contains(hAttributes[0])) && !(x.attributes.ToList().Contains(hAttributes[1])));    
                 }
                 else
                 {
@@ -655,12 +679,12 @@ public class StageManager : MonoBehaviour
         yield return null;
     }
 
-    IEnumerator Heal(float _coolTime)
+    IEnumerator Heal(float _coolTime, float _value)
     {
         while(true)
         {
             if(StageTime.text == "0") break;
-            Hero.GetComponent<HeroScript>().BeHealed(Hero.GetComponent<HeroScript>().armor * 2);
+            Hero.GetComponent<HeroScript>().BeHealed(_value);
             yield return new WaitForSeconds(_coolTime);
         }
     }

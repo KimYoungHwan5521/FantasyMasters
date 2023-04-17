@@ -10,6 +10,7 @@ public class HeroScript : MonoBehaviour
     Animator animator;
     GameObject Map;
     DataManager DataManager;
+    SoundManager SoundManager;
 
     Hero heroInfo;
     public int _heroID;
@@ -43,6 +44,7 @@ public class HeroScript : MonoBehaviour
     public List<StatusV> HeroStatus;
     public List<Item> HeroItems;
     public GameObject StatusSprites;
+    public string atkSound;
 
     private float curTime;
     public float atkCoolTime;
@@ -67,6 +69,7 @@ public class HeroScript : MonoBehaviour
     void Start()
     {
         DataManager = GameObject.Find("DataManager").GetComponent<DataManager>();
+        SoundManager = GameObject.Find("DataManager").GetComponent<SoundManager>();
         _heroID = DataManager.selectedHeroID;
         int cntDgit = 0;
         int copy_heroID = _heroID;
@@ -109,6 +112,8 @@ public class HeroScript : MonoBehaviour
         resurrection = 0;
         animator = GetComponentInChildren<Animator>();
         transform.position = new Vector2(0, 0);
+
+        predateCurTime = float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0015").abilityCoolTime);
 
         Map = GameObject.Find("Map");
         HPbar = GameObject.Find("HeroHPBar").GetComponent<Image>();
@@ -261,7 +266,7 @@ public class HeroScript : MonoBehaviour
         {
             curTime -= Time.deltaTime;
         }
-        predateCurTime -= Time.deltaTime;
+        if(abilities.Contains("0015")) predateCurTime -= Time.deltaTime;
     }
     
     private void UpdateTarget()
@@ -314,6 +319,13 @@ public class HeroScript : MonoBehaviour
         {
             if(collider.tag == "Enemy")
             {
+                AudioClip s = null;
+                if(atkSound =="Blow") 
+                {
+                    if(isCritical) s = Resources.Load<AudioClip>("Sounds/SE/hits/18");
+                    else s = Resources.Load<AudioClip>("Sounds/SE/Hit");
+                }
+                if(s != null) SoundManager.PlaySE(s);
                 if(collider.GetComponent<EnemyScript>().enemyNowHP <= collider.GetComponent<EnemyScript>().enemyMaxHP * 0.3 && predateCurTime <= 0)
                 {
                     Instantiate(Resources.Load<GameObject>("Effects/Predate"), collider.GetComponent<Collider2D>().bounds.center, Quaternion.identity);
@@ -394,6 +406,8 @@ public class HeroScript : MonoBehaviour
     {
         if (collision.gameObject.tag == "Enemy")
         {
+            AudioClip s = Resources.Load<AudioClip>("Sounds/SE/hits/6");
+            SoundManager.PlaySE(s);
             EnemyScript colES = collision.gameObject.GetComponent<EnemyScript>();
             float dmg = 0;
             RectTransform DmgText = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);

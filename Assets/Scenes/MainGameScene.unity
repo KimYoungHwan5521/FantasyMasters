@@ -10584,6 +10584,7 @@ GameObject:
   - component: {fileID: 1131356830}
   - component: {fileID: 1131356828}
   - component: {fileID: 1131356831}
+  - component: {fileID: 1131356832}
   m_Layer: 0
   m_Name: DataManager
   m_TagString: Untagged
@@ -10720,6 +10721,18 @@ MonoBehaviour:
   subbox: {fileID: 554010517}
   subintext: {fileID: 1057610038}
   subani: {fileID: 554010519}
+--- !u!114 &1131356832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1131356827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cb79cb07e2f5794caff278aae900038, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1141480164
 GameObject:
   m_ObjectHideFlags: 0
