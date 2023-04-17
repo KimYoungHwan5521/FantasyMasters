@@ -314,7 +314,7 @@ public class HeroScript : MonoBehaviour
     private void MeleeAttack()
     {
         if(abilities.Contains("0044")) BeHealed(20);
-        Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(GetComponent<Collider2D>().bounds.center, boxSize, 0);
+        Collider2D[] collider2Ds = Physics2D.OverlapCircleAll(GetComponent<Collider2D>().bounds.center, atkRange * 0.5f);
         foreach(Collider2D collider in collider2Ds)
         {
             if(collider.tag == "Enemy")
@@ -399,7 +399,7 @@ public class HeroScript : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(GetComponent<Collider2D>().bounds.center, boxSize);
+        Gizmos.DrawWireSphere(GetComponent<Collider2D>().bounds.center, atkRange * 0.5f);
     }
     
     void OnCollisionEnter2D(Collision2D collision)

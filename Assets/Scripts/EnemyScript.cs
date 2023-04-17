@@ -241,7 +241,7 @@ public class EnemyScript : MonoBehaviour
     private void MeleeAttack()
     {
         if(enemyAbilities.Contains("0044")) BeHealed(20);
-        Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(transform.GetComponent<Collider2D>().bounds.center, boxSize, 0);
+        Collider2D[] collider2Ds = Physics2D.OverlapCircleAll(GetComponent<Collider2D>().bounds.center, enemyAtkRange * 0.5f);
         foreach(Collider2D collider in collider2Ds)
         {
             if(collider.tag == "Player")
@@ -359,14 +359,12 @@ public class EnemyScript : MonoBehaviour
         }
     }
 
-    Vector2 center;
     public Vector2 boxSize;
     public Vector2 TrackingBox;
     private void OnDrawGizmos()
     {
-        center = GetComponent<Collider2D>().bounds.center;
         Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(center, boxSize);
+        Gizmos.DrawWireSphere(GetComponent<Collider2D>().bounds.center, enemyAtkRange * 0.5f);
         Gizmos.color = Color.blue;
         Gizmos.DrawWireCube(GetComponent<Collider2D>().bounds.center, new Vector2(enemyAtkRange, enemyAtkRange));
     }
