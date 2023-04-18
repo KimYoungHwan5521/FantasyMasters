@@ -266,6 +266,22 @@ public class StageManager : MonoBehaviour
         {
             StartCoroutine(SummonMinion("0018", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0058").abilityCoolTime)));
         }
+        if(hAbilities.Contains("0059"))
+        {
+            StartCoroutine(SummonProjectile("Baseball",float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0059").abilityCoolTime), 200));
+        }
+        if(hAbilities.Contains("0060"))
+        {
+            StartCoroutine(SummonOrbiting("BowlingBall", 1, 2.4f, 300));
+        }
+        if(hAbilities.Contains("0061"))
+        {
+            StartCoroutine(Buffs("0017", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0061").abilityCoolTime), 0, "hero"));
+        }
+        if(hAbilities.Contains("0062"))
+        {
+            StartCoroutine(Buffs("0018", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0062").abilityCoolTime), 30, "hero"));
+        }
         StartCoroutine(SpawnEnemy(stageInfo));
     }
     
@@ -596,10 +612,8 @@ public class StageManager : MonoBehaviour
 
     IEnumerator Polymorph(string polymorphTo, float coolTime)
     {
-        int exception = 0;
         while(true)
         {
-            if(exception > 1000) break;
             if(StageTime.text == "0") break;
             GameObject te = GameObject.FindWithTag("Enemy");
             if(te != null)
@@ -611,7 +625,6 @@ public class StageManager : MonoBehaviour
                 yield return new WaitForSeconds(coolTime);
             }
             else yield return new WaitForSeconds(1);
-            exception++;
         }
     }
 
@@ -654,10 +667,8 @@ public class StageManager : MonoBehaviour
 
     IEnumerator BloodTransfusion(float coolTime)
     {
-        int exception = 0;
         while(true)
         {
-            if(exception > 1000)
             if(StageTime.text == "0") break;
             GameObject tm = GameObject.FindWithTag("Minion");
             if(tm != null && Hero.GetComponent<HeroScript>().nowHP <= Hero.GetComponent<HeroScript>().maxHP / 2)
@@ -672,7 +683,6 @@ public class StageManager : MonoBehaviour
                 yield return new WaitForSeconds(coolTime);
             }
             else yield return new WaitForSeconds(1);
-            exception++;
         }
     }
 
@@ -717,18 +727,26 @@ public class StageManager : MonoBehaviour
         }
     }
 
-    IEnumerator Buffs(string _statusID, float _coolTime, float wait = 0)
+    IEnumerator Buffs(string _statusID, float _coolTime, float wait = 0, string _buffTarget = "minion")
     {
         yield return new WaitForSeconds(wait + 0.1f);
         while(true)
         {
-            GameObject[] M = GameObject.FindGameObjectsWithTag("Minion");
-            if(M.Length > 0)
+            if(_buffTarget == "minion")
             {
-                foreach(GameObject m in M)
+                GameObject[] M = GameObject.FindGameObjectsWithTag("Minion");
+                if(M.Length > 0)
                 {
-                    m.GetComponent<MinionScript>().AddStatus(_statusID);
+                    foreach(GameObject m in M)
+                    {
+                        m.GetComponent<MinionScript>().AddStatus(_statusID);
+                    }
                 }
+            }
+            else if(_buffTarget == "hero")
+            {
+                GameObject p = GameObject.FindWithTag("Player");
+                if(p != null) p.GetComponent<HeroScript>().AddStatus(_statusID);
             }
             yield return new WaitForSeconds(_coolTime);
         }

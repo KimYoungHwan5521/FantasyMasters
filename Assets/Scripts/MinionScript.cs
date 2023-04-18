@@ -146,6 +146,10 @@ public class MinionScript : MonoBehaviour
         {
             StartCoroutine(Heal());
         }
+        if(minionAbilities.Contains("0067"))
+        {
+            StartCoroutine(AmbientBuffs("0016", 8f));
+        }
     }
 
     Vector2 moveDirection;
@@ -719,6 +723,19 @@ public class MinionScript : MonoBehaviour
                 animator.SetTrigger("Attack");
                 if(targetAlli.tag == "Player") targetAlli.GetComponent<HeroScript>().BeHealed(10);
                 else targetAlli.GetComponent<MinionScript>().BeHealed(10);
+            }
+            yield return new WaitForSeconds(1);
+        }
+    }
+
+    IEnumerator AmbientBuffs(string _statusID, float _buffRange)
+    {
+        while(true)
+        {
+            Collider2D[] collider2Ds = Physics2D.OverlapCircleAll(GetComponent<Collider2D>().bounds.center, _buffRange * 0.5f);
+            foreach(Collider2D col in collider2Ds)
+            {
+                if(col.tag == "Minion" && col.gameObject != gameObject) col.GetComponent<MinionScript>().AddStatus(_statusID);
             }
             yield return new WaitForSeconds(1);
         }

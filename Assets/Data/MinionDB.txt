@@ -17,4 +17,4 @@ MinionID	MinionNameKR	MinionAttributes	MinionHP	MinionAtkType	MinionAtkDmg	Minio
 0015	용병	무속성	150	1	40x3	5	1.2	1.5	10	10	1	2	
 0016	엘리트 용병	무속성	300	1	80	5	1.5	1.5	10	20	1	2	
 0017	용병 궁사	무속성	150	2	80	10	6	2	30	0	3	3	
-0018	왕	무속성	1000	1	90	10	1.4	1.5	10	20	1	2.5	0016
+0018	왕	무속성	1000	1	90	10	1.4	1.5	10	20	1	2.5	0067
