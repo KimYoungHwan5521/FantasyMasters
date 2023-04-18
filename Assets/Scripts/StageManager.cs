@@ -236,7 +236,35 @@ public class StageManager : MonoBehaviour
         }
         if(hAbilities.Contains("0050"))
         {
-            StartCoroutine(SummonMinion("0014", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0050").abilityCoolTime), 1, false, false));
+            StartCoroutine(SummonMinion("0014", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0050").abilityCoolTime), 1, 30, false));
+        }
+        if(hAbilities.Contains("0052"))
+        {
+            StartCoroutine(SummonMinion("0015", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0052").abilityCoolTime)));
+        }
+        if(hAbilities.Contains("0053"))
+        {
+            StartCoroutine(SummonMinion("0016", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0053").abilityCoolTime)));
+        }
+        if(hAbilities.Contains("0054"))
+        {
+            StartCoroutine(SummonMinion("0017", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0054").abilityCoolTime)));
+        }
+        if(hAbilities.Contains("0055"))
+        {
+            StartCoroutine(Buffs("0013", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0055").abilityCoolTime)));
+        }
+        if(hAbilities.Contains("0056"))
+        {
+            StartCoroutine(Buffs("0014", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0056").abilityCoolTime)));
+        }
+        if(hAbilities.Contains("0057"))
+        {
+            StartCoroutine(Buffs("0015", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0057").abilityCoolTime)));
+        }
+        if(hAbilities.Contains("0058"))
+        {
+            StartCoroutine(SummonMinion("0018", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0058").abilityCoolTime)));
         }
         StartCoroutine(SpawnEnemy(stageInfo));
     }
@@ -530,9 +558,9 @@ public class StageManager : MonoBehaviour
     }
     
     // ↓↓↓ Abilities ↓↓↓
-    IEnumerator SummonMinion(string _minionID, float summonCoolTime, int n = 1, bool immediatly = true, bool repeat = true)
+    IEnumerator SummonMinion(string _minionID, float summonCoolTime, int n = 1, float wait = 0, bool repeat = true)
     {
-        if(!immediatly) yield return new WaitForSeconds(summonCoolTime);
+        yield return new WaitForSeconds(wait);
         var minionToSummon = Resources.Load<GameObject>($"Minions/Minion{_minionID}");
         while(true)
         {
@@ -592,7 +620,7 @@ public class StageManager : MonoBehaviour
         while(true)
         {
             if(StageTime.text == "0") break;
-            Collider2D[] cols = Physics2D.OverlapBoxAll(Hero.GetComponent<Collider2D>().bounds.center, new Vector2(3, 3), 0);
+            Collider2D[] cols = Physics2D.OverlapCircleAll(Hero.GetComponent<Collider2D>().bounds.center, 3);
             foreach(Collider2D col in cols)
             {
                 if(col.tag == "Enemy")
@@ -685,6 +713,23 @@ public class StageManager : MonoBehaviour
         {
             if(StageTime.text == "0") break;
             Hero.GetComponent<HeroScript>().BeHealed(_value);
+            yield return new WaitForSeconds(_coolTime);
+        }
+    }
+
+    IEnumerator Buffs(string _statusID, float _coolTime, float wait = 0)
+    {
+        yield return new WaitForSeconds(wait + 0.1f);
+        while(true)
+        {
+            GameObject[] M = GameObject.FindGameObjectsWithTag("Minion");
+            if(M.Length > 0)
+            {
+                foreach(GameObject m in M)
+                {
+                    m.GetComponent<MinionScript>().AddStatus(_statusID);
+                }
+            }
             yield return new WaitForSeconds(_coolTime);
         }
     }

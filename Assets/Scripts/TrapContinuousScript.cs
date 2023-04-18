@@ -12,7 +12,6 @@ public class TrapContinuousScript : MonoBehaviour
     public float trapDmg;
     public float trapKnockback;
     public float trapRange;
-    public Vector2 boxSize;
     public List<string> trapStatus;
     // Start is called before the first frame update
     void Start()
@@ -24,7 +23,6 @@ public class TrapContinuousScript : MonoBehaviour
         trapDmg = float.Parse(trapInfo.trapDmg);
         trapKnockback = float.Parse(trapInfo.trapKnockback);
         trapRange = float.Parse(trapInfo.trapRange);
-        boxSize = new Vector2(trapRange, trapRange);
         trapStatus = trapInfo.trapStatus.ToList();
         
     }

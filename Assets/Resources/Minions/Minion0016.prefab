@@ -158,7 +158,7 @@ Animator:
   m_GameObject: {fileID: 4893087573496854932}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: 714fe817041f1714cafb183258d56bcd, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -219,4 +219,3 @@ MonoBehaviour:
   flockAttack: 0
   floakDefense: 0
   TrackingBox: {x: 0, y: 0}
-  boxSize: {x: 0.3, y: 0.3}

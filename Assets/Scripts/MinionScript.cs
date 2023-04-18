@@ -232,7 +232,7 @@ public class MinionScript : MonoBehaviour
                     }
                     else
                     {
-                        if(minionMoveType == 3 && movable)
+                        if(minionMoveType == 3 && movable && atkCoolTime - curTime > 0.5f)
                         {
                             animator.SetBool("isMoving", true);
                             moveDirection = GetComponent<Collider2D>().bounds.center - target.GetComponent<Collider2D>().bounds.center;

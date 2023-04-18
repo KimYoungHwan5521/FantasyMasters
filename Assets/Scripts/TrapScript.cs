@@ -12,7 +12,6 @@ public class TrapScript : MonoBehaviour
     public float trapDmg;
     public float trapKnockback;
     public float trapRange;
-    public Vector2 boxSize;
     public List<string> trapStatus;
     // Start is called before the first frame update
     void Start()
@@ -24,7 +23,6 @@ public class TrapScript : MonoBehaviour
         trapDmg = float.Parse(trapInfo.trapDmg);
         trapKnockback = float.Parse(trapInfo.trapKnockback);
         trapRange = float.Parse(trapInfo.trapRange);
-        boxSize = new Vector2(trapRange, trapRange);
         trapStatus = trapInfo.trapStatus.ToList();
     }
 
@@ -35,7 +33,7 @@ public class TrapScript : MonoBehaviour
         if (collision.gameObject.tag == "Enemy" && !activated)
         {
             animator.SetBool("Activate", true);
-            Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(GetComponent<Collider2D>().bounds.center, boxSize, 0);
+            Collider2D[] collider2Ds = Physics2D.OverlapCircleAll(GetComponent<Collider2D>().bounds.center, trapRange * 0.5f);
             foreach(Collider2D collider in collider2Ds)
             {
                 if(collider.tag == "Enemy")
@@ -55,6 +53,6 @@ public class TrapScript : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(GetComponent<Collider2D>().bounds.center, boxSize);
+        Gizmos.DrawWireSphere(GetComponent<Collider2D>().bounds.center, trapRange * 0.5f);
     }
 }
