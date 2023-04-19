@@ -235,7 +235,7 @@ public class HeroScript : MonoBehaviour
             transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
         }
         animator.SetBool("isMoving", moveDirection.magnitude > 0);
-        if(abilities.Contains("0046") && moveDirection.magnitude == 0) armor0046 = 30;
+        if(abilities.Contains("0046") && moveDirection.magnitude == 0) armor0046 = 50;
         else armor0046 = 0;
         
         // 공격

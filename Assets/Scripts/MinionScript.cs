@@ -107,7 +107,7 @@ public class MinionScript : MonoBehaviour
         List<string> hAbilities = Hero.GetComponent<HeroScript>().abilities;
         if(hAbilities.Contains("0019")) AddStatus("0005");
         if(hAbilities.Contains("0020")) AddStatus("0006");
-        if(hAbilities.Contains("0030") && minionAtkDmg <= 30) AddStatus("0009");
+        if(hAbilities.Contains("0030") && minionAtkDmg <= 50) AddStatus("0009");
         if(hAbilities.Contains("0032"))
         {
             AddStatus("0010");
@@ -124,16 +124,16 @@ public class MinionScript : MonoBehaviour
             {
                 int r = UnityEngine.Random.Range(0, 3);
                 if(r == 0) atkDmgCV++;
-                else if(r == 1) armorCV++;
-                else maxHPCV += 10;
+                else if(r == 1) armorCV += 0.5f;
+                else maxHPCV += 5;
             }
         }
         if(_minionID == 14)
         {
             float val = StageManager.stageMinionDeath + StageManager.stageEnemyDeath;
-            atkDmgCV += val;
-            armorCV += val * 0.5f;
-            maxHPCV += val * 10;
+            atkDmgCV += val * 30;
+            armorCV += val;
+            maxHPCV += val * 50;
             minionNowHP += maxHPCV;
             transform.localScale = new Vector2(transform.localScale.x * (1 + 0.05f * val), transform.localScale.y * (1 + 0.05f * val));
             animatorCV = -1;
@@ -174,13 +174,13 @@ public class MinionScript : MonoBehaviour
         if(minionNowHP > minionMaxHP) minionNowHP = minionMaxHP;
         if(flockAttack) 
         {
-            float abilityAtkDmgCV = GameObject.FindGameObjectsWithTag("Minion").Length * 5;
+            float abilityAtkDmgCV = GameObject.FindGameObjectsWithTag("Minion").Length * 10;
             minionAtkDmg = (float.Parse(DataManager.AllMinionList[_minionID].minionAtkDmg.Split('x')[0]) + atkDmgCV + abilityAtkDmgCV) * atkDmgCVM;
         }
         else minionAtkDmg = (float.Parse(DataManager.AllMinionList[_minionID].minionAtkDmg.Split('x')[0]) + atkDmgCV) * atkDmgCVM;
         if(floakDefense)
         {
-            float abilityArmorCV = GameObject.FindGameObjectsWithTag("Minion").Length;
+            float abilityArmorCV = GameObject.FindGameObjectsWithTag("Minion").Length * 5;
             minionArmor =minionArmor = (float.Parse(DataManager.AllMinionList[_minionID].minionArmor) + armorCV + abilityArmorCV) * armorCVM;
         }
         else minionArmor = (float.Parse(DataManager.AllMinionList[_minionID].minionArmor) + armorCV) * armorCVM;
@@ -721,8 +721,8 @@ public class MinionScript : MonoBehaviour
             if(targetAlli != null)
             {
                 animator.SetTrigger("Attack");
-                if(targetAlli.tag == "Player") targetAlli.GetComponent<HeroScript>().BeHealed(10);
-                else targetAlli.GetComponent<MinionScript>().BeHealed(10);
+                if(targetAlli.tag == "Player") targetAlli.GetComponent<HeroScript>().BeHealed(20);
+                else targetAlli.GetComponent<MinionScript>().BeHealed(20);
             }
             yield return new WaitForSeconds(1);
         }

@@ -169,7 +169,7 @@ public class StageManager : MonoBehaviour
         }
         if(hAbilities.Contains("0018"))
         {
-            StartCoroutine(SummonProjectile("SkullThrowing",float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0018").abilityCoolTime), 500));
+            StartCoroutine(SummonProjectile("SkullThrowing",float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0018").abilityCoolTime), 1000));
         }
         if(hAbilities.Contains("0021"))
         {
@@ -216,11 +216,11 @@ public class StageManager : MonoBehaviour
         }
         if(hAbilities.Contains("0041"))
         {
-            StartCoroutine(SummonOrbiting("LeafIncantation", 5, 2, 20, true));
+            StartCoroutine(SummonOrbiting("LeafIncantation", 5, 2, 40, true));
         }
         if(hAbilities.Contains("0043"))
         {
-            StartCoroutine(SummonProjectile("LeafBlade",float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0043").abilityCoolTime), 20, true));
+            StartCoroutine(SummonProjectile("LeafBlade",float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0043").abilityCoolTime), 40, true));
         }
         if(hAbilities.Contains("0045"))
         {
@@ -268,11 +268,11 @@ public class StageManager : MonoBehaviour
         }
         if(hAbilities.Contains("0059"))
         {
-            StartCoroutine(SummonProjectile("Baseball",float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0059").abilityCoolTime), 200));
+            StartCoroutine(SummonProjectile("Baseball",float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0059").abilityCoolTime), 400));
         }
         if(hAbilities.Contains("0060"))
         {
-            StartCoroutine(SummonOrbiting("BowlingBall", 1, 2.4f, 300));
+            StartCoroutine(SummonOrbiting("BowlingBall", 1, 2.4f, 600));
         }
         if(hAbilities.Contains("0061"))
         {
@@ -601,7 +601,7 @@ public class StageManager : MonoBehaviour
             GameObject te = GameObject.FindWithTag("Enemy");
             if(te != null)
             {
-                te.GetComponent<EnemyScript>().enemyNowHP -= 30;
+                te.GetComponent<EnemyScript>().enemyNowHP -= 80;
                 GameObject Pjt = Instantiate(effect, te.transform.position, Quaternion.identity);
                 Pjt.GetComponentInChildren<ProjectileScript>().SetProjectile(te, Hero, false, "LifeDrain");
                 yield return new WaitForSeconds(coolTime);

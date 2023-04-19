@@ -127,7 +127,7 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 10
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
@@ -153,15 +153,28 @@ MonoBehaviour:
   enemyNowHP: 0
   enemyAtkType: 0
   enemyAtkDmg: 0
+  atkDmgCV: 0
+  atkDmgCVM: 1
   enemyCollisionDmg: 0
   enemyAtkSpeed: 0
+  atkSpeedCVM: 1
   enemyAtkRange: 0
+  atkRangeCV: 0
   enemyArmor: 0
+  armorCV: 0
+  enemyMoveType: 1
   enemyMoveSpeed: 0
+  moveSpeedCVM: 1
   enemyAbilities: []
+  animatorCV: 1
   HPBar: {fileID: 0}
+  StatusBar: {fileID: 0}
   atkCoolTime: 0
-  boxSize: {x: 0, y: 0}
+  attackedByZombie: 0
+  movable: 1
+  attackable: 1
+  fired: 0
+  TrackingBox: {x: 0, y: 0}
 --- !u!95 &2732091650379244491
 Animator:
   serializedVersion: 3

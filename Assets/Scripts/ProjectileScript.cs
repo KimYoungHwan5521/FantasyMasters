@@ -233,7 +233,7 @@ public class ProjectileScript : MonoBehaviour
                 {
                     if(note == "LifeDrain")
                     {
-                        collision.gameObject.GetComponent<HeroScript>().BeHealed(30);
+                        collision.gameObject.GetComponent<HeroScript>().BeHealed(80);
                     }
                     else
                     {

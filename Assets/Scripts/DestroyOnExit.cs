@@ -40,9 +40,9 @@ public class DestroyOnExit : StateMachineBehaviour
                 {
                     int r = Random.Range(0,4);
                     if(r == 0) Hero.atkDmgCV += 1;
-                    else if(r == 1) Hero.armorCV += 0.1f;
-                    else if(r == 2) {Hero.maxHPCV += 10; Hero.BeHealed(10);}
-                    else if(r == 4) Hero.atkSpeedCVM += 0.01f;
+                    else if(r == 1) Hero.armorCV += 0.5f;
+                    else if(r == 2) {Hero.maxHPCV += 5; Hero.BeHealed(5);}
+                    else if(r == 4) Hero.atkSpeedCVM += 0.02f;
                 }
                 if(animator.GetComponent<MinionScript>().attackedByZombie)
                 {
