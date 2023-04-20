@@ -286,6 +286,10 @@ public class StageManager : MonoBehaviour
         {
             StartCoroutine(AreaDamage("MissileBombing", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0063").abilityCoolTime), 2, 600));
         }
+        if(hAbilities.Contains("0064"))
+        {
+            StartCoroutine(SummonTrap(Hero, "0003", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0064").abilityCoolTime)));
+        }
         StartCoroutine(SpawnEnemy(stageInfo));
     }
     

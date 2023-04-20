@@ -39,9 +39,12 @@ public class TrapScript : MonoBehaviour
                 if(collider.tag == "Enemy")
                 {
                     collider.GetComponent<EnemyScript>().BeAttacked(trapDmg, trapKnockback);
-                    for(int i=0; i<trapStatus.Count; i++)
+                    if(trapStatus[0] != "")
                     {
-                        collider.GetComponent<EnemyScript>().AddStatus(trapStatus[i]);
+                        for(int i=0; i<trapStatus.Count; i++)
+                        {
+                            collider.GetComponent<EnemyScript>().AddStatus(trapStatus[i]);
+                        }
                     }
                 }
             }

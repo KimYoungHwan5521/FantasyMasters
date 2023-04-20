@@ -48,4 +48,9 @@ public class TrapContinuousScript : MonoBehaviour
             }
         }
     }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(GetComponent<Collider2D>().bounds.center, trapRange * 0.5f);
+    }
 }
