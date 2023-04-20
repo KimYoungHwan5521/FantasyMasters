@@ -290,6 +290,10 @@ public class StageManager : MonoBehaviour
         {
             StartCoroutine(SummonTrap(Hero, "0003", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0064").abilityCoolTime)));
         }
+        if(hAbilities.Contains("0065"))
+        {
+            StartCoroutine(Strike(float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0065").abilityCoolTime)));
+        }
         StartCoroutine(SpawnEnemy(stageInfo));
     }
     
@@ -796,5 +800,30 @@ public class StageManager : MonoBehaviour
         }
         Destroy(o);
         Destroy(s);
+    }
+
+    IEnumerator Strike(float _coolTime)
+    {
+        yield return new WaitForSeconds(_coolTime);
+        while(true)
+        {
+            if(StageTime.text == "0") break;
+            GameObject o = Instantiate(Resources.Load<GameObject>("ETC/Strike"), new Vector2(Camera.main.transform.position.x + 15, Camera.main.transform.position.y), Quaternion.identity);
+            for(int i=0; i<140; i++)
+            {
+                o.transform.Translate(Vector2.left * 0.1f);
+                yield return new WaitForSeconds(0.01f);
+            }
+            Collider2D[] cols = Physics2D.OverlapCircleAll(o.transform.position, 4f);
+            foreach(Collider2D col in cols)
+            {
+                if(col.tag == "Enemy")
+                {
+                    col.GetComponent<EnemyScript>().BeAttacked(1700, 1f);
+                }
+            }
+            Destroy(o);
+            yield return new WaitForSeconds(_coolTime);
+        }
     }
 }
