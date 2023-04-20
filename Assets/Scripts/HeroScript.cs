@@ -118,7 +118,7 @@ public class HeroScript : MonoBehaviour
         TextMaxHP = GameObject.Find("HeroMaxHPText").GetComponent<Text>();
         TextNowHP = GameObject.Find("HeroNowHPText").GetComponent<Text>();
         InvokeRepeating("UpdateTarget", 0, 0.25f);
-        InvokeRepeating("HPRegenerationMethod", 0, 1);
+        InvokeRepeating("HPRegenerationMethod", 0, 0.1f);
     }
 
     public GameObject target = null;
@@ -150,6 +150,8 @@ public class HeroScript : MonoBehaviour
         criticalDmg = float.Parse(DataManager.AllHeroList[_heroID].heroCriticalDmg) + criticalDmgCV;
         criticalChance = float.Parse(DataManager.AllHeroList[_heroID].heroCriticalChance) + criticalChanceCV;
         predateCoolTime = float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0015").abilityCoolTime);
+
+        StatusSprites.transform.position = Camera.main.WorldToScreenPoint(new Vector3(transform.GetComponent<Collider2D>().bounds.center.x, transform.GetComponent<Collider2D>().bounds.center.y + GetComponent<BoxCollider2D>().size.y * transform.localScale.y + 0.1f, 0));
 
         bool fear = false;
         fired = false;
@@ -305,7 +307,7 @@ public class HeroScript : MonoBehaviour
     private void HPRegenerationMethod()
     {
         float totalre = HPRegeneration + HPRegenerationCV;
-        BeHealed(totalre);
+        BeHealed(totalre / 10, false);
     }
 
     private void MeleeAttack()
@@ -450,16 +452,19 @@ public class HeroScript : MonoBehaviour
         spriteRenderer.color = new Color(1, 1, 1, 1);
     }
 
-    public void BeHealed(float value)
+    public void BeHealed(float value, bool textFloating = true)
     {
         if(fired) value /= 2;
         if(value > 0 && nowHP < maxHP) 
         {
             nowHP += value;
             if(nowHP > maxHP) nowHP = maxHP;
-            RectTransform text = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);
-            text.GetComponent<FloatingText>().SetText($"+{Mathf.Round(value)}", "#00FF00");
-            text.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y, 0));
+            if(textFloating)
+            {
+                RectTransform text = Instantiate(Resources.Load<RectTransform>("Effects/FloatingText"), GetComponent<Collider2D>().bounds.center, Quaternion.identity, GameObject.Find("Canvas").transform);
+                text.GetComponent<FloatingText>().SetText($"+{Mathf.Round(value)}", "#00FF00");
+                text.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y, 0));
+            }
         }
     }
 

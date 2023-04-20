@@ -2,19 +2,19 @@ StatusID	StatusNameKR	StatusExplainKR	BuffStat	BuffValue	BuffTime
 0000	퀵드로우	공격 속도 +50%	atkSpeedCVM	0.5	5
 0001	거미줄	공격속도, 이동속도 -30%	atkSpeedCVM|moveSpeedCVM	-0.3|-0.3	2
 0002	저주	공격력, 방어력 -20, 치명타확률 -30%	atkDmgCV|armorCV|criticalChanceCV	-20|-20|-30	3
-0003	강한저주	공격력, 방어력 -30, 치명타확률 -60%	atkDmgCV|armorCV|criticalChanceCV	-30|-30|-60	3
+0003	강한저주	공격력, 방어력 -40, 치명타확률 -60%	atkDmgCV|armorCV|criticalChanceCV	-40|-40|-60	3
 0004	공포	이동속도 -80% 상태로 적 반대방향으로 도망감	moveSpeedCVM|attackable	-0.8|-1	2
 0005	광기(지속)	공격력 +30%	atkDmgCVM	0.3	100
 0006	광폭	공격력 +30%, 공격속도 +30%, 이동속도 +30%, 방어력 -10	atkDmgCVM|atkSpeedCVM|moveSpeedCVM|armorCV	0.3|0.3|0.3|-10	100
-0007	중독	공격력, 방어력 -10, 이동속도 -30%, 매초 체력 -20	atkDmgCV|armorCV|moveSpeedCVM|nowHPCV	-10|-10|-0.3|-20	5
-0008	화염	방어력 -20, 매초 체력 -20, 대상의 모든 치유효과 -50%	armorCV|nowHPCV	-20|-20	3
+0007	중독	공격력, 방어력 -10, 이동속도 -30%, 매초 체력 -50	atkDmgCV|armorCV|moveSpeedCVM|nowHPCV	-10|-10|-0.3|-50	5
+0008	화염	방어력 -20, 매초 체력 -50, 대상의 모든 치유효과 -50%	armorCV|nowHPCV	-20|-50	3
 0009	거대화	공격력, 방어력, 최대체력, 크기 x2	atkDmgCVM|armorCVM|maxHPCVM|sizeCVM	1|1|1|1	100
-0010	무리공격	공격력 + 아군 하수인 수x5	atkDmgCV	0	100
-0011	무리방어	방어력 + 아군 하수인 수	armorCV	0	100
+0010	무리공격	공격력 + 아군 하수인 수x10	atkDmgCV	0	100
+0011	무리방어	방어력 + 아군 하수인 수x5	armorCV	0	100
 0012	속박	3초간 움직일 수 없음	movable	-1	3
 0013	광기	공격력 +30%	atkDmgCVM	0.3	10
-0014	방어태세	방어력 +10	armorCV	10	10
-0015	훈련	공격력 +15, 방어력 +15	atkDmgCV|armorCV	15|15	10
-0016	훈련(왕)	공격력 +15, 방어력 +15	atkDmgCV|armorCV	15|15	1
-0017	버티기	방어력 +20	armorCV	20	30
-0018	각성	공격력 +100%, 방어력 +30, 공격속도 +30%	atkDmgCVM|armorCV|atkSpeedCVM	1|30|0.3	100
+0014	방어태세	방어력 +20	armorCV	20	10
+0015	훈련	공격력 +30, 방어력 +15	atkDmgCV|armorCV	30|15	10
+0016	훈련(왕)	공격력 +30, 방어력 +15	atkDmgCV|armorCV	30|15	1
+0017	버티기	방어력 +30	armorCV	30	30
+0018	각성	공격력 +100%, 방어력 +50, 공격속도 +30%	atkDmgCVM|armorCV|atkSpeedCVM	1|50|0.3	100

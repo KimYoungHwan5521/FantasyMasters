@@ -1,49 +1,49 @@
 ItemID	ItemNameKR	ItemAttributes	ItemRareDegree	ItemExplainKR	ItemBuffStat	ItemBuffValue	ItemAbilityID
-0000	팔뼈	암흑	0	공격력 +20, 최대체력 -30	atkDmgCV|maxHPCV	20|-30	
-0001	대퇴골	암흑	0	공격력 +30, 최대체력 -60	atkDmgCV|maxHPCV	30|-60	
-0002	뼈방패	암흑	0	방어력 +10, 최대체력 -30	armorCV|maxHPCV	10|-30	
-0003	사신의 낫	암흑	2	공격력 +40, 최대체력 -60, 방어무시	atkDmgCV|maxHPCV	40|-60	0004
+0000	팔뼈	암흑	0	공격력 +40, 최대체력 -50	atkDmgCV|maxHPCV	40|-50	
+0001	대퇴골	암흑	0	공격력 +60, 최대체력 -100	atkDmgCV|maxHPCV	60|-100	
+0002	뼈방패	암흑	0	방어력 +15, 최대체력 -50	armorCV|maxHPCV	15|-50	
+0003	사신의 낫	암흑	2	공격력 +80, 최대체력 -100, 방어무시	atkDmgCV|maxHPCV	40|-60	0004
 0004	다크 로브	암흑	0	최대체력 +100	maxHPCV	100	
-0005	두개골	암흑	2	최대체력 -30, 저주공격	maxHPCV	-30	0005
-0006	흑마법서	암흑	3	최대체력 -60, 강한저주공격	maxHPCV	-60	0006
-0007	좀비의 팔	암흑	0	체력재생 +3, 최대체력 -30	HPRegenerationCV|maxHPCV	3|-30	
-0008	좀비의 다리	암흑	0	이동속도 +30%, 최대체력 -30	moveSpeedCVM|maxHPCV	0.3|-30	
-0009	늑골	암흑	1	방어력 +20, 최대체력 -60	armorCV|maxHPCV	20|-60	
-0010	좀비의 육체	암흑	1	체력재생 +6, 최대체력 -100	HPRegenerationCV|maxHPCV	6|-100	
-0011	양 머리뼈	암흑	1	공격력 +20, 방어력 +20, 최대체력 -100, 공포 면역	atkDmgCV|armorCV|maxHPCV	20|20|-100	0017
-0012	뼈화살	암흑 숲	1	치명타 확률 +15%, 치명타 데미지 +50%, 최대체력 -30	criticalChanceCV|criticalDmgCV|maxHPCV	15|0.5|-30	
+0005	두개골	암흑	2	최대체력 -50, 저주공격	maxHPCV	-50	0005
+0006	흑마법서	암흑	3	최대체력 -100, 강한저주공격	maxHPCV	-100	0006
+0007	좀비의 팔	암흑	0	체력재생 +20, 최대체력 -50	HPRegenerationCV|maxHPCV	20|-50	
+0008	좀비의 다리	암흑	0	이동속도 +30%, 최대체력 -50	moveSpeedCVM|maxHPCV	0.3|-50	
+0009	늑골	암흑	1	방어력 +30, 최대체력 -100	armorCV|maxHPCV	30|-100	
+0010	좀비의 육체	암흑	1	체력재생 +40, 최대체력 -100	HPRegenerationCV|maxHPCV	40|-100	
+0011	양 머리뼈	암흑	1	공격력 +40, 방어력 +20, 최대체력 -100, 공포 면역	atkDmgCV|armorCV|maxHPCV	40|20|-100	0017
+0012	뼈화살	암흑 숲	1	치명타 확률 +15%, 치명타 데미지 +50%, 최대체력 -50	criticalChanceCV|criticalDmgCV|maxHPCV	15|0.5|-50	
 0013	좀비 턱	암흑	1	최대체력 -100, 좀비 물림: 공격을 받은 적이 처치될때 20% 확률로 같은 편 좀비로 부활함	maxHPCV	-100	0011
-0014	생선 가시	암흑 물	0	치명타 확률 +30%, 최대체력 -30	criticalChanceCV|maxHPCV	30|-30	
+0014	생선 가시	암흑 물	0	치명타 확률 +30%, 최대체력 -50	criticalChanceCV|maxHPCV	30|-50	
 0015	검은 고양이	암흑	3	치명타 확률 -100%, 공격력 +50%	criticalChanceCV|atkDmgCVM	-100|0.5	
 0016	독화살	숲	2	치명타 확률 +15%, 중독공격	criticalChanceCV	15	0025
 0017	불화살	불 숲	2	치명타 확률 +15%, 화염공격	criticalChanceCV	15	0026
 0018	정글 장화	숲	0	이동속도 +15%, 중독면역	moveSpeedCVM	0.15	0027
 0019	네잎클로버	숲 빛	0	치명타 확률 +30%	criticalChanceCV	30	
 0020	날개달린 신발	빛	1	이동속도 +60%	moveSpeedCVM	0.6	
-0021	선인장	숲 대지	1	공격력 +10, 치명타 데미지 +50%	atkDmgCV|criticalDmgCV	10|0.5	
+0021	선인장	숲 대지	1	공격력 +20, 치명타 데미지 +50%	atkDmgCV|criticalDmgCV	20|0.5	
 0022	화살통	숲	0	공격속도 +30%	atkSpeedCVM	0.25	
-0023	연못	물 숲	0	체력재생 +2.5	HPRegenerationCV	2	
-0024	나무방패	무속성	0	방어력 +5	armorCV	5	
+0023	연못	물 숲	0	체력재생 +15	HPRegenerationCV	15	
+0024	나무방패	무속성	0	방어력 +10	armorCV	10	
 0025	호피	숲	0	최대체력 +150	maxHPCV	150	
-0026	벌목용 도끼	무속성	0	공격력 +10	atkDmgCV	10	
-0027	가시덤불	숲	0	공격력 +10, 치명타 확률 +15%	atkDmgCV|criticalChanceCV	10|15	
-0028	저주받은 칼	암흑 불	1	공격력 +60, 방어력 -10, 치명타 확률 -30%	atkDmgCV|armorCV|criticalChanceCV	60|-10|-30	
-0029	큰나무방패	무속성	1	방어력 +10	armorCV	10	
-0030	슈암드리르	암흑	1	공격력 +20, 공격속도 +30%, 최대체력 -20	atkDmg|atkSpeedCVM|maxHPCV	20|0.3|-20	
-0031	가시덤불칼	숲	1	공격력 +20, 치명타확률 +30%	atkDmgCV|criticalChanceCV	20|30	
-0032	엘무위치	숲	1	공격력 +10, 공격속도 +30%	atkDmgCV|atkSpeedCVM	10|0.3	
-0033	백조의 노래	숲	2	공격력 +20, 재생공격	atkDmgCV	10	0044
+0026	벌목용 도끼	무속성	0	공격력 +20	atkDmgCV	20	
+0027	가시덤불	숲	0	공격력 +20, 치명타 확률 +15%	atkDmgCV|criticalChanceCV	20|15	
+0028	저주받은 칼	암흑 불	1	공격력 +80, 방어력 -10, 치명타 확률 -30%	atkDmgCV|armorCV|criticalChanceCV	80|-10|-30	
+0029	큰나무방패	무속성	1	방어력 +20	armorCV	20	
+0030	슈암드리르	암흑	1	공격력 +40, 공격속도 +30%, 최대체력 -100	atkDmg|atkSpeedCVM|maxHPCV	40|0.3|-100	
+0031	가시덤불칼	숲	1	공격력 +40, 치명타확률 +30%	atkDmgCV|criticalChanceCV	40|30	
+0032	엘무위치	숲	1	공격력 +20, 공격속도 +30%	atkDmgCV|atkSpeedCVM	20|0.3	
+0033	백조의 노래	숲	2	공격력 +40, 재생공격	atkDmgCV	40	0044
 0034	람쉬르다	숲	1	공격속도 +30%, 치명타 데미지 +50%	atkSpeedCVM|criticalDmgCV	0.3|50	
-0035	팬텀라이트	암흑	1	공격력 +20, 치명타확률 +15%, 최대체력 -30	atkDmgCV|criticalChanceCV|maxHPCV	20|15|-30	
-0036	나이프프	무속성	0	치명타 확률 +15%	criticalDmgCV	15	
+0035	팬텀라이트	암흑	1	공격력 +40, 치명타확률 +15%, 최대체력 -50	atkDmgCV|criticalChanceCV|maxHPCV	40|15|-50	
+0036	나이프	무속성	0	치명타 확률 +15%	criticalDmgCV	15	
 0037	작은나무활	무속성	0	공격속도 +15%	atkSpeedCVM	0.15	
-0038	맥주	무속성	0	체력재생 +1	HPRegenerationCV	1	
+0038	맥주	무속성	0	체력재생 +10	HPRegenerationCV	10	
 0039	흉갑	무속성	0	최대체력 +100	maxHPCV	100	
-0040	작은강철방패	무속성	2	방어력 +20	armorCV	20	
-0041	장검	무속성	1	공격력 +20	atkDmgCV	20	
-0042	삼지창	무속성	2	공격력 +40	atkDmgCV	40	
-0043	럼주	무속성	1	체력재생 +2	HPRegererationCV	2	
-0044	포도주	무속성	2	체력재생 +5	HPRegenerationCV	5	
+0040	작은강철방패	무속성	2	방어력 +30	armorCV	30	
+0041	장검	무속성	1	공격력 +40	atkDmgCV	40	
+0042	삼지창	무속성	2	공격력 +60	atkDmgCV	60	
+0043	럼주	무속성	1	체력재생 +20	HPRegererationCV	20	
+0044	포도주	무속성	2	체력재생 +30	HPRegenerationCV	30	
 0045	대거	무속성	1	치명타 확률 +30%	criticalChanceCV	30	
 0046	쌍칼	무속성	2	치명타 확률 +45%	criticalChanceCV	45	
 0047	큰나무활	무속성	1	공격속도 +30%	atkSpeedCVM	0.3	
@@ -56,6 +56,6 @@ ItemID	ItemNameKR	ItemAttributes	ItemRareDegree	ItemExplainKR	ItemBuffStat	ItemB
 0054	작은 나무쇠뇌	무속성	0	치명타 데미지 +50%	criticalDmgCV	0.5	
 0055	나무쇠뇌	무속성	1	치명타 데미지 +100%	criticalDmgCV	1	
 0056	큰나무쇠뇌	무속성	2	치명타 데미지 +200%	criticalDmgCV	2	
-0057	잔인한 조각가, 보바피에르	무속성	3	공격력 +40, 방어력 +20	atkDmgCV|armorCV	40|20	
+0057	잔인한 조각가, 보바피에르	무속성	3	공격력 +60, 방어력 +30	atkDmgCV|armorCV	60|30	
 0058	라이트브링거	무속성	3	공격속도 +30%, 치명타 확률 +30%, 치명타 데미지 +100%, 이동속도 +30%	atkSpeedCVM|criticalDmgCV|criticalChanceCV|moveSpeedCVM	0.3|30|1|0.3	
-0059	수호자	무속성	3	방어력 +20, 최대체력 +300, 체력재생 +5	armorCV|maxHPCV|HPRegenerationCV	20|300|5	
+0059	수호자	무속성	3	방어력 +30, 최대체력 +300, 체력재생 +30	armorCV|maxHPCV|HPRegenerationCV	30|300|30	

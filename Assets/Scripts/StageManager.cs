@@ -282,6 +282,10 @@ public class StageManager : MonoBehaviour
         {
             StartCoroutine(Buffs("0018", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0062").abilityCoolTime), 30, "hero"));
         }
+        if(hAbilities.Contains("0063"))
+        {
+            StartCoroutine(AreaDamage("MissileBombing", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0063").abilityCoolTime), 2, 600));
+        }
         StartCoroutine(SpawnEnemy(stageInfo));
     }
     
@@ -633,7 +637,7 @@ public class StageManager : MonoBehaviour
         while(true)
         {
             if(StageTime.text == "0") break;
-            Collider2D[] cols = Physics2D.OverlapCircleAll(Hero.GetComponent<Collider2D>().bounds.center, 3);
+            Collider2D[] cols = Physics2D.OverlapCircleAll(Hero.GetComponent<Collider2D>().bounds.center, 2);
             foreach(Collider2D col in cols)
             {
                 if(col.tag == "Enemy")
@@ -732,6 +736,7 @@ public class StageManager : MonoBehaviour
         yield return new WaitForSeconds(wait + 0.1f);
         while(true)
         {
+            if(StageTime.text == "0") break;
             if(_buffTarget == "minion")
             {
                 GameObject[] M = GameObject.FindGameObjectsWithTag("Minion");
@@ -750,5 +755,42 @@ public class StageManager : MonoBehaviour
             }
             yield return new WaitForSeconds(_coolTime);
         }
+    }
+
+    IEnumerator AreaDamage(string _name, float _coolTime, float _range, float _dmg)
+    {
+        while(true)
+        {
+            if(StageTime.text == "0") break;
+            GameObject t = Hero.GetComponent<HeroScript>().target;
+            Vector2 tp = Vector2.zero;
+            if(t != null) tp = t.transform.position;
+            else tp = new Vector2(Random.Range(-10f, 10f), Random.Range(-5f, 5f));
+            GameObject s = Instantiate(Resources.Load<GameObject>("AreaDamage/AreaDamage"), tp, Quaternion.identity);
+            s.transform.localScale = new Vector2(s.transform.localScale.x * _range, s.transform.localScale.y * _range);
+            GameObject spjt = Instantiate(Resources.Load<GameObject>($"AreaDamage/AreaDamage{_name}"), new Vector2(tp.x, tp.y + 10), Quaternion.identity);
+            StartCoroutine(Drop(spjt, s, _range, _dmg));
+            yield return new WaitForSeconds(_coolTime);
+        }
+    }
+
+    IEnumerator Drop(GameObject o, GameObject s, float _range, float _dmg)
+    {
+        for(int i=0; i<50; i++)
+        {
+            o.transform.Translate(Vector2.down * 0.2f);
+            yield return new WaitForSeconds(0.01f);
+        }
+        Instantiate(Resources.Load<GameObject>("Effects/Explosion01"), s.transform.position, Quaternion.identity);
+        Collider2D[] cols = Physics2D.OverlapCircleAll(s.transform.position, _range * 0.5f);
+        foreach(Collider2D col in cols)
+        {
+            if(col.tag == "Enemy")
+            {
+                col.GetComponent<EnemyScript>().BeAttacked(_dmg, 0.5f);
+            }
+        }
+        Destroy(o);
+        Destroy(s);
     }
 }
