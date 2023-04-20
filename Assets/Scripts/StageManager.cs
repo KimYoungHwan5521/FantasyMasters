@@ -294,6 +294,10 @@ public class StageManager : MonoBehaviour
         {
             StartCoroutine(Strike(float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0065").abilityCoolTime)));
         }
+        if(hAbilities.Contains("0066"))
+        {
+            StartCoroutine(AreaHeal(Hero, float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0066").abilityCoolTime), 4, 200));
+        }
         StartCoroutine(SpawnEnemy(stageInfo));
     }
     
@@ -777,29 +781,24 @@ public class StageManager : MonoBehaviour
             GameObject s = Instantiate(Resources.Load<GameObject>("AreaDamage/AreaDamage"), tp, Quaternion.identity);
             s.transform.localScale = new Vector2(s.transform.localScale.x * _range, s.transform.localScale.y * _range);
             GameObject spjt = Instantiate(Resources.Load<GameObject>($"AreaDamage/AreaDamage{_name}"), new Vector2(tp.x, tp.y + 10), Quaternion.identity);
-            StartCoroutine(Drop(spjt, s, _range, _dmg));
+            for(int i=0; i<50; i++)
+            {
+                spjt.transform.Translate(Vector2.down * 0.2f);
+                yield return new WaitForSeconds(0.01f);
+            }
+            Instantiate(Resources.Load<GameObject>("Effects/Explosion01"), s.transform.position, Quaternion.identity);
+            Collider2D[] cols = Physics2D.OverlapCircleAll(s.transform.position, _range * 0.5f);
+            foreach(Collider2D col in cols)
+            {
+                if(col.tag == "Enemy")
+                {
+                    col.GetComponent<EnemyScript>().BeAttacked(_dmg, 0.5f);
+                }
+            }
+            Destroy(spjt);
+            Destroy(s);
             yield return new WaitForSeconds(_coolTime);
         }
-    }
-
-    IEnumerator Drop(GameObject o, GameObject s, float _range, float _dmg)
-    {
-        for(int i=0; i<50; i++)
-        {
-            o.transform.Translate(Vector2.down * 0.2f);
-            yield return new WaitForSeconds(0.01f);
-        }
-        Instantiate(Resources.Load<GameObject>("Effects/Explosion01"), s.transform.position, Quaternion.identity);
-        Collider2D[] cols = Physics2D.OverlapCircleAll(s.transform.position, _range * 0.5f);
-        foreach(Collider2D col in cols)
-        {
-            if(col.tag == "Enemy")
-            {
-                col.GetComponent<EnemyScript>().BeAttacked(_dmg, 0.5f);
-            }
-        }
-        Destroy(o);
-        Destroy(s);
     }
 
     IEnumerator Strike(float _coolTime)
@@ -825,5 +824,29 @@ public class StageManager : MonoBehaviour
             Destroy(o);
             yield return new WaitForSeconds(_coolTime);
         }
+    }
+
+    IEnumerator AreaHeal(GameObject healer, float _coolTime, float _range, float _value)
+    {
+        while(true)
+        {
+            if(StageTime.text == "0") break;
+            GameObject ef = Instantiate(Resources.Load<GameObject>("Effects/AreaHeal"), healer.transform.position, Quaternion.identity);
+            ef.transform.localScale = new Vector2(ef.transform.localScale.x * _range, ef.transform.localScale.y * _range);
+            Collider2D[] cols = Physics2D.OverlapCircleAll(healer.transform.position, _range * 0.5f);
+            foreach(Collider2D col in cols)
+            {
+                if(col.tag == "Player")
+                {
+                    col.GetComponent<HeroScript>().BeHealed(_value);
+                }
+                else if(col.tag == "Minion")
+                {
+                    col.GetComponent<MinionScript>().BeHealed(_value);
+                }
+            }
+            yield return new WaitForSeconds(_coolTime);
+        }
+        
     }
 }
