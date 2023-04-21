@@ -112,7 +112,7 @@ public class Minion
 [System.Serializable]
 public class Ability
 {
-    public Ability(string _ID, string _NameKR, string _Attributes, string _RareDegree, string _CoolTime, string _ExplainKR, string _RelatedStatus)
+    public Ability(string _ID, string _NameKR, string _Attributes, string _RareDegree, string _CoolTime, string _ExplainKR, string _RelatedMinion, string _RelatedTrap, string _RelatedStatus)
     {
         abilityID = _ID;
         abilityNameKR = _NameKR;
@@ -120,6 +120,8 @@ public class Ability
         abilityRareDegree = _RareDegree;
         abilityCoolTime = _CoolTime;
         abilityExplainKR = _ExplainKR;
+        relatedMinion = _RelatedMinion.Split(',').ToList();
+        relatedTrap = _RelatedTrap.Split(',').ToList();
         relatedStatus = _RelatedStatus.Split(',').ToList();
     }
     public string abilityID;
@@ -128,6 +130,8 @@ public class Ability
     public string abilityRareDegree;
     public string abilityCoolTime;
     public string abilityExplainKR;
+    public List<string> relatedMinion;
+    public List<string> relatedTrap;
     public List<string> relatedStatus;
 }
 
@@ -249,7 +253,7 @@ public class DataManager : MonoBehaviour
     public static List<Item> AllItemList;
     public static List<Trap> AllTrapList;
 
-    public static int selectedHeroID = 1;
+    public static int selectedHeroID = 0;
 
     void Start()
     {
@@ -305,11 +309,11 @@ public class DataManager : MonoBehaviour
             string[] row = line[i].Split('\t');
             if(i == 0)
             {
-                AllAbilityList.Add(new Ability(row[0], row[1], row[2], row[3], row[4], row[5], row[6]));
+                AllAbilityList.Add(new Ability(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]));
             }
             else
             {
-                AllAbilityList.Add(new Ability(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5], row[6]));
+                AllAbilityList.Add(new Ability(row[0].Substring(1), row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]));
             }
         }
         

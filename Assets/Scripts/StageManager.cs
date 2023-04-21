@@ -385,6 +385,7 @@ public class StageManager : MonoBehaviour
     public List<Product> CurProductList;
     public GameObject[] HaveAbilities;
     public GameObject[] HaveItems;
+    public GameObject HeroStats;
     IEnumerator ReadyToNextStage()
     {
         CurProductList = new List<Product>();
@@ -513,6 +514,17 @@ public class StageManager : MonoBehaviour
             Image HaveItemImage = HaveItems[i].GetComponentsInChildren<Image>()[1];
             HaveItemImage.sprite = Resources.Load<Sprite>($"UIs/Icons/Products/Items/Item{hItems[i].itemID}");
         }
+        Text[] heroStatsText = HeroStats.GetComponentsInChildren<Text>();
+        heroStatsText[2].text = $"{(Hero.GetComponent<HeroScript>().maxHP - Hero.GetComponent<HeroScript>().tempMaxHPCV)}";
+        heroStatsText[4].text = $"{Hero.GetComponent<HeroScript>().HPRegeneration}";
+        if(DataManager.AllHeroList[Hero.GetComponent<HeroScript>()._heroID].heroAtkDmg.Contains("x")) heroStatsText[6].text = $"{Hero.GetComponent<HeroScript>().atkDmg}x{DataManager.AllHeroList[Hero.GetComponent<HeroScript>()._heroID].heroAtkDmg.Split('x')[1]}";
+        else heroStatsText[6].text = $"{Hero.GetComponent<HeroScript>().atkDmg}";
+        heroStatsText[8].text = $"{Hero.GetComponent<HeroScript>().atkSpeed}";
+        heroStatsText[10].text = $"{Hero.GetComponent<HeroScript>().atkRange}";
+        heroStatsText[12].text = $"{Hero.GetComponent<HeroScript>().criticalDmg * 100}%";
+        heroStatsText[14].text = $"{Hero.GetComponent<HeroScript>().criticalChance}%";
+        heroStatsText[16].text = $"{Hero.GetComponent<HeroScript>().armor}";
+        heroStatsText[18].text = $"{Hero.GetComponent<HeroScript>().moveSpeed}";
         Shop.SetActive(true);
         yield return null;
     }
@@ -541,6 +553,126 @@ public class StageManager : MonoBehaviour
     public void MouseExitHaveAbility()
     {
         Explain.SetActive(false);
+    }
+
+    public GameObject ProductDetail;
+    public GameObject MinionInfo;
+    public GameObject AbilityInfo;
+    public GameObject StatusInfo;
+    public void MouseEnterProductSimple(int num)
+    {
+        if(CurProductList[num].productType == "능력") 
+        {
+            if(DataManager.AllAbilityList.Find(x => x.abilityID == CurProductList[num].inheritanceID).relatedMinion[0] != "")
+            {
+                string tempMID = DataManager.AllAbilityList.Find(x => x.abilityID == CurProductList[num].inheritanceID).relatedMinion[0];
+                Text[] minionInfoTexts = MinionInfo.GetComponentsInChildren<Text>();
+                minionInfoTexts[0].text = DataManager.AllMinionList.Find(x => x.minionID == tempMID).minionNameKR;
+                minionInfoTexts[2].text = DataManager.AllMinionList.Find(x => x.minionID == tempMID).minionMaxHP;
+                minionInfoTexts[4].text = DataManager.AllMinionList.Find(x => x.minionID == tempMID).minionAtkDmg;
+                minionInfoTexts[6].text = DataManager.AllMinionList.Find(x => x.minionID == tempMID).minionAtkSpeed;
+                minionInfoTexts[8].text = Mathf.Round(float.Parse(DataManager.AllMinionList.Find(x => x.minionID == tempMID).minionCriticalDmg) * 100).ToString() + "%";
+                minionInfoTexts[10].text = DataManager.AllMinionList.Find(x => x.minionID == tempMID).minionCriticalChance + "%";
+                minionInfoTexts[12].text = DataManager.AllMinionList.Find(x => x.minionID == tempMID).minionArmor;
+                minionInfoTexts[14].text = DataManager.AllMinionList.Find(x => x.minionID == tempMID).minionMoveSpeed;
+                MinionInfo.SetActive(true);
+                if(DataManager.AllMinionList.Find(x => x.minionID == tempMID).minionAbilities[0] != "")
+                {
+                    string tempAID = DataManager.AllMinionList.Find(x => x.minionID == tempMID).minionAbilities[0];
+                    minionInfoTexts[16].text = DataManager.AllAbilityList.Find(x => x.abilityID == tempAID).abilityNameKR;
+                    Text[] abilityInfoTexts = AbilityInfo.GetComponentsInChildren<Text>();
+                    abilityInfoTexts[0].text = DataManager.AllAbilityList.Find(x => x.abilityID == tempAID).abilityNameKR;
+                    abilityInfoTexts[1].text = DataManager.AllAbilityList.Find(x => x.abilityID == tempAID).abilityExplainKR;
+                    AbilityInfo.SetActive(true);
+                    if(DataManager.AllAbilityList.Find(x => x.abilityID == tempAID).relatedStatus[0] != "")
+                    {
+                        string tempSID = DataManager.AllAbilityList.Find(x => x.abilityID == tempAID).relatedStatus[0];
+                        Text[] statusInfoTexts = StatusInfo.GetComponentsInChildren<Text>();
+                        statusInfoTexts[0].text = DataManager.AllStatusList.Find(x => x.statusID == tempSID).statusNameKR;
+                        statusInfoTexts[1].text = DataManager.AllStatusList.Find(x => x.statusID == tempSID).statusExplainKR;
+                        StatusInfo.SetActive(true);
+                    }
+                    else if(DataManager.AllAbilityList.Find(x => x.abilityID == tempAID).relatedTrap[0] != "")
+                    {
+                        string tempSID = DataManager.AllTrapList.Find(x => x.trapID == DataManager.AllAbilityList.Find(x => x.abilityID == tempAID).relatedTrap[0]).trapStatus[0];
+                        Text[] statusInfoTexts = StatusInfo.GetComponentsInChildren<Text>();
+                        statusInfoTexts[0].text = DataManager.AllStatusList.Find(x => x.statusID == tempSID).statusNameKR;
+                        statusInfoTexts[1].text = DataManager.AllStatusList.Find(x => x.statusID == tempSID).statusExplainKR;
+                        StatusInfo.SetActive(true);
+                    }
+                    else StatusInfo.SetActive(false);
+                }
+                else 
+                {
+                    minionInfoTexts[16].text = "없음";
+                    AbilityInfo.SetActive(false);
+                    StatusInfo.SetActive(false);
+                }
+            }
+            else if(DataManager.AllAbilityList.Find(x => x.abilityID == CurProductList[num].inheritanceID).relatedTrap[0] != "")
+            {
+                MinionInfo.SetActive(false);
+                AbilityInfo.SetActive(false);
+                if(DataManager.AllTrapList.Find(x => x.trapID == DataManager.AllAbilityList.Find(x => x.abilityID == CurProductList[num].inheritanceID).relatedTrap[0]).trapStatus[0] != null)
+                {
+                    string tempSID = DataManager.AllTrapList.Find(x => x.trapID == DataManager.AllAbilityList.Find(x => x.abilityID == CurProductList[num].inheritanceID).relatedTrap[0]).trapStatus[0];
+                    Text[] statusInfoTexts = StatusInfo.GetComponentsInChildren<Text>();
+                    statusInfoTexts[0].text = DataManager.AllStatusList.Find(x => x.statusID == tempSID).statusNameKR;
+                    statusInfoTexts[1].text = DataManager.AllStatusList.Find(x => x.statusID == tempSID).statusExplainKR;
+                    StatusInfo.SetActive(true);
+                }
+                else StatusInfo.SetActive(false);
+            }
+            else
+            {
+                MinionInfo.SetActive(false);
+                AbilityInfo.SetActive(false);
+                if(DataManager.AllAbilityList.Find(x => x.abilityID == CurProductList[num].inheritanceID).relatedStatus[0] != "")
+                {
+                    string tempSID = DataManager.AllAbilityList.Find(x => x.abilityID == CurProductList[num].inheritanceID).relatedStatus[0];
+                    Text[] statusInfoTexts = StatusInfo.GetComponentsInChildren<Text>();
+                    statusInfoTexts[0].text = DataManager.AllStatusList.Find(x => x.statusID == tempSID).statusNameKR;
+                    statusInfoTexts[1].text = DataManager.AllStatusList.Find(x => x.statusID == tempSID).statusExplainKR;
+                    StatusInfo.SetActive(true);
+                }
+                else StatusInfo.SetActive(false);
+            }
+
+        }
+        else 
+        {
+            MinionInfo.SetActive(false);
+            if(DataManager.AllItemList.Find(x => x.itemID == CurProductList[num].inheritanceID).itemAbilities[0] != "")
+            {
+                string tempAID = DataManager.AllItemList.Find(x => x.itemID == CurProductList[num].inheritanceID).itemAbilities[0];
+                Text[] abilityInfoTexts = AbilityInfo.GetComponentsInChildren<Text>();
+                abilityInfoTexts[0].text = DataManager.AllAbilityList.Find(x => x.abilityID == tempAID).abilityNameKR;
+                abilityInfoTexts[1].text = DataManager.AllAbilityList.Find(x => x.abilityID == tempAID).abilityExplainKR;
+                AbilityInfo.SetActive(true);
+                if(DataManager.AllAbilityList.Find(x => x.abilityID == tempAID).relatedStatus[0] != "")
+                {
+                    string tempSID = DataManager.AllAbilityList.Find(x => x.abilityID == tempAID).relatedStatus[0];
+                    Text[] statusInfoTexts = StatusInfo.GetComponentsInChildren<Text>();
+                    statusInfoTexts[0].text = DataManager.AllStatusList.Find(x => x.statusID == tempSID).statusNameKR;
+                    statusInfoTexts[1].text = DataManager.AllStatusList.Find(x => x.statusID == tempSID).statusExplainKR;
+                    StatusInfo.SetActive(true);
+                }
+                else StatusInfo.SetActive(false);
+            }
+            else
+            {
+                AbilityInfo.SetActive(false);
+                StatusInfo.SetActive(false);
+            }
+        }
+        if(num < 4) ProductDetail.GetComponent<RectTransform>().anchoredPosition = new Vector2(ProductsSimple[num].GetComponent<RectTransform>().anchoredPosition.x + ProductsSimple[num].GetComponent<RectTransform>().rect.width + 75, ProductsSimple[num].GetComponent<RectTransform>().anchoredPosition.y - 30);
+        else ProductDetail.GetComponent<RectTransform>().anchoredPosition = new Vector2(ProductsSimple[num].GetComponent<RectTransform>().anchoredPosition.x - ProductsSimple[num].GetComponent<RectTransform>().rect.width + 75, ProductsSimple[num].GetComponent<RectTransform>().anchoredPosition.y - 30);
+        if(MinionInfo.activeSelf || AbilityInfo.activeSelf || StatusInfo.activeSelf) ProductDetail.SetActive(true);
+    }
+
+    public void MouseExitProductSimple()
+    {
+        ProductDetail.SetActive(false);
     }
 
     public int selectedProduct;
@@ -598,11 +730,6 @@ public class StageManager : MonoBehaviour
         {
             if(StageTime.text == "0") break;
             Vector3 summonPositon = Hero.GetComponent<Collider2D>().bounds.center;
-            for(int i=0; i<n; i++)
-            {
-                GameObject g = Instantiate(minionToSummon, summonPositon, Quaternion.identity);
-                if(_minionID == "0007") StartCoroutine(SummonTrap(g, "0001", 2));
-            }
             if(!repeat) break;
             yield return new WaitForSeconds(summonCoolTime);
         }
@@ -702,7 +829,7 @@ public class StageManager : MonoBehaviour
         }
     }
 
-    IEnumerator SummonTrap(GameObject summoner, string _trapID, float summonCoolTime)
+    public IEnumerator SummonTrap(GameObject summoner, string _trapID, float summonCoolTime)
     {
         var trapToSummon = Resources.Load<GameObject>($"Traps/Trap{_trapID}");
         while(true)

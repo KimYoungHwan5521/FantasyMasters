@@ -8,6 +8,7 @@ using System.Linq;
 public class MinionScript : MonoBehaviour
 {
     DataManager DataManager;
+    StageManager StageManager;
     public int _minionID;
     public string stringID;
     public string minionNameKR;
@@ -78,6 +79,7 @@ public class MinionScript : MonoBehaviour
         }
         stringID += _minionID.ToString();
         DataManager = GameObject.Find("DataManager").GetComponent<DataManager>();
+        StageManager = GameObject.Find("DataManager").GetComponent<StageManager>();
         int idx = DataManager.AllMinionList.FindIndex(x => x.minionID == stringID);
         Minion minionInfo = DataManager.AllMinionList[idx];
         minionNameKR = minionInfo.minionNameKR;
@@ -142,6 +144,10 @@ public class MinionScript : MonoBehaviour
         target = null;
         if(minionMoveType == 4) InvokeRepeating("UpdateTargetAlli", 0, 0.25f);
         InvokeRepeating("UpdateTarget", 0, 0.25f);
+        if(minionAbilities.Contains("0037"))
+        {
+            StageManager.StartCoroutine(StageManager.SummonTrap(gameObject, "0001", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0037").abilityCoolTime)));
+        }
         if(minionAbilities.Contains("0051"))
         {
             StartCoroutine(Heal());

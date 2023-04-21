@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1630736270528000175}
   m_Layer: 0
   m_Name: OrbitingLeafIncantation
-  m_TagString: Untagged
+  m_TagString: Orbiting
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -46,7 +46,7 @@ GameObject:
   - component: {fileID: 1512200202064332822}
   m_Layer: 13
   m_Name: OrbitingLeafIncantation
-  m_TagString: Orbiting
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
