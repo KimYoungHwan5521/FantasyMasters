@@ -130,7 +130,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isCritical: 0
   note: Basic
-  projectileSpeed: 10
+  projectileSpeed: 20
   launchReady: 0
   range: 0
   abilityDmg: 0

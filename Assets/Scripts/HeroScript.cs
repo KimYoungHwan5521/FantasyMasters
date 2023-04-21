@@ -48,7 +48,7 @@ public class HeroScript : MonoBehaviour
 
     private float curTime;
     public float atkCoolTime;
-    private float predateCurTime;
+    public float predateCurTime;
     public float predateCoolTime;
 
     public Image HPbar;
@@ -325,6 +325,17 @@ public class HeroScript : MonoBehaviour
                     else s = Resources.Load<AudioClip>("Sounds/SE/Hit");
                 }
                 if(s != null) SoundManager.PlaySE(s);
+
+                float isCf = 0;
+                if(isCritical) isCf = 1;
+                float isIA = 0;
+                if(abilities.Contains("0004")) isIA = 1;
+                float dmg = atkDmg;
+                float eA = collider.GetComponent<EnemyScript>().enemyArmor;
+                if(isCritical) dmg = atkDmg * criticalDmg + eA * isIA;
+                else dmg = atkDmg + eA * isIA;
+                collider.gameObject.GetComponent<EnemyScript>().BeAttacked(dmg, 0.3f + 0.3f * isCf, isCritical);
+                
                 if(collider.GetComponent<EnemyScript>().enemyNowHP <= collider.GetComponent<EnemyScript>().enemyMaxHP * 0.3 && predateCurTime <= 0)
                 {
                     Instantiate(Resources.Load<GameObject>("Effects/Predate"), collider.GetComponent<Collider2D>().bounds.center, Quaternion.identity);
@@ -336,15 +347,6 @@ public class HeroScript : MonoBehaviour
                 }
                 else
                 {
-                    float isCf = 0;
-                    if(isCritical) isCf = 1;
-                    float isIA = 0;
-                    if(abilities.Contains("0004")) isIA = 1;
-                    float dmg = atkDmg;
-                    float eA = collider.GetComponent<EnemyScript>().enemyArmor;
-                    if(isCritical) dmg = atkDmg * criticalDmg + eA * isIA;
-                    else dmg = atkDmg + eA * isIA;
-                    collider.gameObject.GetComponent<EnemyScript>().BeAttacked(dmg, 0.3f + 0.3f * isCf, isCritical);
 
                     if(abilities.Contains("0016")) 
                     {

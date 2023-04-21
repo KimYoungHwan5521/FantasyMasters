@@ -154,29 +154,41 @@ public class ProjectileScript : MonoBehaviour
                     {
                         if(summoner.abilities.Contains("0004")) collision.gameObject.GetComponent<EnemyScript>().BeAttacked(dmg + collision.gameObject.GetComponent<EnemyScript>().enemyArmor, 0.1f + 0.2f * isCf, isCritical);
                         else collision.gameObject.GetComponent<EnemyScript>().BeAttacked(dmg, 0.1f + 0.2f * isCf, isCritical);
+                        if(collision.gameObject.GetComponent<EnemyScript>().enemyNowHP <= collision.gameObject.GetComponent<EnemyScript>().enemyMaxHP * 0.3 && Hero.GetComponent<HeroScript>().predateCurTime <= 0)
+                        {
+                            Instantiate(Resources.Load<GameObject>("Effects/Predate"), collision.gameObject.GetComponent<Collider2D>().bounds.center, Quaternion.identity);
+                            float rec = collision.gameObject.GetComponent<EnemyScript>().enemyMaxHP / 10;
+                            Hero.GetComponent<HeroScript>().tempMaxHPCV += rec;
+                            Hero.GetComponent<HeroScript>().BeHealed(rec);
+                            collision.gameObject.GetComponent<EnemyScript>().enemyNowHP = 0;
+                            Hero.GetComponent<HeroScript>().predateCurTime = Hero.GetComponent<HeroScript>().predateCoolTime;
+                        }
+                        else
+                        {
+                            if(summoner.abilities.Contains("0016")) 
+                            {
+                                Hero.GetComponent<HeroScript>().BeHealed((dmg - collision.gameObject.GetComponent<EnemyScript>().enemyArmor) / 10);
+                            }
+                            if(summoner.abilities.Contains("0005"))
+                            {
+                                collision.gameObject.GetComponent<EnemyScript>().AddStatus("0002");
+                            }
+                            if(summoner.abilities.Contains("0006"))
+                            {
+                                collision.gameObject.GetComponent<EnemyScript>().AddStatus("0003");
+                            }
+                            if(summoner.abilities.Contains("0025") && !collision.gameObject.GetComponent<EnemyScript>().enemyAbilities.Contains("0027"))
+                            {
+                                collision.gameObject.GetComponent<EnemyScript>().AddStatus("0007");
+                            }
+                            if(summoner.abilities.Contains("0026") && !collision.gameObject.GetComponent<EnemyScript>().enemyAbilities.Contains("0028"))
+                            {
+                                collision.gameObject.GetComponent<EnemyScript>().AddStatus("0008");
+                            }
+                            
+                            if(summoner.abilities.Contains("0011")) collision.gameObject.GetComponent<EnemyScript>().attackedByZombie = true;
+                        }
 
-                        if(summoner.abilities.Contains("0016")) 
-                        {
-                            Hero.GetComponent<HeroScript>().BeHealed((dmg - collision.gameObject.GetComponent<EnemyScript>().enemyArmor) / 10);
-                        }
-                        if(summoner.abilities.Contains("0005"))
-                        {
-                            collision.gameObject.GetComponent<EnemyScript>().AddStatus("0002");
-                        }
-                        if(summoner.abilities.Contains("0006"))
-                        {
-                            collision.gameObject.GetComponent<EnemyScript>().AddStatus("0003");
-                        }
-                        if(summoner.abilities.Contains("0025") && !collision.gameObject.GetComponent<EnemyScript>().enemyAbilities.Contains("0027"))
-                        {
-                            collision.gameObject.GetComponent<EnemyScript>().AddStatus("0007");
-                        }
-                        if(summoner.abilities.Contains("0026") && !collision.gameObject.GetComponent<EnemyScript>().enemyAbilities.Contains("0028"))
-                        {
-                            collision.gameObject.GetComponent<EnemyScript>().AddStatus("0008");
-                        }
-                        
-                        if(summoner.abilities.Contains("0011")) collision.gameObject.GetComponent<EnemyScript>().attackedByZombie = true;
                     }
                     else
                     {

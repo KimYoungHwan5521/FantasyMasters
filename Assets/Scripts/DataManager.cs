@@ -249,7 +249,7 @@ public class DataManager : MonoBehaviour
     public static List<Item> AllItemList;
     public static List<Trap> AllTrapList;
 
-    public static int selectedHeroID = 0;
+    public static int selectedHeroID = 1;
 
     void Start()
     {
