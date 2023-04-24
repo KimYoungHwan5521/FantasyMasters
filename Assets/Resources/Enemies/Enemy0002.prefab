@@ -75,7 +75,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1662870407
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 043969fc14e8f16409ea4981b085d9d5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -187,14 +187,29 @@ MonoBehaviour:
   enemyNowHP: 0
   enemyAtkType: 0
   enemyAtkDmg: 0
+  atkDmgCV: 0
+  atkDmgCVM: 1
   enemyCollisionDmg: 0
   enemyAtkSpeed: 0
+  atkSpeedCVM: 1
   enemyAtkRange: 0
+  atkRangeCV: 0
   enemyArmor: 0
+  armorCV: 0
+  enemyMoveType: 1
   enemyMoveSpeed: 0
+  moveSpeedCVM: 1
+  enemyAbilities: []
+  atkSound: Sword
+  animatorCV: 1
   HPBar: {fileID: 0}
+  StatusBar: {fileID: 0}
   atkCoolTime: 0
-  boxSize: {x: 0, y: 0}
+  attackedByZombie: 0
+  movable: 1
+  attackable: 1
+  fired: 0
+  TrackingBox: {x: 0, y: 0}
 --- !u!1 &6682768200381826082
 GameObject:
   m_ObjectHideFlags: 0

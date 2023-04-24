@@ -9,6 +9,7 @@ public class MinionScript : MonoBehaviour
 {
     DataManager DataManager;
     StageManager StageManager;
+    SoundManager SoundManager;
     public int _minionID;
     public string stringID;
     public string minionNameKR;
@@ -38,6 +39,7 @@ public class MinionScript : MonoBehaviour
     public float sizeCVM = 1;
     public List<string> minionAbilities;
     public List<StatusV> MinionStatus;
+    public string atkSound;
 
     Animator animator;
     public float animatorCV = 1;
@@ -80,6 +82,7 @@ public class MinionScript : MonoBehaviour
         stringID += _minionID.ToString();
         DataManager = GameObject.Find("DataManager").GetComponent<DataManager>();
         StageManager = GameObject.Find("DataManager").GetComponent<StageManager>();
+        SoundManager = GameObject.Find("DataManager").GetComponent<SoundManager>();
         int idx = DataManager.AllMinionList.FindIndex(x => x.minionID == stringID);
         Minion minionInfo = DataManager.AllMinionList[idx];
         minionNameKR = minionInfo.minionNameKR;
@@ -405,6 +408,35 @@ public class MinionScript : MonoBehaviour
         {
             if(collider.tag == "Enemy")
             {
+                AudioClip s = null;
+                if(atkSound =="Blow") 
+                {
+                    if(isCritical) s = Resources.Load<AudioClip>("Sounds/SE/hits/18");
+                    else s = Resources.Load<AudioClip>("Sounds/SE/Hit");
+                }
+                else if(atkSound == "Sword")
+                {
+                    if(isCritical) s = Resources.Load<AudioClip>("Sounds/SE/Socapex - Evol Online SFX - Punches and hits/Socapex - Swordsmall_1");
+                    else s = Resources.Load<AudioClip>("Sounds/SE/Socapex - Evol Online SFX - Punches and hits/Socapex - Swordsmall");
+                }
+                else if(atkSound == "Axe")
+                {
+                    s = Resources.Load<AudioClip>("Sounds/SE/Socapex - Evol Online SFX - Punches and hits/Socapex - big punch");
+                }
+                else if(atkSound == "BiteSmall")
+                {
+                    s = Resources.Load<AudioClip>("Sounds/SE/80-CC0-creature-SFX/eat_04");
+                }
+                else if(atkSound == "Bite")
+                {
+                    s = Resources.Load<AudioClip>("Sounds/SE/80-CC0-creature-SFX/eat_01");
+                }
+                else if(atkSound == "Roar")
+                {
+                    s = Resources.Load<AudioClip>("Sounds/SE/80-CC0-creature-SFX/roar_03");
+                }
+                if(s != null) SoundManager.PlaySE(s);
+
                 if(isCritical)
                 {
                     if(collider.gameObject.GetComponent<EnemyScript>().enemyAbilities.Contains("0004"))
@@ -458,6 +490,17 @@ public class MinionScript : MonoBehaviour
     {
         if(projectileCount > 0)
         {
+            AudioClip s = null;
+            if(atkSound =="Spit") 
+            {
+                s = Resources.Load<AudioClip>("Sounds/SE/80-CC0-creature-SFX/spit_01");
+            }
+            else if(atkSound == "Bow")
+            {
+                s = Resources.Load<AudioClip>("Sounds/SE/swishes/swish-13");
+            }
+            if(s != null) SoundManager.PlaySE(s);
+
             GameObject p = Instantiate(Resources.Load<GameObject>($"Projectiles/ProjectileMinion{stringID}"), GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
             p.GetComponentInChildren<ProjectileScript>().SetProjectile(gameObject, target, isCritical);
             if(minionAbilities.Contains("0044")) BeHealed(20);
@@ -494,6 +537,8 @@ public class MinionScript : MonoBehaviour
     {
         if (collision.gameObject.tag == "Enemy")
         {
+            AudioClip s = Resources.Load<AudioClip>("Sounds/SE/hits/6");
+            SoundManager.PlaySE(s);
             float dmg = 0;
             EnemyScript colES = collision.gameObject.GetComponent<EnemyScript>();
             if(colES.enemyCollisionDmg - minionArmor > 0)
@@ -727,6 +772,8 @@ public class MinionScript : MonoBehaviour
             if(targetAlli != null)
             {
                 animator.SetTrigger("Attack");
+                AudioClip s = Resources.Load<AudioClip>("Sounds/SE/RPG_Essentials_Free/8_Buffs_Heals_SFX/02_Heal_02");
+                SoundManager.PlaySE(s);
                 if(targetAlli.tag == "Player") targetAlli.GetComponent<HeroScript>().BeHealed(20);
                 else targetAlli.GetComponent<MinionScript>().BeHealed(20);
             }

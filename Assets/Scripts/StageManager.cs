@@ -7,6 +7,7 @@ using System.Linq;
 public class StageManager : MonoBehaviour
 {
     NoticeUI _notice;
+    SoundManager SoundManager;
     public GameObject[] SpawnPoint;
     public float spawnCool;
     public int _heroID;
@@ -31,6 +32,7 @@ public class StageManager : MonoBehaviour
     void Awake()
     {
         _notice = FindObjectOfType<NoticeUI>();
+        SoundManager = GameObject.Find("DataManager").GetComponent<SoundManager>();
     }
 
     public static int mapMinionKillEnemies = 0;
@@ -730,6 +732,7 @@ public class StageManager : MonoBehaviour
         {
             if(StageTime.text == "0") break;
             Vector3 summonPositon = Hero.GetComponent<Collider2D>().bounds.center;
+            Instantiate(minionToSummon, summonPositon, Quaternion.identity);
             if(!repeat) break;
             yield return new WaitForSeconds(summonCoolTime);
         }
@@ -765,6 +768,9 @@ public class StageManager : MonoBehaviour
                 Destroy(te.GetComponent<EnemyScript>().HPBar.gameObject);
                 Destroy(te.GetComponent<EnemyScript>().StatusBar.gameObject);
                 Destroy(te.gameObject);
+                
+                AudioClip s = Resources.Load<AudioClip>("Sounds/SE/mutant_frog/mutant_frog-1");
+                SoundManager.PlaySE(s);
                 yield return new WaitForSeconds(coolTime);
             }
             else yield return new WaitForSeconds(1);
@@ -777,6 +783,8 @@ public class StageManager : MonoBehaviour
         {
             if(StageTime.text == "0") break;
             Collider2D[] cols = Physics2D.OverlapCircleAll(Hero.GetComponent<Collider2D>().bounds.center, 2);
+            AudioClip s = Resources.Load<AudioClip>("Sounds/SE/80-CC0-creature-SFX/misc_05");
+            SoundManager.PlaySE(s);
             foreach(Collider2D col in cols)
             {
                 if(col.tag == "Enemy")
@@ -816,6 +824,8 @@ public class StageManager : MonoBehaviour
             GameObject tm = GameObject.FindWithTag("Minion");
             if(tm != null && Hero.GetComponent<HeroScript>().nowHP <= Hero.GetComponent<HeroScript>().maxHP / 2)
             {
+                AudioClip s = Resources.Load<AudioClip>("Sounds/SE/80-CC0-creature-SFX/apple_bite");
+                SoundManager.PlaySE(s);
                 Instantiate(Resources.Load<GameObject>("Effects/Predate"), tm.GetComponent<Collider2D>().bounds.center, Quaternion.identity);
                 float h = tm.GetComponent<MinionScript>().minionMaxHP;
                 Hero.GetComponent<HeroScript>().nowHP += h;
@@ -908,12 +918,23 @@ public class StageManager : MonoBehaviour
             GameObject s = Instantiate(Resources.Load<GameObject>("AreaDamage/AreaDamage"), tp, Quaternion.identity);
             s.transform.localScale = new Vector2(s.transform.localScale.x * _range, s.transform.localScale.y * _range);
             GameObject spjt = Instantiate(Resources.Load<GameObject>($"AreaDamage/AreaDamage{_name}"), new Vector2(tp.x, tp.y + 10), Quaternion.identity);
+            AudioClip se = null;
+            if(_name == "MissileBombing")
+            {
+                se = Resources.Load<AudioClip>("Sounds/SE/rocket_launches/rocket_launche_1");
+            }
+            if(se != null) SoundManager.PlaySE2(se);
             for(int i=0; i<50; i++)
             {
                 spjt.transform.Translate(Vector2.down * 0.2f);
                 yield return new WaitForSeconds(0.01f);
             }
             Instantiate(Resources.Load<GameObject>("Effects/Explosion01"), s.transform.position, Quaternion.identity);
+            if(_name == "MissileBombing")
+            {
+                se = Resources.Load<AudioClip>("Sounds/SE/explosions/explosion07");
+            }
+            if(se != null) SoundManager.PlaySE2(se);
             Collider2D[] cols = Physics2D.OverlapCircleAll(s.transform.position, _range * 0.5f);
             foreach(Collider2D col in cols)
             {
@@ -935,6 +956,8 @@ public class StageManager : MonoBehaviour
         {
             if(StageTime.text == "0") break;
             GameObject o = Instantiate(Resources.Load<GameObject>("ETC/Strike"), new Vector2(Camera.main.transform.position.x + 15, Camera.main.transform.position.y), Quaternion.identity);
+            AudioClip se = Resources.Load<AudioClip>("Sounds/SE/bowling/qubodup-bowling-roll/qubodup-bowling_roll");
+            if(se != null) SoundManager.PlaySE2(se);
             for(int i=0; i<140; i++)
             {
                 o.transform.Translate(Vector2.left * 0.1f);
@@ -948,6 +971,8 @@ public class StageManager : MonoBehaviour
                     col.GetComponent<EnemyScript>().BeAttacked(1700, 1f);
                 }
             }
+            se = Resources.Load<AudioClip>("Sounds/SE/bowling/juskiddink-bowling-strike/strike3n-5");
+            if(se != null) SoundManager.PlaySE2(se);
             Destroy(o);
             yield return new WaitForSeconds(_coolTime);
         }
@@ -960,6 +985,8 @@ public class StageManager : MonoBehaviour
             if(StageTime.text == "0") break;
             GameObject ef = Instantiate(Resources.Load<GameObject>("Effects/AreaHeal"), healer.transform.position, Quaternion.identity);
             ef.transform.localScale = new Vector2(ef.transform.localScale.x * _range, ef.transform.localScale.y * _range);
+            AudioClip s = Resources.Load<AudioClip>("Sounds/SE/RPG_Essentials_Free/8_Buffs_Heals_SFX/02_Heal_02");
+            SoundManager.PlaySE(s);
             Collider2D[] cols = Physics2D.OverlapCircleAll(healer.transform.position, _range * 0.5f);
             foreach(Collider2D col in cols)
             {

@@ -207,9 +207,12 @@ MonoBehaviour:
   moveSpeedCVM: 1
   sizeCVM: 1
   minionAbilities: []
+  atkSound: Spit
+  animatorCV: 1
   HPBar: {fileID: 0}
   StatusBar: {fileID: 0}
   atkCoolTime: 0
+  Hero: {fileID: 0}
   attackedByZombie: 0
   movable: 1
   attackable: 1
@@ -217,4 +220,3 @@ MonoBehaviour:
   flockAttack: 0
   floakDefense: 0
   TrackingBox: {x: 0, y: 0}
-  boxSize: {x: 3, y: 3}

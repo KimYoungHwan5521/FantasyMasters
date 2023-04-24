@@ -217,11 +217,26 @@ MonoBehaviour:
   enemyNowHP: 0
   enemyAtkType: 0
   enemyAtkDmg: 0
+  atkDmgCV: 0
+  atkDmgCVM: 1
   enemyCollisionDmg: 0
   enemyAtkSpeed: 0
+  atkSpeedCVM: 1
   enemyAtkRange: 0
+  atkRangeCV: 0
   enemyArmor: 0
+  armorCV: 0
+  enemyMoveType: 1
   enemyMoveSpeed: 0
+  moveSpeedCVM: 1
+  enemyAbilities: []
+  atkSound: Spit
+  animatorCV: 1
   HPBar: {fileID: 0}
+  StatusBar: {fileID: 0}
   atkCoolTime: 0
-  boxSize: {x: 0, y: 0}
+  attackedByZombie: 0
+  movable: 1
+  attackable: 1
+  fired: 0
+  TrackingBox: {x: 0, y: 0}

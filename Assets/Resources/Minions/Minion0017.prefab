@@ -207,6 +207,7 @@ MonoBehaviour:
   moveSpeedCVM: 1
   sizeCVM: 1
   minionAbilities: []
+  atkSound: Bow
   animatorCV: 1
   HPBar: {fileID: 0}
   StatusBar: {fileID: 0}

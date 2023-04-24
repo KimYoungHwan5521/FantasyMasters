@@ -19,16 +19,22 @@ public class SoundManager : MonoBehaviour
             GameObject go2 = new GameObject { name = "SE" }; 
             go2.AddComponent<AudioSource>();
             go2.transform.parent = root.transform;
+
+            GameObject go3 = new GameObject { name = "SE2" }; 
+            go3.AddComponent<AudioSource>();
+            go3.transform.parent = root.transform;
         }
         
     }
 
     AudioSource BGM;
     AudioSource SE;
+    AudioSource SE2;
     void Start()
     {
         BGM = GameObject.Find("BGM").GetComponent<AudioSource>();
         SE = GameObject.Find("SE").GetComponent<AudioSource>();
+        SE2 = GameObject.Find("SE2").GetComponent<AudioSource>();
     }
 
     public void PlayBGM(AudioClip clip, bool loop = true)
@@ -47,15 +53,24 @@ public class SoundManager : MonoBehaviour
 
     public void PlaySE(AudioClip clip, bool loop = false)
     {
-        SE.Stop();
         SE.clip = clip;
         SE.loop = loop;
         SE.time = 0;
         SE.PlayOneShot(clip);
     }
 
+    public void PlaySE2(AudioClip clip, bool loop = false)
+    {
+        SE2.Stop();
+        SE2.clip = clip;
+        SE2.loop = loop;
+        SE2.time = 0;
+        SE2.Play();
+    }
+
     public void SEStop()
     {
         SE.Stop();
+        SE2.Stop();
     }
 }

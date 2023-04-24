@@ -384,6 +384,13 @@ public class HeroScript : MonoBehaviour
     {
         if(projectileCount > 0)
         {
+            AudioClip s = null;
+            if(atkSound == "Bow")
+            {
+                s = Resources.Load<AudioClip>("Sounds/SE/swishes/swish-13");
+            }
+            if(s != null) SoundManager.PlaySE(s);
+
             GameObject p = Instantiate(Resources.Load<GameObject>($"Projectiles/ProjectileHero{stringID}"), GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
             p.GetComponentInChildren<ProjectileScript>().SetProjectile(gameObject, target, isCritical);
             if(abilities.Contains("0024"))

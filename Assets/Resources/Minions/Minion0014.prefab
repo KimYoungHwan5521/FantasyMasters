@@ -207,6 +207,8 @@ MonoBehaviour:
   moveSpeedCVM: 1
   sizeCVM: 1
   minionAbilities: []
+  atkSound: Roar
+  animatorCV: 1
   HPBar: {fileID: 0}
   StatusBar: {fileID: 0}
   atkCoolTime: 0
@@ -218,4 +220,3 @@ MonoBehaviour:
   flockAttack: 0
   floakDefense: 0
   TrackingBox: {x: 0, y: 0}
-  boxSize: {x: 1.8, y: 1.8}

@@ -184,10 +184,13 @@ MonoBehaviour:
   minionNameKR: 
   minionAttributes: []
   minionMaxHP: 0
+  maxHPCV: 0
+  maxHPCVM: 1
   minionNowHP: 0
   minionAtkType: 0
   minionAtkDmg: 0
   atkDmgCV: 0
+  atkDmgCVM: 1
   minionAtkSpeed: 0
   atkSpeedCVM: 1
   minionAtkRange: 0
@@ -198,11 +201,22 @@ MonoBehaviour:
   criticalChanceCV: 0
   minionArmor: 0
   armorCV: 0
+  armorCVM: 1
+  minionMoveType: 1
   minionMoveSpeed: 0
   moveSpeedCVM: 1
+  sizeCVM: 1
   minionAbilities: []
+  atkSound: Blow
+  animatorCV: 1
   HPBar: {fileID: 0}
   StatusBar: {fileID: 0}
   atkCoolTime: 0
+  Hero: {fileID: 0}
+  attackedByZombie: 0
+  movable: 1
+  attackable: 1
+  fired: 0
+  flockAttack: 0
+  floakDefense: 0
   TrackingBox: {x: 0, y: 0}
-  boxSize: {x: 0, y: 0}

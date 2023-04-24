@@ -8,6 +8,7 @@ using System.Linq;
 public class EnemyScript : MonoBehaviour
 {
     DataManager DataManager;
+    SoundManager SoundManager;
     public int _enemyID;
     public string stringID;
     public string enemyNameKR;
@@ -29,6 +30,7 @@ public class EnemyScript : MonoBehaviour
     public float moveSpeedCVM = 1;
     public List<string> enemyAbilities;
     public List<StatusV> EnemyStatus;
+    public string atkSound;
 
     Animator animator;
     public float animatorCV = 1;
@@ -70,6 +72,7 @@ public class EnemyScript : MonoBehaviour
         stringID += _enemyID.ToString();
 
         DataManager = GameObject.Find("DataManager").GetComponent<DataManager>();
+        SoundManager = GameObject.Find("DataManager").GetComponent<SoundManager>();
         Hero = GameObject.FindWithTag("Player");
         int idx = DataManager.AllEnemyList.FindIndex(x => x.enemyID == stringID);
         Enemy enemyInfo = DataManager.AllEnemyList[idx];
@@ -270,7 +273,37 @@ public class EnemyScript : MonoBehaviour
         if(enemyAbilities.Contains("0044")) BeHealed(20);
         Collider2D[] collider2Ds = Physics2D.OverlapCircleAll(GetComponent<Collider2D>().bounds.center, enemyAtkRange * 0.5f);
         foreach(Collider2D collider in collider2Ds)
-        {
+        {   
+            if(collider.tag == "Player" || collider.tag == "Minion")
+            {
+                AudioClip s = null;
+                if(atkSound =="Blow") 
+                {
+                    s = Resources.Load<AudioClip>("Sounds/SE/Hit");
+                }
+                else if(atkSound == "Sword")
+                {
+                    s = Resources.Load<AudioClip>("Sounds/SE/Socapex - Evol Online SFX - Punches and hits/Socapex - Swordsmall");
+                }
+                else if(atkSound == "Axe")
+                {
+                    s = Resources.Load<AudioClip>("Sounds/SE/Socapex - Evol Online SFX - Punches and hits/Socapex - big punch");
+                }
+                else if(atkSound == "BiteSmall")
+                {
+                    s = Resources.Load<AudioClip>("Sounds/SE/80-CC0-creature-SFX/eat_04");
+                }
+                else if(atkSound == "Bite")
+                {
+                    s = Resources.Load<AudioClip>("Sounds/SE/80-CC0-creature-SFX/eat_01");
+                }
+                else if(atkSound == "Roar")
+                {
+                    s = Resources.Load<AudioClip>("Sounds/SE/80-CC0-creature-SFX/roar_03");
+                }
+                if(s != null) SoundManager.PlaySE(s);
+
+            }
             if(collider.tag == "Player")
             {
                 if(enemyAbilities.Contains("0004"))
@@ -339,6 +372,17 @@ public class EnemyScript : MonoBehaviour
     {
         if(projectileCount > 0)
         {
+            AudioClip s = null;
+            if(atkSound =="Spit") 
+            {
+                s = Resources.Load<AudioClip>("Sounds/SE/80-CC0-creature-SFX/spit_01");
+            }
+            else if(atkSound == "Bow")
+            {
+                s = Resources.Load<AudioClip>("Sounds/SE/swishes/swish-13");
+            }
+            if(s != null) SoundManager.PlaySE(s);
+
             GameObject p = Instantiate(Resources.Load<GameObject>($"Projectiles/ProjectileEnemy{stringID}"), GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
             p.GetComponentInChildren<ProjectileScript>().SetProjectile(gameObject, target);
             if(enemyAbilities.Contains("0044")) BeHealed(20);
