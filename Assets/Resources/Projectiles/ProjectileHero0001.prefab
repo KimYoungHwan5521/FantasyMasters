@@ -135,6 +135,7 @@ MonoBehaviour:
   range: 0
   abilityDmg: 0
   ignoreArmor: 0
+  projectileSound: Arrow
 --- !u!50 &9089987463747297298
 Rigidbody2D:
   serializedVersion: 4

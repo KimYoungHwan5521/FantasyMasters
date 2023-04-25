@@ -136,6 +136,7 @@ MonoBehaviour:
   range: 0
   abilityDmg: 0
   ignoreArmor: 0
+  projectileSound: Blow
 --- !u!50 &8412004315416300783
 Rigidbody2D:
   serializedVersion: 4

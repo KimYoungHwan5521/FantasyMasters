@@ -274,7 +274,7 @@ public class EnemyScript : MonoBehaviour
         Collider2D[] collider2Ds = Physics2D.OverlapCircleAll(GetComponent<Collider2D>().bounds.center, enemyAtkRange * 0.5f);
         foreach(Collider2D collider in collider2Ds)
         {   
-            if(collider.tag == "Player" || collider.tag == "Minion")
+            if((collider.tag == "Player" && collider.gameObject.layer == 11) || collider.tag == "Minion")
             {
                 AudioClip s = null;
                 if(atkSound =="Blow") 

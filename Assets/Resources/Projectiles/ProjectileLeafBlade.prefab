@@ -135,6 +135,7 @@ MonoBehaviour:
   range: 0
   abilityDmg: 0
   ignoreArmor: 0
+  projectileSound: Blade
 --- !u!50 &3740138996903036005
 Rigidbody2D:
   serializedVersion: 4

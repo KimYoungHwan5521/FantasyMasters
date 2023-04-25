@@ -182,4 +182,5 @@ MonoBehaviour:
   circleR: 1
   dmg: 0
   ignoreArmor: 0
+  orbitingSound: Blade
   limit: 60

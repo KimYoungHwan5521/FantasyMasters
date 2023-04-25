@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class OrbitingScript : MonoBehaviour
 {
+    SoundManager SoundManager;
     public GameObject target;
     public float orbitalDistance = 1;
     public float orbitingSpeed = 200;
@@ -11,12 +12,13 @@ public class OrbitingScript : MonoBehaviour
     public float circleR = 1;
     public float dmg;
     public bool ignoreArmor;
+    public string orbitingSound;
     
     public float limit = 60;
     // Start is called before the first frame update
     void Start()
     {
-        
+        SoundManager = GameObject.Find("DataManager").GetComponent<SoundManager>();
     }
 
     public void SetOrbiting(GameObject _target, float _orbitalDistance, float _summonDeg, float _dmg, bool _ignoreArmor = false)
@@ -58,6 +60,10 @@ public class OrbitingScript : MonoBehaviour
     {
         if(col.tag == "Enemy")
         {
+            AudioClip s = null;
+            if(orbitingSound == "Blow") s = Resources.Load<AudioClip>("Sounds/SE/hits/18");
+            else if(orbitingSound == "Blade") s = Resources.Load<AudioClip>("Sounds/SE/RPG_Essentials_Free/10_Battle_SFX/77_flesh_02");
+            if(s != null) SoundManager.PlaySE(s);
             if(ignoreArmor) col.gameObject.GetComponent<EnemyScript>().BeAttacked(dmg + col.gameObject.GetComponent<EnemyScript>().enemyArmor, 0);
             else col.gameObject.GetComponent<EnemyScript>().BeAttacked(dmg, 0);
         }

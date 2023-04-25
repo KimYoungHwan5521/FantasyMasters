@@ -5,6 +5,7 @@ using System.Linq;
 
 public class ProjectileScript : MonoBehaviour
 {
+    SoundManager SoundManager;
     SummonerInfo summoner;
     GameObject target;
     Vector3 targetInitialPosition;
@@ -17,10 +18,12 @@ public class ProjectileScript : MonoBehaviour
     public float abilityDmg;
     public bool ignoreArmor;
     GameObject Hero;
+    public string projectileSound;
 
     void Start()
     {
         Hero = GameObject.FindWithTag("Player");
+        SoundManager = GameObject.Find("DataManager").GetComponent<SoundManager>();
     }
 
     public class SummonerInfo
@@ -133,6 +136,7 @@ public class ProjectileScript : MonoBehaviour
     {
         if(launchReady)
         {
+            AudioClip s = null;
             float dmg = 0;
             float isCf = 0;
             if(isCritical) isCf = 1;
@@ -146,12 +150,32 @@ public class ProjectileScript : MonoBehaviour
                     {
                         if(summoner.abilities.Contains("0003"))
                         {
-                            GameObject.FindWithTag("Player").GetComponent<HeroScript>().AddStatus("0000");
+                            bool alreadyGotIt = false;
+                            for(int i=0; i<Hero.GetComponent<HeroScript>().HeroStatus.Count; i++)
+                            {
+                                if(Hero.GetComponent<HeroScript>().HeroStatus[i].statusID == "0003") 
+                                {
+                                    alreadyGotIt = true;
+                                    break;
+                                }
+                            }
+                            if(!alreadyGotIt)
+                            {
+                                s = Resources.Load<AudioClip>("Sounds/SE/RPG_Essentials_Free/8_Buffs_Heals_SFX/16_Atk_buff_04");
+                                SoundManager.PlaySE(s);
+                            }
+                            Hero.GetComponent<HeroScript>().AddStatus("0000");
                         }
                     }
 
                     if(note == "Basic")
                     {
+                        s = null;
+                        if(projectileSound == "Arrow") s = Resources.Load<AudioClip>("Sounds/SE/hits/2");
+                        else if(projectileSound == "Blow") s = Resources.Load<AudioClip>("Sounds/SE/hits/18");
+                        else if(projectileSound == "Blade") s = Resources.Load<AudioClip>("Sounds/SE/RPG_Essentials_Free/10_Battle_SFX/77_flesh_02");
+                        else if(projectileSound == "Acid") s = Resources.Load<AudioClip>("Sounds/SE/acid_burn/acid burn small");
+                        if(s != null) SoundManager.PlaySE(s);
                         if(summoner.abilities.Contains("0004")) collision.gameObject.GetComponent<EnemyScript>().BeAttacked(dmg + collision.gameObject.GetComponent<EnemyScript>().enemyArmor, 0.1f + 0.2f * isCf, isCritical);
                         else collision.gameObject.GetComponent<EnemyScript>().BeAttacked(dmg, 0.1f + 0.2f * isCf, isCritical);
                         if(collision.gameObject.GetComponent<EnemyScript>().enemyNowHP <= collision.gameObject.GetComponent<EnemyScript>().enemyMaxHP * 0.3 && Hero.GetComponent<HeroScript>().predateCurTime <= 0)

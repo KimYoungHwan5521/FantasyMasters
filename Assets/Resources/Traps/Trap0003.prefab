@@ -115,7 +115,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: -0.000052571297, y: -0.03414184}
@@ -169,4 +169,5 @@ MonoBehaviour:
   trapKnockback: 0
   trapRange: 0.8
   trapStatus: []
+  trapSound: SpikeTrap
   activated: 0

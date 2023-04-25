@@ -326,6 +326,24 @@ public class HeroScript : MonoBehaviour
                 }
                 if(s != null) SoundManager.PlaySE(s);
 
+                if(abilities.Contains("0003") && isCritical) 
+                {
+                    bool alreadyGotIt = false;
+                    for(int i=0; i<HeroStatus.Count; i++)
+                    {
+                        if(HeroStatus[i].statusID == "0003") 
+                        {
+                            alreadyGotIt = true;
+                            break;
+                        }
+                    }
+                    if(!alreadyGotIt)
+                    {
+                        s = Resources.Load<AudioClip>("Sounds/SE/RPG_Essentials_Free/8_Buffs_Heals_SFX/16_Atk_buff_04");
+                        SoundManager.PlaySE(s);
+                    }
+                    AddStatus("0000");
+                }
                 float isCf = 0;
                 if(isCritical) isCf = 1;
                 float isIA = 0;
@@ -457,7 +475,7 @@ public class HeroScript : MonoBehaviour
     void OffDamaged()
     {
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-        gameObject.layer = 11;
+        if(nowHP > 0) gameObject.layer = 11;
         spriteRenderer.color = new Color(1, 1, 1, 1);
     }
 

@@ -171,6 +171,7 @@ MonoBehaviour:
   circleR: 1
   dmg: 0
   ignoreArmor: 0
+  orbitingSound: Blow
   limit: 60
 --- !u!1 &7743950244471606736
 GameObject:

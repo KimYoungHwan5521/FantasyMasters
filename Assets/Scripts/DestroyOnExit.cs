@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class DestroyOnExit : StateMachineBehaviour
 {
+    SoundManager SoundManager;
+
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        SoundManager = GameObject.Find("DataManager").GetComponent<SoundManager>();
         GameObject StageTimer = GameObject.Find("StageTimer");
         if(StageTimer != null)
         {
@@ -18,6 +21,7 @@ public class DestroyOnExit : StateMachineBehaviour
                 if(Hero.abilities.Contains("0009"))
                 {
                     Instantiate(Resources.Load<GameObject>($"Effects/Explosion00"), animator.GetComponent<BoxCollider2D>().bounds.center, Quaternion.identity);
+                    SoundManager.PlaySE(Resources.Load<AudioClip>("Sounds/SE/acid_burn/acid burn"));
                     Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(animator.GetComponent<Collider2D>().bounds.center, new Vector2(2, 2), 0);
                     bool attacked = false;
                     foreach(Collider2D collider in collider2Ds)

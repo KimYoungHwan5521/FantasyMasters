@@ -136,6 +136,7 @@ MonoBehaviour:
   range: 0
   abilityDmg: 0
   ignoreArmor: 0
+  projectileSound: Acid
 --- !u!50 &2664195482457452888
 Rigidbody2D:
   serializedVersion: 4

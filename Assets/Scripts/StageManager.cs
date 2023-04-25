@@ -112,6 +112,7 @@ public class StageManager : MonoBehaviour
         {
             Hero.GetComponent<HeroScript>().resurrection--;
             Instantiate(Resources.Load<GameObject>("Effects/Resurrection"), Hero.transform.position, Quaternion.identity);
+            SoundManager.PlaySE(Resources.Load<AudioClip>("Sounds/SE/RPG_Essentials_Free/8_Buffs_Heals_SFX/30_Revive_03"));
             Hero.layer = 12;
             Hero.GetComponent<HeroScript>().controllable = false;
             Hero.GetComponent<HeroScript>().attackable = false;
@@ -137,18 +138,20 @@ public class StageManager : MonoBehaviour
         Hero.GetComponent<HeroScript>().nowHP = Hero.GetComponent<HeroScript>().maxHP - Hero.GetComponent<HeroScript>().tempMaxHPCV;
         Hero.GetComponent<HeroScript>().tempMaxHPCV = 0;
         Hero.transform.position = new Vector2(0, 0);
+        FloatingText CountText;
         for(int i=3; i>-1; i--)
         {
-            FloatingText CountText = Instantiate(Resources.Load<FloatingText>("Effects/FloatingText"), new Vector2(0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
+            CountText = Instantiate(Resources.Load<FloatingText>("Effects/FloatingText"), new Vector2(0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
             CountText.gameObject.GetComponent<RectTransform>().position = Camera.main.WorldToScreenPoint(new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, 0));
-            if(i == 0) CountText.SetText("<size=100>Start!</size>", "#FF0000");
-            else CountText.SetText($"<size=100>{i.ToString()}</size>", "#FF0000");
+            CountText.SetText($"<size=100>{i.ToString()}</size>", "#FF0000");
             yield return new WaitForSeconds(1);
+            if(i==0) CountText.SetText("<size=100>Start!</size>", "#FF0000");
         }
+        List<string> hAbilities = Hero.GetComponent<HeroScript>().abilities;
+        if(hAbilities.Contains("0019")) SoundManager.PlaySE(Resources.Load<AudioClip>("Sounds/SE/FreeSFX/GameSFX/Animal Insects/Retro Wolf B 02"));
         stageTime = stageInfo.Split('|').Length * 5;
         // stageTime = 60;
         StartCoroutine(StageTimer());
-        List<string> hAbilities = Hero.GetComponent<HeroScript>().abilities;
         if(hAbilities.Contains("0000"))
         {
             StartCoroutine(SummonMinion("0000", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0000").abilityCoolTime)));
