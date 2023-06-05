@@ -183,6 +183,11 @@ public class HeroSelectScript : MonoBehaviour
         HeroSelect.SetActive(true);
     }
 
+    public void OnClickGameEnd()
+    {
+        Application.Quit();
+    }
+
     public void OnClickBack()
     {
         HeroSelect.SetActive(false);

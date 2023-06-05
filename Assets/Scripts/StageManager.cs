@@ -99,9 +99,12 @@ public class StageManager : MonoBehaviour
 
     bool deathEvent = true;
     public GameObject Settings;
+    public GameObject Confirm;
+    public Text ConfirmText;
+    public bool goTitle = true;
     void Update()
     {
-        if(Hero.GetComponent<HeroScript>().nowHP <= 0 && deathEvent)
+        if(stageStarted && Hero.GetComponent<HeroScript>().nowHP <= 0 && deathEvent)
         {
             deathEvent = false;
             StartCoroutine(DeathEvent());
@@ -110,15 +113,60 @@ public class StageManager : MonoBehaviour
         {
             if(Settings.activeSelf)
             {
-                Settings.SetActive(false);
-                Time.timeScale = 1;
+                if(Confirm.activeSelf)
+                {
+                    Confirm.SetActive(false);
+                }
+                else
+                {
+                    Settings.SetActive(false);
+                    Time.timeScale = 1;
+                }
             }
             else
             {
+                Settings.transform.SetAsLastSibling();
                 Settings.SetActive(true);
                 Time.timeScale = 0;
             }
         }
+    }
+
+    public void Resume()
+    {
+        Settings.SetActive(false);
+        Time.timeScale = 1;
+    }
+
+    public void GoTitle()
+    {
+        goTitle = true;
+        ConfirmText.text = "정말 타이틀로 이동합니까?";
+        Confirm.transform.SetAsLastSibling();
+        Confirm.SetActive(true);
+    }
+
+    public void GameEnd()
+    {
+        goTitle = false;
+        Confirm.transform.SetAsLastSibling();
+        ConfirmText.text = "정말 게임을 종료합니까?";
+        Confirm.SetActive(true);
+    }
+
+    public void ConfirmYes()
+    {
+        if(goTitle) 
+        {
+            Time.timeScale = 1;
+            SceneManager.LoadScene("TitleScene");
+        }
+        else Application.Quit();
+    }
+
+    public void ConfirmNo()
+    {
+        Confirm.SetActive(false);
     }
 
     bool isGameOver = false;
@@ -148,6 +196,7 @@ public class StageManager : MonoBehaviour
         }
     }
 
+    public bool stageStarted = false;
     IEnumerator StageStart()
     {
         stageInfo = CurStageList.Find(x => x.stageNumber == stageNumber.ToString()).stageInfo;
@@ -164,6 +213,7 @@ public class StageManager : MonoBehaviour
             CountText.SetText($"<size=100>{i.ToString()}</size>", "#FF0000");
             yield return new WaitForSeconds(1);
             if(i==0) CountText.SetText("<size=100>Start!</size>", "#FF0000");
+            stageStarted = true;
         }
         List<string> hAbilities = Hero.GetComponent<HeroScript>().abilities;
         if(hAbilities.Contains("0019")) SoundManager.PlaySE(Resources.Load<AudioClip>("Sounds/SE/FreeSFX/GameSFX/Animal Insects/Retro Wolf B 02"));
@@ -369,6 +419,7 @@ public class StageManager : MonoBehaviour
     IEnumerator StageEnd()
     {
         int exception = 0;
+        stageStarted = false;
         while(true)
         {
             GameObject[] E = GameObject.FindGameObjectsWithTag("Enemy");
