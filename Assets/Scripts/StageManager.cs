@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Linq;
 
 public class StageManager : MonoBehaviour
@@ -97,6 +98,7 @@ public class StageManager : MonoBehaviour
     }
 
     bool deathEvent = true;
+    public GameObject Settings;
     void Update()
     {
         if(Hero.GetComponent<HeroScript>().nowHP <= 0 && deathEvent)
@@ -104,8 +106,22 @@ public class StageManager : MonoBehaviour
             deathEvent = false;
             StartCoroutine(DeathEvent());
         }
+        if(!isGameOver && Input.GetKeyDown(KeyCode.Escape))
+        {
+            if(Settings.activeSelf)
+            {
+                Settings.SetActive(false);
+                Time.timeScale = 1;
+            }
+            else
+            {
+                Settings.SetActive(true);
+                Time.timeScale = 0;
+            }
+        }
     }
 
+    bool isGameOver = false;
     IEnumerator DeathEvent()
     {
         if(Hero.GetComponent<HeroScript>().resurrection > 0)
@@ -127,6 +143,8 @@ public class StageManager : MonoBehaviour
         else
         {
             // GameOver
+            isGameOver = true;
+            StartCoroutine(StageEnd());
         }
     }
 
@@ -178,7 +196,7 @@ public class StageManager : MonoBehaviour
         }
         if(hAbilities.Contains("0021"))
         {
-            StartCoroutine(SummonMinion("0002", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0021").abilityCoolTime), 3));
+            StartCoroutine(SummonMinion("0002", float.Parse(DataManager.AllAbilityList.Find(x => x.abilityID == "0021").abilityCoolTime), 3, 0, false));
         }
         if(hAbilities.Contains("0022"))
         {
@@ -346,6 +364,8 @@ public class StageManager : MonoBehaviour
         }
     }
 
+    public GameObject GameOverUI;
+    public Text GameOverText;
     IEnumerator StageEnd()
     {
         int exception = 0;
@@ -380,9 +400,33 @@ public class StageManager : MonoBehaviour
             Hero.GetComponent<HeroScript>().HeroStatus.RemoveAt(i);
             Destroy(Hero.GetComponent<HeroScript>().StatusSprites.transform.GetChild(i).gameObject);
         }
-        stageNumber++;
-        if(CurStageList.Find(x => x.stageNumber == stageNumber.ToString()) != null) yield return StartCoroutine(ReadyToNextStage());
-        else yield return StartCoroutine(ClearMap());
+        if(isGameOver)
+        {
+            // GameOver
+            StopAllCoroutines();
+            SoundManager.BGMStop();
+            GameOverText.text = "패배!";
+            GameOverUI.SetActive(true);
+        }
+        else
+        {
+            stageNumber++;
+            if(CurStageList.Find(x => x.stageNumber == stageNumber.ToString()) != null) yield return StartCoroutine(ReadyToNextStage());
+            else
+            {
+                StopAllCoroutines();
+                isGameOver = true;
+                SoundManager.BGMStop();
+                GameOverText.text = "승리!";
+                GameOverUI.SetActive(true);
+            }
+        }
+    }
+
+    public void ConfirmGameOver()
+    {
+        Destroy(GameObject.Find("DataManager"));
+        SceneManager.LoadScene("TitleScene");
     }
 
     public GameObject Shop;
@@ -720,11 +764,6 @@ public class StageManager : MonoBehaviour
             _notice.SUB("보상을 선택 해주세요");
         }
     }
-
-    IEnumerator ClearMap()
-    {
-        yield return null;
-    }
     
     // ↓↓↓ Abilities ↓↓↓
     IEnumerator SummonMinion(string _minionID, float summonCoolTime, int n = 1, float wait = 0, bool repeat = true)
@@ -735,7 +774,10 @@ public class StageManager : MonoBehaviour
         {
             if(StageTime.text == "0") break;
             Vector3 summonPositon = Hero.GetComponent<Collider2D>().bounds.center;
-            Instantiate(minionToSummon, summonPositon, Quaternion.identity);
+            for(int i=0;i<n;i++)
+            {
+                Instantiate(minionToSummon, summonPositon, Quaternion.identity);
+            }
             if(!repeat) break;
             yield return new WaitForSeconds(summonCoolTime);
         }
@@ -750,7 +792,7 @@ public class StageManager : MonoBehaviour
             GameObject te = GameObject.FindWithTag("Enemy");
             if(te != null)
             {
-                te.GetComponent<EnemyScript>().enemyNowHP -= 80;
+                te.GetComponent<EnemyScript>().enemyNowHP -= 200;
                 GameObject Pjt = Instantiate(effect, te.transform.position, Quaternion.identity);
                 Pjt.GetComponentInChildren<ProjectileScript>().SetProjectile(te, Hero, false, "LifeDrain");
                 yield return new WaitForSeconds(coolTime);

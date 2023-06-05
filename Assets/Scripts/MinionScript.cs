@@ -81,7 +81,7 @@ public class MinionScript : MonoBehaviour
         }
         stringID += _minionID.ToString();
         DataManager = GameObject.Find("DataManager").GetComponent<DataManager>();
-        StageManager = GameObject.Find("DataManager").GetComponent<StageManager>();
+        StageManager = GameObject.Find("GameManager").GetComponent<StageManager>();
         SoundManager = GameObject.Find("DataManager").GetComponent<SoundManager>();
         int idx = DataManager.AllMinionList.FindIndex(x => x.minionID == stringID);
         Minion minionInfo = DataManager.AllMinionList[idx];
@@ -179,7 +179,7 @@ public class MinionScript : MonoBehaviour
         atkCoolTime = 10 / minionAtkSpeed;
         minionMoveSpeed = float.Parse(DataManager.AllMinionList[_minionID].minionMoveSpeed) * moveSpeedCVM;
         animator.SetFloat("MoveSpeed", moveSpeedCVM);
-        minionMaxHP = float.Parse(DataManager.AllMinionList[_minionID].minionMaxHP) * maxHPCVM;
+        minionMaxHP = (float.Parse(DataManager.AllMinionList[_minionID].minionMaxHP) + maxHPCV) * maxHPCVM;
         if(minionNowHP > minionMaxHP) minionNowHP = minionMaxHP;
         if(flockAttack) 
         {
@@ -519,7 +519,7 @@ public class MinionScript : MonoBehaviour
         else
         {
             minionNowHP -= dmg - minionArmor;
-            DmgText.gameObject.GetComponent<FloatingText>().SetText(Mathf.Round(dmg).ToString(), "#FFAAAA");
+            DmgText.gameObject.GetComponent<FloatingText>().SetText(Mathf.Round(dmg - minionArmor).ToString(), "#FFAAAA");
             OnDamaged();
         }
 

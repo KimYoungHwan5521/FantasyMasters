@@ -331,7 +331,7 @@ public class HeroScript : MonoBehaviour
                     bool alreadyGotIt = false;
                     for(int i=0; i<HeroStatus.Count; i++)
                     {
-                        if(HeroStatus[i].statusID == "0003") 
+                        if(HeroStatus[i].statusID == "0000") 
                         {
                             alreadyGotIt = true;
                             break;

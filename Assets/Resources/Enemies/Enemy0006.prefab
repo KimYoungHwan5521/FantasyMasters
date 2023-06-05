@@ -77,7 +77,7 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: -3858331487878545982, guid: 3a6739bd0bf3a7a4288cb782bea5c863, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.49803922}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.3137255}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -154,6 +154,7 @@ MonoBehaviour:
   enemyAtkType: 0
   enemyAtkDmg: 0
   atkDmgCV: 0
+  atkDmgCVM: 1
   enemyCollisionDmg: 0
   enemyAtkSpeed: 0
   atkSpeedCVM: 1
@@ -161,13 +162,20 @@ MonoBehaviour:
   atkRangeCV: 0
   enemyArmor: 0
   armorCV: 0
+  enemyMoveType: 1
   enemyMoveSpeed: 0
   moveSpeedCVM: 1
   enemyAbilities: []
+  atkSound: 
+  originalColor: {r: 0, g: 0, b: 0, a: 0}
+  animatorCV: 1
   HPBar: {fileID: 0}
   StatusBar: {fileID: 0}
   atkCoolTime: 0
-  boxSize: {x: 0, y: 0}
+  attackedByZombie: 0
+  movable: 1
+  attackable: 1
+  fired: 0
   TrackingBox: {x: 0, y: 0}
 --- !u!95 &8651694021206102686
 Animator:

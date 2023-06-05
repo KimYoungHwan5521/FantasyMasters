@@ -8,6 +8,7 @@ using System.Linq;
 
 public class HeroSelectScript : MonoBehaviour
 {
+    SoundManager SoundManager;
     public List<Hero> CurHeroList;
 
     public GameObject HeroSelect;
@@ -21,10 +22,13 @@ public class HeroSelectScript : MonoBehaviour
 
     void Start()
     {
+        SoundManager = GameObject.Find("DataManager").GetComponent<SoundManager>();
         for(int i=0; i < searchAttributeIsChecked.Length; i++)
         {
             searchAttributeIsChecked[i] = false;
         }
+        AudioClip m = Resources.Load<AudioClip>("Sounds/BGM/Possibility");
+        SoundManager.PlayBGM(m);
     }
 
     public GameObject[] HerosSimple;
@@ -124,7 +128,9 @@ public class HeroSelectScript : MonoBehaviour
         {
             HerosSimple[i].SetActive(i < CurHeroList.Count);
             Text[] heroInfoSimple = HerosSimple[i].GetComponentsInChildren<Text>();
+            Image heroPreview = HerosSimple[i].GetComponentsInChildren<Image>()[1];
             heroInfoSimple[0].text = i < CurHeroList.Count ? CurHeroList[i].heroNameKR : "";
+            if(i < CurHeroList.Count) heroPreview.sprite = Resources.Load<Sprite>($"UIs/HerosPreview/Hero{CurHeroList[i].heroID}");
             heroInfoSimple[1].text = "";
             if(i < CurHeroList.Count)
             {
@@ -184,9 +190,11 @@ public class HeroSelectScript : MonoBehaviour
 
     public GameObject HeroDetails;
     public Text[] HeroDetailValues;
+    public Image HeroDetailHeroPreview;
     public void MouseEnterToHero(int _heroID)
     {
         HeroDetailValues[0].text = CurHeroList[_heroID].heroNameKR;
+        HeroDetailHeroPreview.sprite = Resources.Load<Sprite>($"UIs/HerosPreview/Hero{CurHeroList[_heroID].heroID}");
         HeroDetailValues[1].text = "";
         for(int j=0; j < CurHeroList[_heroID].heroAttributes.Length; j++)
         {
@@ -310,6 +318,9 @@ public class HeroSelectScript : MonoBehaviour
         }
         else
         {
+            AudioClip m = Resources.Load<AudioClip>("Sounds/BGM/Vengeance");
+            SoundManager.BGMStop();
+            SoundManager.PlayBGM(m);
             DataManager.selectedHeroID = selectedHeroID;
             SceneManager.LoadScene("MainGameScene");
         }

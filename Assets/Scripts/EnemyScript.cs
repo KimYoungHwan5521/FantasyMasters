@@ -31,6 +31,7 @@ public class EnemyScript : MonoBehaviour
     public List<string> enemyAbilities;
     public List<StatusV> EnemyStatus;
     public string atkSound;
+    public Color originalColor;
 
     Animator animator;
     public float animatorCV = 1;
@@ -80,7 +81,7 @@ public class EnemyScript : MonoBehaviour
         enemyMaxHP = float.Parse(enemyInfo.enemyMaxHP);
         enemyNowHP = enemyMaxHP;
         enemyAtkType = int.Parse(enemyInfo.enemyAtkType);
-        enemyAtkDmg = float.Parse(enemyInfo.enemyAtkDmg);
+        enemyAtkDmg = float.Parse(enemyInfo.enemyAtkDmg.Split('x')[0]);
         enemyCollisionDmg = float.Parse(enemyInfo.enemyCollisionDmg);
         enemyAtkSpeed = float.Parse(enemyInfo.enemyAtkSpeed);
         atkCoolTime = 10 / enemyAtkSpeed;
@@ -91,6 +92,7 @@ public class EnemyScript : MonoBehaviour
         enemyMoveSpeed = float.Parse(enemyInfo.enemyMoveSpeed);
         enemyAbilities = enemyInfo.enemyAbilities.ToList();
         EnemyStatus = new List<StatusV>();
+        originalColor = GetComponent<SpriteRenderer>().color;
 
         animator = GetComponent<Animator>();
         HPBar = Instantiate(Resources.Load<RectTransform>("UIs/HPBar"), new Vector3(0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
@@ -155,6 +157,12 @@ public class EnemyScript : MonoBehaviour
             HPBar.position = Camera.main.WorldToScreenPoint(new Vector3(GetComponent<Collider2D>().bounds.center.x, GetComponent<Collider2D>().bounds.center.y - GetComponent<BoxCollider2D>().size.y * transform.localScale.y - 0.1f, 0));
             HPBar.GetComponent<Image>().fillAmount = enemyNowHP / enemyMaxHP;
             StatusBar.position = Camera.main.WorldToScreenPoint(new Vector3(transform.GetComponent<Collider2D>().bounds.center.x, transform.GetComponent<Collider2D>().bounds.center.y + GetComponent<BoxCollider2D>().size.y * transform.localScale.y + 0.1f, 0));
+            
+            if(enemyAtkType == 3 && curTime <= 0)
+            {
+                animator.SetTrigger("Attack");
+                curTime = atkCoolTime;
+            }
             if(target != null)
             {
                 if(Vector2.Distance(transform.GetComponent<Collider2D>().bounds.center, target.GetComponent<Collider2D>().bounds.center) * Mathf.Abs(transform.localScale.x) < enemyAtkRange)
@@ -390,6 +398,22 @@ public class EnemyScript : MonoBehaviour
         }
     }
 
+    private void SummonEnemy()
+    {
+        if(stringID == "0012")
+        {
+            var enemyToSummon = Resources.Load<GameObject>($"Enemies/Enemy0002");
+            Vector3 summonPositon = GetComponent<Collider2D>().bounds.center;
+            Instantiate(enemyToSummon, summonPositon, Quaternion.identity);
+        }
+        else if(stringID == "0013")
+        {
+            var enemyToSummon = Resources.Load<GameObject>($"Enemies/Enemy0003");
+            Vector3 summonPositon = GetComponent<Collider2D>().bounds.center;
+            Instantiate(enemyToSummon, summonPositon, Quaternion.identity);
+        }
+    }
+
     public void BeAttacked(float dmg, float knockback, bool getCritical = false)
     {
         if(dmg - enemyArmor < 1) dmg = 1;
@@ -401,7 +425,7 @@ public class EnemyScript : MonoBehaviour
         else DmgText.gameObject.GetComponent<FloatingText>().SetText(Mathf.Round(dmg).ToString(), "#FFAAAA");
         // print($"enemyNowHP: {enemyNowHP}");
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-        spriteRenderer.color = new Color(1, 0, 0, 1);
+        spriteRenderer.color = new Color(1, 0, 0, spriteRenderer.color[3]);
         if(Hero != null)
         {
             Vector2 moveDirection = GetComponent<Collider2D>().bounds.center - Hero.GetComponent<Collider2D>().bounds.center;
@@ -414,7 +438,7 @@ public class EnemyScript : MonoBehaviour
     void OffDamaged()
     {
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-        spriteRenderer.color = new Color(1, 1, 1, 1);
+        spriteRenderer.color = originalColor;
     }
 
     public void BeHealed(float value)

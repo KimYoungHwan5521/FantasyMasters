@@ -136,6 +136,7 @@ MonoBehaviour:
   range: 0
   abilityDmg: 0
   ignoreArmor: 0
+  projectileSound: 
 --- !u!50 &8161935887710957220
 Rigidbody2D:
   serializedVersion: 4
@@ -170,7 +171,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0061698984, y: -0.05336767}
+  m_Offset: {x: -0.0036784261, y: -0.050876275}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -181,7 +182,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.056283634, y: 0.053691067}
+  m_Size: {x: 0.07521884, y: 0.08458519}
   m_EdgeRadius: 0
 --- !u!95 &2283298656970418289
 Animator:

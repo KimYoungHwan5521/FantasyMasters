@@ -153,7 +153,8 @@ public class ProjectileScript : MonoBehaviour
                             bool alreadyGotIt = false;
                             for(int i=0; i<Hero.GetComponent<HeroScript>().HeroStatus.Count; i++)
                             {
-                                if(Hero.GetComponent<HeroScript>().HeroStatus[i].statusID == "0003") 
+                                print(Hero.GetComponent<HeroScript>().HeroStatus[i].statusID);
+                                if(Hero.GetComponent<HeroScript>().HeroStatus[i].statusID == "0000") 
                                 {
                                     alreadyGotIt = true;
                                     break;
@@ -269,7 +270,7 @@ public class ProjectileScript : MonoBehaviour
                 {
                     if(note == "LifeDrain")
                     {
-                        collision.gameObject.GetComponent<HeroScript>().BeHealed(80);
+                        collision.gameObject.GetComponent<HeroScript>().BeHealed(200);
                     }
                     else
                     {

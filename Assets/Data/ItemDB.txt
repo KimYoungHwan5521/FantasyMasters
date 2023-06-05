@@ -2,7 +2,7 @@ ItemID	ItemNameKR	ItemAttributes	ItemRareDegree	ItemExplainKR	ItemBuffStat	ItemB
 0000	팔뼈	암흑	0	공격력 +40, 최대체력 -50	atkDmgCV|maxHPCV	40|-50	
 0001	대퇴골	암흑	0	공격력 +60, 최대체력 -100	atkDmgCV|maxHPCV	60|-100	
 0002	뼈방패	암흑	0	방어력 +15, 최대체력 -50	armorCV|maxHPCV	15|-50	
-0003	사신의 낫	암흑	2	공격력 +80, 최대체력 -100, 방어무시	atkDmgCV|maxHPCV	40|-60	0004
+0003	사신의 낫	암흑	2	공격력 +80, 최대체력 -100, 방어무시	atkDmgCV|maxHPCV	80|-60	0004
 0004	다크 로브	암흑	0	최대체력 +100	maxHPCV	100	
 0005	두개골	암흑	2	최대체력 -50, 저주공격	maxHPCV	-50	0005
 0006	흑마법서	암흑	3	최대체력 -100, 강한저주공격	maxHPCV	-100	0006
@@ -33,7 +33,7 @@ ItemID	ItemNameKR	ItemAttributes	ItemRareDegree	ItemExplainKR	ItemBuffStat	ItemB
 0031	가시덤불칼	숲	1	공격력 +40, 치명타확률 +30%	atkDmgCV|criticalChanceCV	40|30	
 0032	엘무위치	숲	1	공격력 +20, 공격속도 +30%	atkDmgCV|atkSpeedCVM	20|0.3	
 0033	백조의 노래	숲	2	공격력 +40, 재생공격	atkDmgCV	40	0044
-0034	람쉬르다	숲	1	공격속도 +30%, 치명타 데미지 +50%	atkSpeedCVM|criticalDmgCV	0.3|50	
+0034	람쉬르다	숲	1	공격속도 +30%, 치명타 데미지 +50%	atkSpeedCVM|criticalDmgCV	0.3|0.5	
 0035	팬텀라이트	암흑	1	공격력 +40, 치명타확률 +15%, 최대체력 -50	atkDmgCV|criticalChanceCV|maxHPCV	40|15|-50	
 0036	나이프	무속성	0	치명타 확률 +15%	criticalDmgCV	15	
 0037	작은나무활	무속성	0	공격속도 +15%	atkSpeedCVM	0.15	
