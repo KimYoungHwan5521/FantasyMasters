@@ -153,6 +153,11 @@ public class HeroScript : MonoBehaviour
 
         StatusSprites.transform.position = Camera.main.WorldToScreenPoint(new Vector3(transform.GetComponent<Collider2D>().bounds.center.x, transform.GetComponent<Collider2D>().bounds.center.y + GetComponent<BoxCollider2D>().size.y * transform.localScale.y + 0.1f, 0));
 
+        if(nowHP <= 0 && resurrection == 0) 
+        {
+            animator.SetTrigger("Dead");
+            controllable = false;
+        }
         bool fear = false;
         fired = false;
         // status timer

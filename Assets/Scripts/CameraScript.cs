@@ -47,17 +47,20 @@ public class CameraScript : MonoBehaviour
     void LateUpdate()
     {
         Hero = GameObject.FindWithTag("Player");
-        transform.position = Vector3.Lerp(Hero.GetComponent<BoxCollider2D>().bounds.center, Hero.GetComponent<BoxCollider2D>().bounds.center, Time.deltaTime * speed);
+        if(Hero != null)
+        {
+            transform.position = Vector3.Lerp(Hero.GetComponent<BoxCollider2D>().bounds.center, Hero.GetComponent<BoxCollider2D>().bounds.center, Time.deltaTime * speed);
 
-        height = Camera.main.orthographicSize;
-        width = height * Screen.width / Screen.height;
-        // Mathf.Clamp() : 변수가 일정한 값을 벗어나지 못하도록 범위를 제한하는 함수
-        float lx = Map.transform.localScale.x * 0.5f - width;
-        float clampX = Mathf.Clamp(transform.position.x, -lx + center.x, lx + center.x);
+            height = Camera.main.orthographicSize;
+            width = height * Screen.width / Screen.height;
+            // Mathf.Clamp() : 변수가 일정한 값을 벗어나지 못하도록 범위를 제한하는 함수
+            float lx = Map.transform.localScale.x * 0.5f - width;
+            float clampX = Mathf.Clamp(transform.position.x, -lx + center.x, lx + center.x);
 
-        float ly = Map.transform.localScale.y * 0.5f - height;
-        float clampY = Mathf.Clamp(transform.position.y, -ly + center.y, ly + center.y);
-        transform.position = new Vector3(clampX, clampY, -10f);
+            float ly = Map.transform.localScale.y * 0.5f - height;
+            float clampY = Mathf.Clamp(transform.position.y, -ly + center.y, ly + center.y);
+            transform.position = new Vector3(clampX, clampY, -10f);
+        }
     }
 
     private void OnDrawGizmos()
